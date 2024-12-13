@@ -33,7 +33,7 @@ def get_product_links():
     return product_links
 
 # Main function to scrape products for a search term
-def scrape_products(search_term, num_results=5):
+def scrape_products(search_term, num_results=1):
     base_url = "https://www.daraz.lk/"
     driver.get(base_url)
 
