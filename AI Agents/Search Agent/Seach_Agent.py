@@ -65,10 +65,9 @@ def generate_response(prompt):
 
 
     # print(tavily_context_results)
-    print("\n\n")
 
     result_prompt = f""" 
-    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only add links that have something match for {prompt} product. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
+    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only add links which have {prompt} product mentioned in the link. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
     role: user, content: {tavily_context_results}"""
     response_1 = chat_session.send_message(result_prompt)
 
