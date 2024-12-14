@@ -75,7 +75,7 @@ def extract_all_links(url,item_name):
     # Deduplicate links
     unique_links = list(set(all_links))
 
-    with open("all_links.txt", "w", encoding="utf-8") as f:
+    with open("all_links.txt", "a", encoding="utf-8") as f:
         for link in unique_links:
             f.write(link + "\n")
 
@@ -92,12 +92,12 @@ def extract_all_links(url,item_name):
     response = chat_session.send_message(final_prompt)
 
     # Save Gemini's response to a text file line by line
-    with open("Filtered_links.txt", "w", encoding="utf-8") as f:
+    with open("Filtered_links.txt", "a", encoding="utf-8") as f:
         f.write(response.text)
 
 
 
-item_name = "USB Type C Cable"
-url = "https://www.aliexpress.com/w/wholesale-USB-C-cable.html"
+item_name = "canon f166400 printer ink cartridge"
+url = "https://www.walmart.com/ip/Canon-Toner-Cartridge/118712042"
 
 extract_all_links(url,item_name)
