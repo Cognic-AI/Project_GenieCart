@@ -65,19 +65,26 @@ def generate_response(prompt):
 
 
     # print(tavily_context_results)
-
-    result_prompt = f""" 
+    chat_session = gemini_model.start_chat()
+    result_prompt_1 = f""" 
     role: system, content: Analyze the following web page links.Only provide the links that shows many product results not single product pages. This is a must and You only the add links which have {prompt} product mentioned in the link, Other links are not needed. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
     role: user, content: {tavily_context_results}"""
-    response_1 = chat_session.send_message(result_prompt)
+    response_1 = chat_session.send_message(result_prompt_1)
+
+    chat_session = gemini_model.start_chat()
+    result_prompt_ = f""" 
+    role: system, content: Analyze the following web page links. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. Only provide the links that shows many product results not single product pages. Give the results Line by line.
+    role: user, content: {response_1}"""
+    response_ = chat_session.send_message(result_prompt_)
 
     with open("search_agent_output.txt", "w", encoding="utf-8") as f:
-        f.write(response_1.text)
+        f.write(response_.text)
 
-    result_prompt = f""" 
-    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows single product in that web page that is {prompt}.
+    chat_session = gemini_model.start_chat()
+    result_prompt_2 = f""" 
+    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows single product in that web page that is {prompt}. Only return the links line by line.
     role: user, content: {tavily_context_results}"""
-    response_2 = chat_session.send_message(result_prompt)
+    response_2 = chat_session.send_message(result_prompt_2)
 
     with open("Filtered_links.txt", "w", encoding="utf-8") as f:
         f.write(response_2.text)
