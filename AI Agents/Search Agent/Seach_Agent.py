@@ -38,12 +38,12 @@ def generate_response(prompt):
     
     chat_session = gemini_model.start_chat()
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant in Sri Lanka that converts the user prompt into a search query to find products from the web. You only provide the search query. No other responds.
+    role: system, content: You are a helpful assistant in Sri Lanka that converts the user prompt into a search query to find products from the web. The products need to be buy from Sri Lanka. You only provide the search query. No other responds.
     role: user, content: {prompt}"""
     response = chat_session.send_message(final_prompt)
     search_query = response.text
 
-    # print(search_query)
+    print(search_query)
 
     tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=30)
     tavily_context_results = []
