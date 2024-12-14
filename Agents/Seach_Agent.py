@@ -68,7 +68,7 @@ def generate_response(prompt):
     print("\n\n")
 
     result_prompt = f""" 
-    role: system, content: Analyze the following search results and provide the web page links of each result.Line by line numbered.Don't duplicate the same links.    
+    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line numbered.
     role: user, content: {tavily_context_results}"""
     response = chat_session.send_message(result_prompt)
 
