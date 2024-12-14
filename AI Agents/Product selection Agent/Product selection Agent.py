@@ -75,10 +75,6 @@ def extract_all_links(url,item_name):
     # Deduplicate links
     unique_links = list(set(all_links))
 
-    with open("all_links.txt", "a", encoding="utf-8") as f:
-        for link in unique_links:
-            f.write(link + "\n")
-
     driver.quit()
 
     gemini_model = initialize_gemini()
@@ -98,6 +94,6 @@ def extract_all_links(url,item_name):
 
 
 item_name = "canon f166400 printer ink cartridge"
-url = "https://www.ubuy.com.lk/en/product/7ULL83WVG-nucala-f166400-compatible-toner-cartridge-replacement-for-canon-f166400-printer-toner-cartridge-2-pack-black"
+url = "https://www.aliexpress.com/w/wholesale-canon-f166400-toner.html"
 
 extract_all_links(url,item_name)
