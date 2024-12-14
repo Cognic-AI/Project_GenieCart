@@ -8,7 +8,7 @@ class MachineCustomer:
         self.isHistory = isHistory
 
 class Item:
-    def __init__(self, name, price, description, link, rate, tags, quantity = 0):
+    def __init__(self, name, price, description, link, rate, tags):
         self.name = name
         self.price = price
         self.description = description
@@ -16,7 +16,6 @@ class Item:
         self.rate = rate
         self.tags = tags #list of tags [material, style, color, size, etc]
         self.score = 0
-        self.quantity = quantity
 
 class Customer:
     def __init__(self, customer_id, customer_name):
