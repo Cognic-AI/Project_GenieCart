@@ -45,7 +45,7 @@ def generate_response(prompt):
 
     print(search_query)
 
-    tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=10)
+    tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=30)
     tavily_context_results = []
     for result in tavily_context['results']:
         if 'url' in result:
@@ -57,7 +57,7 @@ def generate_response(prompt):
     # Perform searches for each domain
     for domain in custom_domains:
         domain_query = f"{search_query} site:{domain}"  # Restrict search to the domain
-        tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=10)
+        tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=20)
         
         for result in tavily_context['results']:
             if 'url' in result:
@@ -68,7 +68,7 @@ def generate_response(prompt):
     print("\n\n")
 
     result_prompt = f""" 
-    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
+    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only add links relevent to {prompt}. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
     role: user, content: {tavily_context_results}"""
     response_1 = chat_session.send_message(result_prompt)
 

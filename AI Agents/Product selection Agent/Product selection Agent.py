@@ -97,7 +97,7 @@ def extract_all_links(url,item_name):
 
 
 
-item_name = "AAA Batteries"
+item_name = "canon f166400 printer ink cartridge"
 url = "https://www.walmart.com/ip/Canon-Toner-Cartridge/118712042"
 
 extract_all_links(url,item_name)
