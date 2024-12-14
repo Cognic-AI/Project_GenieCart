@@ -72,7 +72,7 @@ def generate_response(prompt):
     role: user, content: {tavily_context_results}"""
     response_1 = chat_session.send_message(result_prompt)
 
-    with open("search_agent_output_1.txt", "a", encoding="utf-8") as f:
+    with open("search_agent_output.txt", "w", encoding="utf-8") as f:
         f.write(response_1.text)
 
     result_prompt = f""" 
@@ -80,7 +80,7 @@ def generate_response(prompt):
     role: user, content: {tavily_context_results}"""
     response_2 = chat_session.send_message(result_prompt)
 
-    with open("search_agent_output_2.txt", "a", encoding="utf-8") as f:
+    with open("Filtered_links.txt", "w", encoding="utf-8") as f:
         f.write(response_2.text)
 
 
