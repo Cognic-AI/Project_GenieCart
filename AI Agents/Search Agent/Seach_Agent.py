@@ -38,12 +38,12 @@ def generate_response(prompt):
     
     chat_session = gemini_model.start_chat()
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant that converts the user prompt into a search query to find products. You only provide the search query. No other responds.
+    role: system, content: You are a helpful assistant that converts the user prompt into a search query to find products in Sri Lanka from the web. You only provide the search query. No other responds.
     role: user, content: {prompt}"""
     response = chat_session.send_message(final_prompt)
     search_query = response.text
 
-    print(search_query)
+    # print(search_query)
 
     tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=30)
     tavily_context_results = []
@@ -67,7 +67,7 @@ def generate_response(prompt):
     # print(tavily_context_results)
 
     result_prompt = f""" 
-    role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows many product results not single product pages. Only add links which have {prompt} product mentioned in the link. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
+    role: system, content: Analyze the following web page links.Only provide the links that shows many product results not single product pages. You only the add links which have {prompt} product mentioned in the link, Other links are not needed. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
     role: user, content: {tavily_context_results}"""
     response_1 = chat_session.send_message(result_prompt)
 
