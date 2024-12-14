@@ -86,21 +86,18 @@ def extract_all_links(url,item_name):
     chat_session = gemini_model.start_chat()
 
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that related to a one spesific item.(Analyse the link and get a understanding of it)
+    role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line with a space between each link. Make sure you return only the links that related to a one spesific item.(Analyse the link and get a understanding of it)
     role: user, content: website {url} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
     response = chat_session.send_message(final_prompt)
 
     # Save Gemini's response to a text file line by line
     with open("Filtered_links.txt", "w", encoding="utf-8") as f:
-        for link in response.text:
-            f.write(link + "\n")
+        f.write(response.text)
 
-    return response.text
+
 
 item_name = "USB Type C Cable"
 url = "https://www.aliexpress.com/w/wholesale-USB-C-cable.html"
 
-all_links = extract_all_links(url,item_name)
-
-print(all_links)
+extract_all_links(url,item_name)
