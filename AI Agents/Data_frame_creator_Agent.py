@@ -50,6 +50,9 @@ def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) ->
 
 def json_to_csv(item_name: str) -> None:
 
+    print("------------------------------------------------------------------------------------------------")
+    print("Data frame creator agent started")
+
     json_folder = "Final_products"
     output_csv = "products.csv"
 
@@ -96,6 +99,9 @@ def json_to_csv(item_name: str) -> None:
                 writer.writerow(data)
 
     print(f"CSV file has been created at {output_csv}")
+
+    print("Data frame creator agent completed")
+    print("------------------------------------------------------------------------------------------------")
 
 # Example usage
 # json_to_csv("White color A4 paper bundle")

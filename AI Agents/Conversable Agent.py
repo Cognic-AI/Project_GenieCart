@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from Seach_Agent import generate_search_results
 from Product_Selection_Agent import extract_all_links
 from Data_Extract_Agent import process_links
+from Data_frame_creator_Agent import json_to_csv
 
 load_dotenv()
 
@@ -34,6 +35,14 @@ Your task is to execute the `process_links` function when invoked.
 Execute the function and ensure it runs successfully.
 """
 
+data_frame_creator_agent_system_message="""
+Your task is to execute the `json_to_csv` function when invoked.
+This function takes one input:
+- A string representing the product or item name.
+
+Execute the function and ensure it runs successfully.
+"""
+
 def main(user_query, custom_domains):
     llm_config = {
         "config_list": [
@@ -51,6 +60,7 @@ def main(user_query, custom_domains):
     entrypoint_agent.register_for_execution(name="generate_search_results")(generate_search_results)
     entrypoint_agent.register_for_execution(name="extract_all_links")(extract_all_links)
     entrypoint_agent.register_for_execution(name="process_links")(process_links)
+    entrypoint_agent.register_for_execution(name="json_to_csv")(json_to_csv)
 
     # Search agent
     search_agent = ConversableAgent(
@@ -88,6 +98,18 @@ def main(user_query, custom_domains):
         description="Extracts structured data from product links."
     )(process_links)
 
+    # Data frame creator agent
+    data_frame_creator_agent = ConversableAgent(
+        name="data_frame_creator_agent",
+        system_message=data_frame_creator_agent_system_message,
+        llm_config=llm_config,
+        human_input_mode='NEVER',
+    )
+    data_frame_creator_agent.register_for_llm(
+        name="json_to_csv",
+        description="Creates a CSV file from the extracted data."
+    )(json_to_csv)
+
     # Entrypoint agent coordinates sub-agents
     result = entrypoint_agent.initiate_chats([
         {
@@ -105,6 +127,12 @@ def main(user_query, custom_domains):
         {
             "recipient": data_extract_agent,
             "message": f"Please execute the `process_links` function.",
+            "max_turns": 2,
+            "summary_method": "last_msg",
+        },
+        {
+            "recipient": data_frame_creator_agent,
+            "message": f"Please execute the `json_to_csv` function. product or item name is {user_query}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
