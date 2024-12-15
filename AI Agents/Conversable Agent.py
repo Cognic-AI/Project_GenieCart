@@ -112,4 +112,4 @@ def main(user_query, custom_domains):
 
     return result
 
-main("A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
+main("White A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])

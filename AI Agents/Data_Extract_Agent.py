@@ -39,7 +39,7 @@ def initialize_gemini(gemini_api_key: str) -> genai.GenerativeModel:
         "temperature": 0.1,
         "top_p": 0.6,
         "top_k": 10,
-        "max_output_tokens": 8192,
+        "max_output_tokens": 20000,
         "response_mime_type": "application/json",
     }
     return genai.GenerativeModel(
@@ -103,20 +103,19 @@ def process_links() -> None:
             product_name
             description
             brand
-            category
-            price 
+            price (There can be previous price and price after discounts add the after discount price)
             currency
             product rating
             Color (all colors available)
-            product_qty
+            availability
             shipping (if mentioned as not shipping to the current location, mention false)
             delivery (delivery details)
-            warranty
+            delivery cost(or shipping cost)
+            warranty(ture or false on availablity)
             warranty_policy
-            availability
             condition
             image
-            latest reviews
+            latest reviews(The reviws are available in the bottom parts analyze and add them)
 
             URL: {link}
             HTML Content: {page_content}
