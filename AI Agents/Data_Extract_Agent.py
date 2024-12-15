@@ -63,6 +63,10 @@ def extract_page_content(url):
 
 # Process each link and save responses in separate files
 def process_links():
+
+    print("------------------------------------------------------------------------------------------------")
+    print("Data extraction agent started")
+
     # Ensure the output folder exists
     os.makedirs("structured_responses", exist_ok=True)
 
@@ -117,6 +121,9 @@ def process_links():
 
         except Exception as e:
             print(f"Error processing {link}: {e}")
+
+    print("Data extraction agent completed")
+    print("------------------------------------------------------------------------------------------------")
 
 # Helper function to sanitize file names
 def sanitize_filename(url):

@@ -58,6 +58,9 @@ def slow_scroll_page():
 # Function to extract all links from a webpage
 def extract_all_links(item_name):
 
+    print("------------------------------------------------------------------------------------------------")
+    print("Product selection agent started")
+
     with open("search_agent_output.txt", "r", encoding="utf-8") as f:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
@@ -83,6 +86,8 @@ def extract_all_links(item_name):
 
         driver.quit()
 
+        print("links extracted")
+
         gemini_model = initialize_gemini()
 
         final_prompt = f""" 
@@ -90,6 +95,14 @@ def extract_all_links(item_name):
         role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
         response = gemini_model.generate_content(contents=final_prompt)
+
+        print("filtered links")
+
+        print("\n\n")
+
+        print("Product selection agent completed")
+        print("------------------------------------------------------------------------------------------------")
+
 
         # Save Gemini's response to a text file line by line
         with open("Filtered_links.txt", "a", encoding="utf-8") as f:
