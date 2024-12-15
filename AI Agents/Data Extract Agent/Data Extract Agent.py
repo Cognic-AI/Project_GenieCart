@@ -122,8 +122,7 @@ def process_links(input_file, output_folder):
 def sanitize_filename(url):
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
-# Main function
-if __name__ == "__main__":
-    input_file = "testlinks.txt"  # File containing the links
-    output_folder = "structured_responses"  # Folder to save responses
-    process_links(input_file, output_folder)
+
+input_file = "testlinks.txt"  # File containing the links
+output_folder = "structured_responses"  # Folder to save responses
+process_links(input_file, output_folder)
