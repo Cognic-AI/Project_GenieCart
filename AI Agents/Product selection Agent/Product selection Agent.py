@@ -11,6 +11,7 @@ load_dotenv()
 options = webdriver.ChromeOptions()
 options.add_argument('--disable-gpu')
 options.add_argument('--no-sandbox')
+options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
 # options.add_argument('--headless')  # Uncomment for headless mode
 driver = webdriver.Chrome(options=options)
 
@@ -94,6 +95,6 @@ def extract_all_links(url,item_name):
 
 
 item_name = "canon f166400 printer ink cartridge"
-url = "https://www.aliexpress.com/w/wholesale-canon-f166400-toner.html"
+url = "https://www.amazon.com/s?k=canon+f166400+printer+ink+cartridge&crid=3NCB1LF193ACW&sprefix=%2Caps%2C1034&ref=nb_sb_ss_recent_2_0_recent"
 
 extract_all_links(url,item_name)
