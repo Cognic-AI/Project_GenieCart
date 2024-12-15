@@ -115,4 +115,4 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("A4 paper bundle", ["https://www.amazon.com", "https://daraz.lk"])
+# generate_search_results("White color A4 paper bundle", ["https://www.amazon.com", "https://daraz.lk"])

@@ -71,9 +71,6 @@ def process_links() -> None:
     print("------------------------------------------------------------------------------------------------")
     print("Data extraction agent started")
 
-    # Ensure the output folder exists
-    os.makedirs("structured_responses", exist_ok=True)
-
     input_filename: str = os.path.join("Agent_Outputs", "Filtered_links.txt")
     with open(input_filename, "r", encoding="utf-8") as f:
         links: List[str] = [line.strip() for line in f.readlines() if line.strip()]
@@ -97,25 +94,23 @@ def process_links() -> None:
 
             # Send the content to Gemini for structuring
             prompt: str = f"""
-            Structure the following product details in JSON format from the webpage html content:
+            Structure the following product details in JSON format from the webpage html content(give in the same name as the fields):
             Add the following fields to the JSON:
-            product URL
+            product_url
             product_name
-            description
-            brand
             price (There can be previous price and price after discounts add the after discount price)
             currency
-            product rating
+            product_rating (Mostly this is available which is usually 0 ot 5 find the rating and add it)
             Color (all colors available)
-            availability
-            shipping (if mentioned as not shipping to the current location, mention false)
-            delivery (delivery details)
-            delivery cost(or shipping cost)
+            availability(make false if mentioned as out of stock otherwise always true)
+            shipping (if mentioned as not shipping to the current location, mention false otherwise always true)
+            delivery_date (add the delivery date or how long it takes to deliver)
+            delivery_cost(or shipping cost)
             warranty(ture or false on availablity)
             warranty_policy
-            condition
-            image
-            latest reviews(The reviws are available in the bottom parts analyze and add them)
+            condition(new or used)
+            image(add the image url)
+            latest_reviews(The reviws are available in the bottom parts analyze and add them)
 
             URL: {link}
             HTML Content: {page_content}
@@ -142,4 +137,4 @@ def sanitize_filename(url: str) -> str:
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 # Example usage
-# process_links()
+process_links()

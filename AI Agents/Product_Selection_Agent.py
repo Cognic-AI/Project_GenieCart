@@ -63,12 +63,12 @@ def extract_all_links(item_name: str) -> None:
     Returns:
     - None
     """
-    # Configure WebDriver (using Chrome as an example)
+    # Configure WebDriver (using Chrome)
     options = webdriver.ChromeOptions()
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
-    # options.add_argument('--headless')  # Uncomment for headless browsing
+    # options.add_argument('--headless')  
 
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
@@ -121,4 +121,4 @@ def extract_all_links(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("canon f166400 printer ink cartridge")
+# extract_all_links("White color A4 paper bundle")
