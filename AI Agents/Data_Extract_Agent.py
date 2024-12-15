@@ -74,9 +74,12 @@ def process_links() -> None:
     # Ensure the output folder exists
     os.makedirs("structured_responses", exist_ok=True)
 
-    # Read links from the input file
-    with open("Filtered_links.txt", "r", encoding="utf-8") as f:
+    input_filename: str = os.path.join("Agent_Outputs", "Filtered_links.txt")
+    with open(input_filename, "r", encoding="utf-8") as f:
         links: List[str] = [line.strip() for line in f.readlines() if line.strip()]
+
+    # Variable to keep track of the product number
+    product_counter: int = 1
 
     for link in links:
         print(f"Processing: {link}")
@@ -90,7 +93,6 @@ def process_links() -> None:
 
             # Get the next API key and initialize Gemini model
             api_key: str = key_manager.get_next_key()
-            print(f"Using API key: {api_key}")
             gemini_model: genai.GenerativeModel = initialize_gemini(api_key)
 
             # Send the content to Gemini for structuring
@@ -122,10 +124,12 @@ def process_links() -> None:
             response = gemini_model.generate_content(contents=prompt)
 
             # Save the structured response to a separate file
-            filename: str = os.path.join("structured_responses", f"{sanitize_filename(link)}.json")
+            filename: str = os.path.join("Final_products", f"product{product_counter}.json")
             with open(filename, "w", encoding="utf-8") as out_file:
                 out_file.write(response.text)
             print(f"Saved response to: {filename}")
+
+            product_counter += 1
 
         except Exception as e:
             print(f"Error processing {link}: {e}")

@@ -91,7 +91,8 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     role: user, content: {response_1}"""
     response_ = gemini_model.generate_content(contents=result_prompt_)
 
-    with open("search_agent_output.txt", "w", encoding="utf-8") as f:
+    filename: str = os.path.join("Agent_Outputs", f"search_agent_output.txt")
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(response_.text)
 
     print("\n")
@@ -102,7 +103,8 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     role: user, content: {tavily_context_results}"""
     response_2 = gemini_model.generate_content(contents=result_prompt_2)
 
-    with open("Filtered_links.txt", "w", encoding="utf-8") as f:
+    filename: str = os.path.join("Agent_Outputs", f"Filtered_links.txt")
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(response_2.text)
 
     print("Filtered_links.txt created")

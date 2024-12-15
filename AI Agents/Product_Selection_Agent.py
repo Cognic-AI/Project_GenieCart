@@ -29,7 +29,7 @@ def initialize_gemini() -> genai.GenerativeModel:
     }
     
     gemini_model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-1.5-pro",
         generation_config=generation_config,
     )  
     
@@ -74,10 +74,12 @@ def extract_all_links(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
 
-    with open("search_agent_output.txt", "r", encoding="utf-8") as f:
+    input_filename: str = os.path.join("Agent_Outputs", "search_agent_output.txt")
+    with open(input_filename, "r", encoding="utf-8") as f:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
     for link in links:
+        print("processing link: ", link)
         driver.get(link)
 
         # Wait for the page to initially load
@@ -99,26 +101,26 @@ def extract_all_links(item_name: str) -> None:
 
         driver.quit()
 
-        print("links extracted")
+    print("links extracted")
 
-        gemini_model = initialize_gemini()
+    gemini_model = initialize_gemini()
 
-        final_prompt = f""" 
+    final_prompt = f""" 
         role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that related to a one specific item.(Analyse the link and get a understanding of it)
         role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
-        response = gemini_model.generate_content(contents=final_prompt)
+    response = gemini_model.generate_content(contents=final_prompt)
 
-        print("filtered links")
+    print("filtered links")
 
-        print("\n\n")
+    print("\n\n")
 
-        print("Product selection agent completed")
-        print("------------------------------------------------------------------------------------------------")
+    print("Product selection agent completed")
+    print("------------------------------------------------------------------------------------------------")
 
-        # Save Gemini's response to a text file line by line
-        with open("Filtered_links.txt", "a", encoding="utf-8") as f:
-            f.write(response.text)
+    filename: str = os.path.join("Agent_Outputs", f"Filtered_links.txt")
+    with open(filename, "a", encoding="utf-8") as f:
+        f.write(response.text)
 
 # Example usage
 # extract_all_links("canon f166400 printer ink cartridge")
