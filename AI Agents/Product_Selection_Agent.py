@@ -55,8 +55,8 @@ def slow_scroll_page(driver: webdriver.Chrome) -> None:
 
 def extract_all_links(item_name: str) -> None:
     """
-    Extracts all product links from the search results based on the item name.
-    
+    Extracts all product links by searching for the item name on given websites, handling various website structures.
+
     Args:
     - item_name (str): The name of the item to search for.
 
@@ -68,8 +68,7 @@ def extract_all_links(item_name: str) -> None:
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
-    # options.add_argument('--headless')  
-    driver = webdriver.Chrome(options=options)
+    # options.add_argument('--headless')  # Uncomment for headless browsing
 
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
@@ -79,7 +78,8 @@ def extract_all_links(item_name: str) -> None:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
     for link in links:
-        print("processing link: ", link)
+        driver = webdriver.Chrome(options=options)
+        print(f"Processing link: {link}")
         driver.get(link)
 
         # Wait for the page to initially load
@@ -101,26 +101,24 @@ def extract_all_links(item_name: str) -> None:
 
         driver.quit()
 
-    print("links extracted")
+        print(f"Extracted {len(unique_links)} links from {link}")
 
-    gemini_model = initialize_gemini()
+        gemini_model = initialize_gemini()
 
-    final_prompt = f""" 
-        role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that related to a one specific item.(Analyse the link and get a understanding of it)
-        role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
+        final_prompt = f"""
+            role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that are related to a one specific item (Analyze the link and get an understanding of it).
+            role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
-    response = gemini_model.generate_content(contents=final_prompt)
+        response = gemini_model.generate_content(contents=final_prompt)
 
-    print("filtered links")
+        output_filename: str = os.path.join("Agent_Outputs", "Filtered_links.txt")
+        with open(output_filename, "a", encoding="utf-8") as f:
+            f.write(response.text)
 
-    print("\n\n")
+        print(f"Filtered links saved to: {output_filename}")
 
     print("Product selection agent completed")
     print("------------------------------------------------------------------------------------------------")
-
-    filename: str = os.path.join("Agent_Outputs", f"Filtered_links.txt")
-    with open(filename, "a", encoding="utf-8") as f:
-        f.write(response.text)
 
 # Example usage
 # extract_all_links("canon f166400 printer ink cartridge")

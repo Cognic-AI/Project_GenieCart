@@ -82,12 +82,12 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     print("tavily_context_results: ", tavily_context_results)
 
     result_prompt_1 = f""" 
-    role: system, content: Analyze the following web page links.Only provide the links that shows many product results not single product pages. This is a must and You only the add links which have {prompt} product mentioned in the link, Other links are not needed. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
+    role: system, content: Analyze the following web page links.Only provide the links that shows many product results not single product pages. Only add links which have {prompt} product mentioned in the link, Other links are not needed. Give the results Line by line.
     role: user, content: {tavily_context_results}"""
     response_1 = gemini_model.generate_content(contents=result_prompt_1)
 
     result_prompt_ = f""" 
-    role: system, content: Analyze the following web page links. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. Only provide the links that shows many product results not single product pages. Give the results Line by line. Don't add facebook links. Only return 2 links(priorities the {custom_domains} when selecting best links).
+    role: system, content: Analyze the following web page links. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. If you think this link will give more unrelated results, don't add it. Give the results Line by line. Don't add facebook links. Only return 2 links(priorities the {custom_domains} when selecting best links).
     role: user, content: {response_1}"""
     response_ = gemini_model.generate_content(contents=result_prompt_)
 
