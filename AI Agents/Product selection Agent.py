@@ -12,7 +12,7 @@ options = webdriver.ChromeOptions()
 options.add_argument('--disable-gpu')
 options.add_argument('--no-sandbox')
 options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
-# options.add_argument('--headless')  # Uncomment for headless mode
+# options.add_argument('--headless')  
 driver = webdriver.Chrome(options=options)
 
 def initialize_gemini():
@@ -56,45 +56,46 @@ def slow_scroll_page():
         total_height = driver.execute_script("return document.body.scrollHeight")
 
 # Function to extract all links from a webpage
-def extract_all_links(url,item_name):
-    driver.get(url)
+def extract_all_links(item_name):
 
-    # Wait for the page to initially load
-    time.sleep(5)
+    with open("search_agent_output.txt", "r", encoding="utf-8") as f:
+        links = [line.strip() for line in f.readlines() if line.strip()]
 
-    # Scroll the page to load all dynamic content
-    slow_scroll_page()
+    for link in links:
+        driver.get(link)
 
-    # Find all <a> tags with href attributes
-    elements = driver.find_elements(By.TAG_NAME, "a")
-    all_links = []
-    for element in elements:
-        href = element.get_attribute("href")
-        if href:  # Check if the href attribute is not empty
-            all_links.append(href)
+        # Wait for the page to initially load
+        time.sleep(5)
 
-    # Deduplicate links
-    unique_links = list(set(all_links))
+        # Scroll the page to load all dynamic content
+        slow_scroll_page()
 
-    driver.quit()
+        # Find all <a> tags with href attributes
+        elements = driver.find_elements(By.TAG_NAME, "a")
+        all_links = []
+        for element in elements:
+            href = element.get_attribute("href")
+            if href:  # Check if the href attribute is not empty
+                all_links.append(href)
 
-    gemini_model = initialize_gemini()
+        # Deduplicate links
+        unique_links = list(set(all_links))
 
-    chat_session = gemini_model.start_chat()
+        driver.quit()
 
-    final_prompt = f""" 
-    role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that related to a one spesific item.(Analyse the link and get a understanding of it)
-    role: user, content: website {url} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
+        gemini_model = initialize_gemini()
 
-    response = chat_session.send_message(final_prompt)
+        final_prompt = f""" 
+        role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that related to a one spesific item.(Analyse the link and get a understanding of it)
+        role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
-    # Save Gemini's response to a text file line by line
-    with open("Filtered_links.txt", "a", encoding="utf-8") as f:
-        f.write(response.text)
+        response = gemini_model.generate_content(contents=final_prompt)
 
+        # Save Gemini's response to a text file line by line
+        with open("Filtered_links.txt", "a", encoding="utf-8") as f:
+            f.write(response.text)
 
 
 item_name = "canon f166400 printer ink cartridge"
-url = "https://www.amazon.com/s?k=canon+f166400+printer+ink+cartridge&crid=3NCB1LF193ACW&sprefix=%2Caps%2C1034&ref=nb_sb_ss_recent_2_0_recent"
 
-extract_all_links(url,item_name)
+extract_all_links(item_name)

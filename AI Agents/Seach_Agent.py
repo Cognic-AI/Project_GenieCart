@@ -52,7 +52,7 @@ def generate_response(prompt):
             tavily_context_results.append(result['url'])
 
 
-    custom_domains = ["https://www.amazon.com"]  
+    custom_domains = ["https://www.amazon.com","https://www.ebay.com"]  
 
     # Perform searches for each domain
     for domain in custom_domains:
@@ -89,5 +89,6 @@ def generate_response(prompt):
     with open("Filtered_links.txt", "w", encoding="utf-8") as f:
         f.write(response_2.text)
 
+item_name = "canon f166400 printer ink cartridge"
 
-generate_response("canon f166400 printer ink cartridge")
+generate_response(item_name)

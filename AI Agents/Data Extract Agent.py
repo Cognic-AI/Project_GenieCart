@@ -62,12 +62,12 @@ def extract_page_content(url):
         return f"Error extracting content from {url}: {e}"
 
 # Process each link and save responses in separate files
-def process_links(input_file, output_folder):
+def process_links():
     # Ensure the output folder exists
-    os.makedirs(output_folder, exist_ok=True)
+    os.makedirs("structured_responses", exist_ok=True)
 
     # Read links from the input file
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open("Filtered_links.txt", "r", encoding="utf-8") as f:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
     for link in links:
@@ -110,7 +110,7 @@ def process_links(input_file, output_folder):
             response = gemini_model.generate_content(contents=prompt)
 
             # Save the structured response to a separate file
-            filename = os.path.join(output_folder, f"{sanitize_filename(link)}.json")
+            filename = os.path.join("structured_responses", f"{sanitize_filename(link)}.json")
             with open(filename, "w", encoding="utf-8") as out_file:
                 out_file.write(response.text)
             print(f"Saved response to: {filename}")
@@ -123,6 +123,4 @@ def sanitize_filename(url):
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 
-input_file = "testlinks.txt"  # File containing the links
-output_folder = "structured_responses"  # Folder to save responses
-process_links(input_file, output_folder)
+process_links()
