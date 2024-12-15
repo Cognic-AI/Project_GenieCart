@@ -18,7 +18,7 @@ def initialize_clients():
     genai.configure(api_key=gemini_api_key)
     
     generation_config = {
-        "temperature": 0.7,
+        "temperature": 0.3,
         "top_p": 0.9,
         "top_k": 40,
         "max_output_tokens": 4096,
@@ -32,27 +32,26 @@ def initialize_clients():
     
     return tavily_client, gemini_model
 
-def generate_response(prompt):
+def generate_search_results(prompt,custom_domains):
+
+    print("------------------------------------------------------------------------------------------------")
+    print("search agent started")
 
     tavily_client, gemini_model = initialize_clients()
     
-    chat_session = gemini_model.start_chat()
     final_prompt = f""" 
     role: system, content: You are a helpful assistant in Sri Lanka that converts the user prompt into a search query to find products from the web. The products need to be buy from Sri Lanka. You only provide the search query. No other responds.
     role: user, content: {prompt}"""
-    response = chat_session.send_message(final_prompt)
+    response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
 
-    print(search_query)
+    print("search_query created: ",search_query)
 
     tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=30)
     tavily_context_results = []
     for result in tavily_context['results']:
         if 'url' in result:
             tavily_context_results.append(result['url'])
-
-
-    custom_domains = ["https://www.amazon.com","https://www.ebay.com"]  
 
     # Perform searches for each domain
     for domain in custom_domains:
@@ -64,31 +63,38 @@ def generate_response(prompt):
                 tavily_context_results.append(result['url'])
 
 
-    # print(tavily_context_results)
-    chat_session = gemini_model.start_chat()
+    print("tavily_context_results: ", tavily_context_results)
+
     result_prompt_1 = f""" 
     role: system, content: Analyze the following web page links.Only provide the links that shows many product results not single product pages. This is a must and You only the add links which have {prompt} product mentioned in the link, Other links are not needed. Only give one link from one web domain(Don't give multiple links from same domain/website).Give the results Line by line.
     role: user, content: {tavily_context_results}"""
-    response_1 = chat_session.send_message(result_prompt_1)
+    response_1 = gemini_model.generate_content(contents=result_prompt_1)
 
-    chat_session = gemini_model.start_chat()
     result_prompt_ = f""" 
-    role: system, content: Analyze the following web page links. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. Only provide the links that shows many product results not single product pages. Give the results Line by line.
+    role: system, content: Analyze the following web page links. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. Only provide the links that shows many product results not single product pages. Give the results Line by line. Don't add facebook links. Only return 2 links(priorities the {custom_domains} when selecting best links).
     role: user, content: {response_1}"""
-    response_ = chat_session.send_message(result_prompt_)
+    response_ = gemini_model.generate_content(contents=result_prompt_)
 
     with open("search_agent_output.txt", "w", encoding="utf-8") as f:
         f.write(response_.text)
 
-    chat_session = gemini_model.start_chat()
+    print("\n")
+    print("search_agent_output.txt created")
+
     result_prompt_2 = f""" 
     role: system, content: Analyze the following search results and provide the web page links.Only provide the links that shows single product in that web page that is {prompt}. Only return the links line by line.
     role: user, content: {tavily_context_results}"""
-    response_2 = chat_session.send_message(result_prompt_2)
+    response_2 = gemini_model.generate_content(contents=result_prompt_2)
 
     with open("Filtered_links.txt", "w", encoding="utf-8") as f:
         f.write(response_2.text)
 
-item_name = "canon f166400 printer ink cartridge"
+    print("Filtered_links.txt created")
 
-generate_response(item_name)
+    print("\n\n")
+
+    print("Search agent completed")
+    print("------------------------------------------------------------------------------------------------")
+
+#Example usage
+generate_search_results("A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])

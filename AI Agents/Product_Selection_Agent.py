@@ -95,7 +95,5 @@ def extract_all_links(item_name):
         with open("Filtered_links.txt", "a", encoding="utf-8") as f:
             f.write(response.text)
 
-
-item_name = "canon f166400 printer ink cartridge"
-
-extract_all_links(item_name)
+#Example usage
+# extract_all_links("canon f166400 printer ink cartridge")
