@@ -3,10 +3,17 @@ import asyncio
 from dotenv import load_dotenv
 from tavily import Client as TavilyClient
 import google.generativeai as genai
+from typing import List
 
 load_dotenv()
 
-def initialize_clients():
+def initialize_clients() -> tuple[TavilyClient, genai.GenerativeModel]:
+    """
+    Initialize and return the Tavily and Gemini clients.
+    Returns a tuple containing:
+    - TavilyClient instance
+    - Gemini GenerativeModel instance
+    """
     tavily_api_key = os.getenv("TAVILY_API_KEY")
     if not tavily_api_key:
         raise ValueError("TAVILY_API_KEY is not set in the environment variables.")
@@ -32,8 +39,17 @@ def initialize_clients():
     
     return tavily_client, gemini_model
 
-def generate_search_results(prompt,custom_domains):
+def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
+    """
+    Generate search results for a given prompt, restricting to the provided domains.
+    
+    Args:
+    - prompt (str): The search prompt to generate queries for.
+    - custom_domains (List[str]): A list of domains to restrict the search to.
 
+    Returns:
+    - None
+    """
     print("------------------------------------------------------------------------------------------------")
     print("search agent started")
 
@@ -45,7 +61,7 @@ def generate_search_results(prompt,custom_domains):
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
 
-    print("search_query created: ",search_query)
+    print("search_query created: ", search_query)
 
     tavily_context = tavily_client.search(query=search_query, search_depth="advanced", max_results=30)
     tavily_context_results = []
@@ -96,5 +112,5 @@ def generate_search_results(prompt,custom_domains):
     print("Search agent completed")
     print("------------------------------------------------------------------------------------------------")
 
-#Example usage
-generate_search_results("A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
+# Example usage
+# generate_search_results("A4 paper bundle", ["https://www.amazon.com", "https://daraz.lk"])
