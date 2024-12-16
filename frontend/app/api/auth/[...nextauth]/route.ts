@@ -1,10 +1,7 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
-
+import { connection } from '../../../database/db';
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -18,24 +15,31 @@ const handler = NextAuth({
           return null;
         }
 
-        const user = await prisma.customer.findUnique({
-          where: { email: credentials.email }
-        });
+        try {
+          const [users] = await connection.query(
+            'SELECT * FROM Customer WHERE email = ?',
+            [credentials.email]
+          );
 
-        if (!user) return null;
+          const user = users[0];
+          if (!user) return null;
 
-        const passwordMatch = await bcrypt.compare(
-          credentials.password, 
-          user.password
-        );
+          const passwordMatch = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
 
-        if (!passwordMatch) return null;
+          if (!passwordMatch) return null;
 
-        return {
-          id: user.customer_id.toString(),
-          email: user.email,
-          name: user.customer_name
-        };
+          return {
+            id: user.customer_id.toString(),
+            email: user.email,
+            name: user.customer_name
+          };
+        } catch (error) {
+          console.error('Error during authentication:', error);
+          return null;
+        }
       }
     })
   ],
@@ -48,8 +52,10 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
-      session.user.name = token.name as string;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+      }
       return session;
     }
   },

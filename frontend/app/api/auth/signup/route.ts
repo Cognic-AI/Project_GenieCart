@@ -12,11 +12,11 @@ export async function POST(req: NextRequest) {
   try {
     // Check if the user already exists
     const [existingUser] = await connection.query(
-      'SELECT * FROM users WHERE email = ?',
+      'SELECT * FROM Customer WHERE email = ?',
       [email]
     );
 
-    if (existingUser && existingUser.length > 0) {
+    if (existingUser.length > 0) {
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
     }
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     // Insert the new user into the database
     await connection.query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      'INSERT INTO customer (customer_name, email, password) VALUES (?, ?, ?)',
       [name, email, hashedPassword]
     );
 
