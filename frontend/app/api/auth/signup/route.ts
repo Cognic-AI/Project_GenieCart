@@ -1,42 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { connection } from '../../../database/db';
 import bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
+export async function POST(req: NextRequest) {
+  const { name, email, password } = await req.json();
 
-export async function POST(request: NextRequest) {
+  if (!name || !email || !password) {
+    return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+  }
+
   try {
-    const { email, password, name } = await request.json();
+    // Check if the user already exists
+    const [existingUser] = await connection.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
 
-    // Validate input
-    if (!email || !password || !name) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (existingUser && existingUser.length > 0) {
+      return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.customer.findUnique({
-      where: { email }
-    });
-
-    if (existingUser) {
-      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
-    }
-
-    // Hash password
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
-    await prisma.customer.create({
-      data: {
-        email,
-        password: hashedPassword,
-        customer_name: name
-      }
-    });
+    // Insert the new user into the database
+    await connection.query(
+      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      [name, email, hashedPassword]
+    );
 
     return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
-  } catch (error) {
-    console.error('Signup error:', error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
