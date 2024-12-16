@@ -1,16 +1,8 @@
+
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import mysql from "mysql2/promise"; // MySQL import
 import bcrypt from "bcrypt";
-
-// Set up MySQL connection
-const connection = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-
+import { connection } from '../../../database/db';
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -24,26 +16,31 @@ const handler = NextAuth({
           return null;
         }
 
-        // Query user from MySQL
-        const [rows] = await connection.query(
-          'SELECT * FROM customers WHERE email = ?',
-          [credentials.email]
-        );
+        try {
+          const [users] = await connection.query(
+            'SELECT * FROM Customer WHERE email = ?',
+            [credentials.email]
+          );
 
-        if (rows.length === 0) return null;
+          const user = users[0];
+          if (!user) return null;
 
-        const user = rows[0];
+          const passwordMatch = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
 
-        // Check if password matches
-        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
-        if (!passwordMatch) return null;
+          if (!passwordMatch) return null;
 
-        // Return user data if password matches
-        return {
-          id: user.customer_id.toString(),
-          email: user.email,
-          name: user.customer_name
-        };
+          return {
+            id: user.customer_id.toString(),
+            email: user.email,
+            name: user.customer_name
+          };
+        } catch (error) {
+          console.error('Error during authentication:', error);
+          return null;
+        }
       }
     })
   ],
@@ -55,18 +52,16 @@ const handler = NextAuth({
       }
       return token;
     },
-    
-async session({ session, token }) {
-    if (session.user) {
-      session.user.id = token.id as string;
-      session.user.name = token.name as string;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+      }
+      return session;
     }
-    return session;
-  }
-
   },
   pages: {
-    signIn: '/auth/signin' // Define the sign-in page
+    signIn: '/auth/signin'
   }
 });
 
