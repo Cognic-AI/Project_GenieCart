@@ -15,6 +15,10 @@ To fully utilize GenieCart, the following secrets need to be configured in the `
 
 ```
 GEMINI_API_KEY=your_gemini_api_key
+GEMINI_API_KEY_1=your_gemini_api_key_1
+GEMINI_API_KEY_2=your_gemini_api_key_2
+GEMINI_API_KEY_3=your_gemini_api_key_3
+GEMINI_API_KEY_4=your_gemini_api_key_4
 TAVILY_API_KEY=your_tavily_api_key
 LLAMA_API_KEY=your_llama_api_key
 OPENAI_API_KEY=your_openai_api_key
