@@ -1,7 +1,6 @@
 import os
 import json
 import csv
-import google.generativeai as genai
 from dotenv import load_dotenv
 from openai import OpenAI
 load_dotenv()
