@@ -55,11 +55,15 @@ const handler = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
-      session.user.email = token.id as string;
+    
+async session({ session, token }) {
+    if (session.user) {
+      session.user.id = token.id as string;
       session.user.name = token.name as string;
-      return session;
     }
+    return session;
+  }
+
   },
   pages: {
     signIn: '/auth/signin' // Define the sign-in page
