@@ -12,11 +12,11 @@ export async function POST(req: NextRequest) {
   try {
     // Check if the user already exists
     const [existingUser] = await connection.query(
-      'SELECT * FROM customer WHERE email = ?',
+      'SELECT * FROM Customer WHERE email = ?',
       [email]
     );
 
-    if (existingUser && existingUser.length > 0) {
+    if (existingUser.length > 0) {
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
     }
 
