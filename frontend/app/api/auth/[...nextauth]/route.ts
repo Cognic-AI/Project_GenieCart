@@ -1,9 +1,15 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
+import mysql from "mysql2/promise"; // MySQL import
 import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+// Set up MySQL connection
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
 const handler = NextAuth({
   providers: [
@@ -18,19 +24,21 @@ const handler = NextAuth({
           return null;
         }
 
-        const user = await prisma.customer.findUnique({
-          where: { email: credentials.email }
-        });
-
-        if (!user) return null;
-
-        const passwordMatch = await bcrypt.compare(
-          credentials.password, 
-          user.password
+        // Query user from MySQL
+        const [rows] = await connection.query(
+          'SELECT * FROM customers WHERE email = ?',
+          [credentials.email]
         );
 
+        if (rows.length === 0) return null;
+
+        const user = rows[0];
+
+        // Check if password matches
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
         if (!passwordMatch) return null;
 
+        // Return user data if password matches
         return {
           id: user.customer_id.toString(),
           email: user.email,
@@ -48,13 +56,13 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
+      session.user.email = token.id as string;
       session.user.name = token.name as string;
       return session;
     }
   },
   pages: {
-    signIn: '/auth/signin'
+    signIn: '/auth/signin' // Define the sign-in page
   }
 });
 

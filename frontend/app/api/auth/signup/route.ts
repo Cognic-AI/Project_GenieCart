@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     // Check if the user already exists
     const [existingUser] = await connection.query(
-      'SELECT * FROM users WHERE email = ?',
+      'SELECT * FROM customer WHERE email = ?',
       [email]
     );
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     // Insert the new user into the database
     await connection.query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      'INSERT INTO customer (customer_name, email, password) VALUES (?, ?, ?)',
       [name, email, hashedPassword]
     );
 
