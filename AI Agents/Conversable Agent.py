@@ -140,4 +140,10 @@ def main(user_query, custom_domains):
 
     return result
 
-main("White color A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
+result = main("White color A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
+
+output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+with open(output_filename, "w", encoding="utf-8") as f:
+    f.write(result)
+
+print(f"Agent workflow output saved to: {output_filename}") 
