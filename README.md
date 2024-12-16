@@ -52,6 +52,17 @@ Project_GenieCart/
    pip install -r requirements.txt
    ```
 3. Configure the secrets in `.env`:
+   ```bash
+   echo "GEMINI_API_KEY=your_api_key_here" >> .env
+   echo "GEMINI_API_KEY_1=your_api_key_here" >> .env
+   echo "GEMINI_API_KEY_2=your_api_key_here" >> .env
+   echo "GEMINI_API_KEY_3=your_api_key_here" >> .env
+   echo "GEMINI_API_KEY_4=your_api_key_here" >> .env
+   echo "TAVILY_API_KEY=your_api_key_here" >> .env
+   echo "LLAMA_API_KEY=your_api_key_here" >> .env
+   echo "OPENAI_API_KEY=your_api_key_here" >> .env
+   echo "USER_AGENT=your_web_browser_user_agent_here" >> .env
+   ```
 
 ## Usage
 
@@ -73,10 +84,10 @@ npm run dev
 
 - **Python** (Backend)
 - **TypeScript** (Frontend)
-- **Google Gemini AI** (AI integration)
+- **Google Gemini** (AI integration)
 - **Tavily API** (Web search)
-- **Llama API from Nvidia** (AI integration)
-- **OpenAI API** (AI integration)
+- **LLAMA 3.1 from Nvidia** (AI integration)
+- **OpenAI ChatGPT 4o mini** (AI integration)
 - **Machine Learning** (Recommendation system)
 
 ## Contributing
