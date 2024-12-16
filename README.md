@@ -52,20 +52,13 @@ Project_GenieCart/
    pip install -r requirements.txt
    ```
 3. Configure the secrets in `.env`:
-   ```bash
-   echo "GEMINI_API_KEY=your_api_key_here" > .env
-   echo "TAVILY_API_KEY=your_api_key_here" >> .env
-   echo "LLAMA_API_KEY=your_api_key_here" >> .env
-   echo "OPENAI_API_KEY=your_api_key_here" >> .env
-   echo "USER_AGENT=your_user_agent_here" >> .env
-   ```
 
 ## Usage
 
 ### Running the AI Model
 To filter product data and generate a CSV file:
 ```bash
-python Data_frame_creator.py
+python "AI Agents/Conversable Agent.py"
 ```
 
 ### Frontend Development
@@ -73,7 +66,7 @@ Navigate to the `frontend` directory and start the development server:
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 ## Technologies Used
@@ -81,7 +74,10 @@ npm start
 - **Python** (Backend)
 - **TypeScript** (Frontend)
 - **Google Gemini AI** (AI integration)
-- **Machine Learning** (Categorization and filtering)
+- **Tavily API** (Web search)
+- **Llama API from Nvidia** (AI integration)
+- **OpenAI API** (AI integration)
+- **Machine Learning** (Recommendation system)
 
 ## Contributing
 
