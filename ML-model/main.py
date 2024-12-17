@@ -151,7 +151,7 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            database = db(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"))
+            database = db(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
             database.add_search_result(machine_customer.customer_id, result)
             return jsonify({"status": "success"})
         except Exception as e:
