@@ -10,6 +10,8 @@ load_dotenv()
 def create_machine_customer(request):
     database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
 
+    print(database.get_users())
+
     customer = database.get_customer_by_email(request["email"], request["password"])
 
     if customer is None:

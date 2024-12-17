@@ -152,3 +152,19 @@ class Database:
         cursor.close()
         conn.close()
         print("Database connection closed")
+
+    def get_users(self):
+        """
+        Retrieve all users from the database
+        
+        Returns:
+            list: List of all users
+        """
+        conn = self.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM customer')
+        users = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        print("Database connection closed")
+        return users
