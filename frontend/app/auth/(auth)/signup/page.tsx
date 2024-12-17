@@ -37,19 +37,21 @@ export default function SignUpPage(): React.JSX.Element {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
+    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#121212' }}>
+      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: '#1e1e1e' }}>
+        <h2 className="text-3xl font-extrabold text-center" style={{ color: '#00cec9' }}>
+          Sign Up
+        </h2>
         
         {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+          <div className="bg-red-500 text-white p-3 rounded-md text-center text-sm">
             {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300">
               Name
             </label>
             <input
@@ -58,12 +60,13 @@ export default function SignUpPage(): React.JSX.Element {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full px-3 py-2 border text-gray-200 rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+              style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               Email
             </label>
             <input
@@ -72,12 +75,13 @@ export default function SignUpPage(): React.JSX.Element {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full px-3 py-2 border text-gray-200 rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+              style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
             />
           </div>
           
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
               Password
             </label>
             <input
@@ -86,20 +90,26 @@ export default function SignUpPage(): React.JSX.Element {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full px-3 py-2 border text-gray-200 rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
+              style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
             />
           </div>
           
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-150 ease-in-out"
+            style={{ backgroundColor: '#00cec9' }}
           >
             Sign Up
           </button>
         </form>
         
-        <div className="mt-4 text-center">
-          <Link href="/auth/signin" className="text-blue-500 hover:underline">
+        <div className="text-center">
+          <Link
+            href="/auth/signin"
+            className="font-medium hover:text-cyan-300 transition duration-150 ease-in-out"
+            style={{ color: '#00cec9', textDecoration: 'none', fontSize: '0.9rem' }}
+          >
             Already have an account? Sign In
           </Link>
         </div>
@@ -107,3 +117,4 @@ export default function SignUpPage(): React.JSX.Element {
     </div>
   );
 }
+
