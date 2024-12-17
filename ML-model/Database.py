@@ -1,7 +1,7 @@
 import mysql.connector
 
 class Database:
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, user, password, database, port):
         print("\n<====================>")
         print("DATABASE INITIALIZATION")
         print("<====================>")
@@ -10,6 +10,7 @@ class Database:
         self.user = user
         self.password = password
         self.database = database
+        self.port = port
         print("Database initialization complete")
         
     def connect(self):
@@ -20,7 +21,7 @@ class Database:
                 user=self.user, 
                 password=self.password,
                 database=self.database,
-                port=3306,  # Explicitly specify default MySQL port
+                port=self.port,  # Explicitly specify default MySQL port
                 connect_timeout=10000  # Add timeout
             )
             if connection.is_connected():
