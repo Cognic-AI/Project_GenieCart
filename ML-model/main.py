@@ -108,6 +108,11 @@ import MachineCustomerItemDataConvertor as mc
 import ItemDataConvertor as ic
 import Model as md
 from Database import Database as db
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 app = Flask(__name__)
 
@@ -146,7 +151,7 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            database = db("localhost","root","root","machine_customer")
+            database = db(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"))
             database.add_search_result(machine_customer.customer_id, result)
             return jsonify({"status": "success"})
         except Exception as e:
