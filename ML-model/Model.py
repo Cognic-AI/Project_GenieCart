@@ -1,5 +1,8 @@
 import consts
-import UserFixedDataConvertor as uc
+import math
+from sklearn.metrics.pairwise import cosine_similarity
+from collections import Counter
+import DataTypes as dt
 
 print("<====================>")
 print("MODEL INITIALIZATION")
@@ -14,8 +17,6 @@ class Model:
         self.no_of_high = 0
         self.no_of_low = 0
         self.no_of_middle = 0
-        print("Building final query...")
-        self.buildFinalQuery()
         print("Initializing prices...")
         self.initializePrices()
         print("Initializing tags vector...")
@@ -34,14 +35,6 @@ class Model:
         result = self.getFinalResult()
         print("Model execution complete")
         return result
-        
-    def buildFinalQuery(self):
-        """Build history list for the customer from database"""
-        print("\n<====================>")
-        print("BUILDING QUERY")
-        print("<====================>")
-        print(f"Building history list for customer {self.machine_customer_query.customer_id}")
-        self.machine_customer_query.history = uc.buildHistoryList(self.machine_customer_query.customer_id)
 
     def assigningScores(self):
         """Assign scores to items based on price, rating and tags"""
@@ -52,8 +45,9 @@ class Model:
         for i in self.item_array:
             print(f"\nProcessing item: {i.name}")
             # Calculate and add price score based on price level and availability
-            price_score = self.addPriceScore(i.price)
+            price_score = self.addPriceScoreImproved(i.price)  # Using improved version
             print(f"Price score: {price_score}")
+            print(f"Item score before: {i.score}")
             i.score += price_score
             
             # Calculate and add rating score using rate score factor
@@ -119,27 +113,66 @@ class Model:
 
         # Calculate mapped gap score
         if len(self.item_array)==1:
-            mapped_gape = 1
+            mapped_gap = 1
         else:
-            mapped_gape = (self.max_p -self.min_p - min_gap)/(self.max_p -self.min_p)
+            mapped_gap = (self.max_p -self.min_p - min_gap)/(self.max_p -self.min_p)
 
-        print(mapped_gape)
+        print(mapped_gap)
         
         # Return final price score based on price level match and availability
         if self.machine_customer_query.price_level == price_level_cal:
             if self.no_of_high>=consts.EXACT_AVAILABILITY_THRESHOLD:
-                return consts.EXACT*mapped_gape + consts.AVAILABLE
+                return consts.EXACT*mapped_gap + consts.AVAILABLE
             else:
-                return consts.EXACT*mapped_gape + consts.NOT_AVAILABLE
+                return consts.EXACT*mapped_gap + consts.NOT_AVAILABLE
         if self.machine_customer_query.price_level == consts.MIDDLE_USER:
             if self.no_of_middle>=consts.NORMAL_AVAILABILITY_THRESHOLD:
-                return consts.NORMAL*mapped_gape + consts.AVAILABLE
+                return consts.NORMAL*mapped_gap + consts.AVAILABLE
             else:
-                return consts.NORMAL*mapped_gape + consts.NOT_AVAILABLE
+                return consts.NORMAL*mapped_gap + consts.NOT_AVAILABLE
         if self.no_of_low>=consts.WORST_AVAILABILITY_THRESHOLD:
-            return consts.WORST*mapped_gape + consts.AVAILABLE
+            return consts.WORST*mapped_gap + consts.AVAILABLE
         else:
-            return consts.WORST*mapped_gape + consts.NOT_AVAILABLE
+            return consts.WORST*mapped_gap + consts.NOT_AVAILABLE
+
+    def addPriceScoreImproved(self, price):
+        """Improved price scoring with smoother transitions and better range handling"""
+        print(f"\nCalculating improved price score for price: {price}")
+        
+        # Define normalized price
+        price_range = self.max_p - self.min_p
+        normalized_price = (price - self.min_p) / price_range
+
+        # Define scoring ranges for middle user
+        price_range_buffer = price_range * 0.2
+        lower_mid = self.middle_p - price_range_buffer
+        upper_mid = self.middle_p + price_range_buffer
+        
+        # Calculate score based on user preference
+        if self.machine_customer_query.price_level == consts.HIGH_END_USER:
+            # Sigmoid function for smoother transitions
+            base_score = 5 / (1 + math.exp(-10 * (normalized_price - 0.8)))
+        elif self.machine_customer_query.price_level == consts.LOW_END_USER:
+            # Sigmoid function for smoother transitions
+            base_score = 5 / (1 + math.exp(-10 * (0.2 - normalized_price)))
+        else:  # MIDDLE_USER
+            # Gaussian function centered on middle price
+            sigma = price_range_buffer / 2
+            base_score = 5 * math.exp(-((price - self.middle_p) ** 2) / (2 * sigma ** 2))
+        
+        # Add availability bonus
+        availability_bonus = 0
+        if self.machine_customer_query.price_level == consts.HIGH_END_USER and self.no_of_high >= consts.EXACT_AVAILABILITY_THRESHOLD:
+            availability_bonus = 1
+        elif self.machine_customer_query.price_level == consts.MIDDLE_USER and self.no_of_middle >= consts.NORMAL_AVAILABILITY_THRESHOLD:
+            availability_bonus = 1
+        elif self.machine_customer_query.price_level == consts.LOW_END_USER and self.no_of_low >= consts.WORST_AVAILABILITY_THRESHOLD:
+            availability_bonus = 1
+        
+        total_score = base_score + availability_bonus
+        print(f"Improved price score: {total_score}")
+        return total_score
+
     
     
     def initializeTagsVector(self):
@@ -170,9 +203,8 @@ class Model:
             print(f"Tag {k}: weight = {tags_vector[k]}")
         
         return tags_vector
-        
 
-    def addTagScore(self,item):
+    def addTagScore(self, item):
         """Calculate tag matching score for an item"""
         print(f"Calculating tag score for {item.name}")
         sum = 0
@@ -190,6 +222,40 @@ class Model:
         print(f"Final tag score for {item.name}: {sum}")
         return sum
 
+    def addTagScoreImproved(self, item):
+        """
+        Calculate an improved tag matching score using cosine similarity
+        and weighted tag importance
+        """
+        print(f"Calculating improved tag score for {item.name}")
+        
+        # Create user tags dictionary with weights
+        user_tags = Counter()
+        if self.machine_customer_query.isHistory:
+            user_tags.update(self.history)
+        for tag in self.machine_customer_query.tags:
+            user_tags[tag] += 1.5  # Higher weight for explicit query tags
+            
+        # Define tag importance based on common retail categories
+        tag_importance = {
+            
+        }
+        
+        # Convert tags to vectors for cosine similarity
+        all_tags = list(set(list(user_tags.keys()) + item.tags))
+        user_vector = [user_tags.get(tag, 0) * tag_importance.get(tag, 1.0) for tag in all_tags]
+        item_vector = [1.0 * tag_importance.get(tag, 1.0) if tag in item.tags else 0 for tag in all_tags]
+        
+        # Reshape vectors for sklearn
+        user_vector = [user_vector]
+        item_vector = [item_vector]
+        
+        # Calculate cosine similarity
+        similarity = cosine_similarity(user_vector, item_vector)[0][0]
+        
+        print(f"Final improved tag score for {item.name}: {similarity}")
+        return similarity
+
     def getFinalResult(self):
         """Sort items by score and return sorted array"""
         print("\n<====================>")
@@ -201,3 +267,52 @@ class Model:
         for i in range(len(self.item_array)):
             print(f"{i+1}. {self.item_array[i].name} - Score: {self.item_array[i].score}")
         return self.item_array
+
+
+# def test_tag_score(item, machine_customer_query, history=None):
+#     """
+#     Standalone test function for tag score calculation using cosine similarity
+#     and weighted tag importance
+#     """
+#     print(f"Calculating test tag score for {item.name}")
+    
+#     # Create user tags dictionary with weights  
+#     user_tags = Counter()
+#     if machine_customer_query.isHistory and history:
+#         user_tags.update(history)
+#     for tag in machine_customer_query.tags:
+#         user_tags[tag] += 1.5  # Higher weight for explicit query tags
+        
+#     # Define tag importance based on common retail categories
+#     tag_importance = {
+#         'premium': 1.3,
+#         'budget': 1.3,
+#         'quality': 1.2,
+#         'performance': 1.2,
+#         'value': 1.1,
+#         'portable': 1.1
+#     }
+    
+#     # Convert tags to vectors for cosine similarity
+#     all_tags = list(set(list(user_tags.keys()) + item.tags))
+#     user_vector = [user_tags.get(tag, 0) * tag_importance.get(tag, 1.0) for tag in all_tags]
+#     item_vector = [1.0 * tag_importance.get(tag, 1.0) if tag in item.tags else 0 for tag in all_tags]
+    
+#     # Reshape vectors for sklearn
+#     user_vector = [user_vector]
+#     item_vector = [item_vector]
+    
+#     # Calculate cosine similarity
+#     similarity = cosine_similarity(user_vector, item_vector)[0][0]
+    
+#     print(f"Final test tag score for {item.name}: {similarity}")
+#     return similarity
+
+# # Create dummy data for testing
+# dummy_item = dt.Item("Test Laptop", 1000,description="",link="", tags=["premium", "portable", "white"],rate=4.3)
+# dummy_machine_customer = dt.MachineCustomer(1, "laptop", 1, ["portable", "premium"])
+# dummy_history = ["premium", "performance", "quality"]
+
+# # Test the tag scoring
+# test_tag_score(dummy_item, dummy_machine_customer, dummy_history)
+
