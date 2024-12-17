@@ -9,63 +9,63 @@ The GenieCart ML Recommendation Engine analyzes user behavior and product charac
 ## ✨ Key Features
 
 🏷️ **Price-Level Based Matching**
-- Categorizes products into high-end, middle, and low-end segments
-- Intelligently matches products to user preferences and budget
+- Categorizes products into high-end, middle, and low-end segments.
+- Intelligently matches products to user preferences and budget.
 
 ⭐ **Rating-Based Scoring**
-- Incorporates product ratings with configurable weight factors
-- Prioritizes highly-rated items in recommendations
+- Incorporates product ratings with configurable weight factors.
+- Prioritizes highly-rated items in recommendations.
 
 🔍 **Tag-Based Similarity**
-- Analyzes product tags and attributes
-- Finds items matching user preferences and interests
+- Analyzes product tags and attributes.
+- Finds items matching user preferences and interests.
 
 📊 **Purchase History Analysis**
-- Learns from user's previous purchases
-- Continuously improves recommendation accuracy
+- Learns from user's previous purchases.
+- Continuously improves recommendation accuracy.
 
 📦 **Availability Checking**
-- Ensures recommended products are in stock
-- Maintains real-time inventory tracking
+- Ensures recommended products are in stock.
+- Maintains real-time inventory tracking.
 
 💱 **Multi-Currency Support**
-- Seamless handling of USD and LKR
-- Automatic currency conversion
+- Seamless handling of USD and LKR.
+- Automatic currency conversion.
 
 ## 🏗️ System Architecture
 
 ### 1️⃣ Data Processing Layer
 **ItemDataConvertor.py**
-- Handles CSV to object conversion
-- Processes product attributes
-- Manages price conversions
-- Generates and normalizes product tags
+- Handles CSV to object conversion.
+- Processes product attributes.
+- Manages price conversions.
+- Generates and normalizes product tags.
 
 **MachineCustomerItemDataConvertor.py**
-- Creates machine customer profiles
-- Processes user preferences
-- Handles purchase history integration
+- Creates machine customer profiles.
+- Processes user preferences.
+- Handles purchase history integration.
 
 ### 2️⃣ Core Recommendation Engine
 **Model.py**
-- Implements the scoring algorithm
-- Manages price level categorization
-- Processes tag matching
-- Calculates final recommendation scores
+- Implements the scoring algorithm.
+- Manages price level categorization.
+- Processes tag matching.
+- Calculates final recommendation scores.
 
 ### 3️⃣ Database Layer
 **Database.py**
-- Manages MySQL connections
-- Handles customer authentication
-- Stores and retrieves purchase history
-- Manages search results
+- Manages MySQL connections.
+- Handles customer authentication.
+- Stores and retrieves purchase history.
+- Manages search results.
 
 ### 4️⃣ Configuration
 **consts.py**
-- Defines price level thresholds
-- Sets scoring weights
-- Configures availability thresholds
-- Defines currency conversion rates
+- Defines price level thresholds.
+- Sets scoring weights.
+- Configures availability thresholds.
+- Defines currency conversion rates.
 
 ## 📚 API Documentation
 
@@ -75,3 +75,30 @@ The GenieCart ML Recommendation Engine analyzes user behavior and product charac
 **Content-Type**: `application/json`
 
 ### Request Format
+```json
+{
+"email": "test@test.com",
+"password": "test",
+"item_name": "laptop",
+"price_level": 1,
+"tags": ["portable", "mac"]
+}
+```
+
+### Response Format
+- **Success**: Returns a success status.
+- **Error**: Returns an error message with status code.
+
+## 🛠️ Setup Instructions
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd Project_GenieCart/ML-model
+   ```
+
+2. **Install dependencies**:
+   Ensure you have Python and pip installed, then run:
+   ```bash
+   pip install
+   ```

@@ -94,7 +94,6 @@ def generate_llm_tags_bulk(df):
         except Exception as e:
             print(f"Error processing response: {e}")
             return {}
-        return llm_tags
     except Exception as e:
         print(f"Error generating LLM tags: {e}")
         return []

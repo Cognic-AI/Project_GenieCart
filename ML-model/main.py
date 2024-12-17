@@ -1,3 +1,73 @@
+# from flask import Flask, request, jsonify
+# import MachineCustomerItemDataConvertor as mc
+# import ItemDataConvertor as ic
+# import Model as md
+# from Database import Database as db
+# import os
+# from dotenv import load_dotenv
+
+# POST MAN request
+# {
+#     "email": "test@test.com",
+#     "password": "test",
+#     "item_name": "laptop",
+#     "price_level": 1,
+#     "tags": ["portable","mac"],
+# }
+
+# load_dotenv()
+
+# app = Flask(__name__)
+
+# @app.route('/recommend', methods=['POST'])
+# def recommend():
+#     try:
+#         print("\n<====================>")
+#         print("RECOMMENDATION REQUEST")
+#         print("<====================>")
+        
+#         # Get request data and create machine customer
+#         print("Getting request data...")
+#         request_data = request.get_json()
+#         print(f"Request data received: {request_data}")
+        
+#         print("Creating machine customer...")
+#         try:
+#             machine_customer = mc.create_machine_customer(request_data)
+#             mc.print_machine_customer(machine_customer)
+#         except ValueError as e:
+#             return jsonify({"status": "error", "message": str(e)}), 400
+        
+#         # Get items from CSV and create model
+#         print("\nLoading items from CSV...")
+#         items = ic.csv_to_list(os.getenv('PRODUCT_CSV',"product.csv"))
+#         print(f"Loaded {len(items)} items")
+        
+#         # Create model with items and machine customer
+#         print("\nCreating recommendation model...")
+#         model = md.Model(items, machine_customer)
+        
+#         # Get recommendations
+#         print("\nGetting recommendations...")
+#         try:
+#             result = model.execute()
+#             print("Recommendations generated successfully")
+#             print("\nSending response to database...")
+#             # Initialize database connection
+#             database = db(os.getenv("DB_HOST","localhost"),os.getenv("DB_USER","root"),os.getenv("DB_PASSWORD","root"),os.getenv("DB_NAME","machine_customer"))
+#             database.add_search_result(machine_customer.customer_id, result)
+#             return jsonify({"status": "success"})
+#         except Exception as e:
+#             print(f"Error during model execution: {str(e)}")
+#             return jsonify({"status": "error", "message": str(e)}), 500
+            
+#     except Exception as e:
+#         print(f"\nERROR: {str(e)}")
+#         return jsonify({"status": "error", "message": str(e)}), 500
+
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5000, threaded=True)
+
 # import DataTypes as dt
 # import Model
 # import MachineCustomerItemDataConvertor as mc
@@ -113,6 +183,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# {
+#     "email": "sahan@gmail.com",
+#     "password": "$2b$10$046d0Gtk1CeDcKR7ZdpnV.fwQGSq01h9zsatggogVIuF6vgeGFLdG", 
+#     "item_name": "A4 bundle", 
+#     "price_level": 3, 
+#     "tags": ["white","80gsm","photocopy","a4","100 sheets"]
+# }
 
 app = Flask(__name__)
 
@@ -151,7 +228,13 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            database = db(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
+            database = db(
+                host=os.getenv("DB_HOST"),
+                user=os.getenv("DB_USER"), 
+                password=os.getenv("DB_PASSWORD"),
+                database=os.getenv("DB_NAME"),
+                port=os.getenv("DB_PORT",13467)
+            )
             database.add_search_result(machine_customer.customer_id, result)
             return jsonify({"status": "success"})
         except Exception as e:

@@ -1,11 +1,10 @@
 class MachineCustomer:
-    def __init__(self, customer_id, item_name, price_level, tags=[], isHistory = False):
+    def __init__(self, customer_id, item_name, price_level, tags=[]):
         self.customer_id = customer_id
         self.price_level = price_level
         self.item_name = item_name
         self.tags = tags
         self.history = []
-        self.isHistory = isHistory
 
 class Item:
     def __init__(self, name, price, description, link, rate, tags, image_link=None):
