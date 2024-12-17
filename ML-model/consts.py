@@ -1,5 +1,5 @@
 # User price level categories
-HIGH_END_USER = 1
+HIGH_END_USER = 1  
 MIDDLE_USER = 2  # Fixed spacing
 LOW_END_USER = 3
 

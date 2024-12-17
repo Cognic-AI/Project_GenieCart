@@ -2,6 +2,15 @@ import mysql.connector
 
 class Database:
     def __init__(self, host, user, password, database):
+        """
+        Initialize Database connection parameters
+        
+        Args:
+            host (str): Database host address
+            user (str): Database username
+            password (str): Database password 
+            database (str): Name of the database
+        """
         print("\n<====================>")
         print("DATABASE INITIALIZATION")
         print("<====================>")
@@ -13,6 +22,16 @@ class Database:
         print("Database initialization complete")
         
     def connect(self):
+        """
+        Establish connection to MySQL database
+        
+        Returns:
+            mysql.connector.connection: Active database connection
+            
+        Raises:
+            mysql.connector.Error: When connection fails
+            Exception: For other unexpected errors
+        """
         print("\nConnecting to database...")
         try:
             connection = mysql.connector.connect(
@@ -41,7 +60,18 @@ class Database:
         except Exception as err:
             print(f"Unexpected error while connecting to database: {err}")
             raise
+
     def get_customer_by_email(self, email, password):
+        """
+        Retrieve customer information using email and password
+        
+        Args:
+            email (str): Customer's email address
+            password (str): Customer's password
+            
+        Returns:
+            tuple: Customer data if found, None otherwise
+        """
         print(f"\nFetching customer with email: {email}")
         conn = self.connect()
         cursor = conn.cursor()
@@ -56,6 +86,15 @@ class Database:
         return customer
     
     def get_customer_history(self, customer_id):
+        """
+        Retrieve purchase history for a customer
+        
+        Args:
+            customer_id (int): ID of the customer
+            
+        Returns:
+            list: List of items purchased by the customer
+        """
         print(f"\nFetching purchase history for customer ID: {customer_id}")
         conn = self.connect()
         cursor = conn.cursor()
@@ -70,6 +109,16 @@ class Database:
         return history
     
     def add_search_result(self, customer_id, item_array):
+        """
+        Add a new search result for a customer
+        
+        Args:
+            customer_id (int): ID of the customer
+            item_array (list): List of items from search result
+            
+        Raises:
+            ValueError: If customer_id doesn't exist
+        """
         print(f"\nAdding search result for customer ID: {customer_id}")
         conn = self.connect()
         cursor = conn.cursor()
@@ -87,6 +136,13 @@ class Database:
         print("Database connection closed")
 
     def add_search_item(self, search_id, item_array):
+        """
+        Add items from a search result to the database
+        
+        Args:
+            search_id (int): ID of the search result
+            item_array (list): List of items to add
+        """
         print(f"\nAdding search items for search ID: {search_id}")
         conn = self.connect()
         cursor = conn.cursor()
@@ -104,4 +160,3 @@ class Database:
         cursor.close()
         conn.close()
         print("Database connection closed")
-
