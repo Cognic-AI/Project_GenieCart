@@ -105,4 +105,3 @@ class Database:
         cursor.close()
         conn.close()
         print("Database connection closed")
-
