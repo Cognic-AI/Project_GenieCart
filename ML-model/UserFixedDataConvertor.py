@@ -1,9 +1,14 @@
 # Import required modules
 import Database as db
 import DataTypes as dt
+import os
+import dotenv
+
+dotenv.load_dotenv()
+
 
 # Initialize database connection
-database = db.Database("localhost","root","root","machine_customer")
+database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"))
 
 def buildHistoryList(customer_id):
     """Build list of historical items purchased by a customer"""

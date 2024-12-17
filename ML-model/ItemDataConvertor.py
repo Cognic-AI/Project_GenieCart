@@ -1,11 +1,13 @@
 import pandas as pd
 from DataTypes import Item
 from consts import USD_TO_LKR
+from gemini import generate_llm_tags_bulk
 
 def csv_to_list(csv_file_path):
     df = pd.read_csv(csv_file_path)
     df = df.fillna('')
     items_list = []
+    tags = generate_llm_tags_bulk(df)
     for _, row in df.iterrows():
         if 'in' in row['availability'].lower():
             item = Item(
@@ -14,7 +16,8 @@ def csv_to_list(csv_file_path):
                 description=row['description'],
                 link=row['product_url'],
                 rate=float(row['product_rating']) if row['product_rating'] != '' else 0,
-                tags=generateTags(row),
+                # tags=generateTags(row),
+                tags=tags[row["product_name"]],
                 image_link=row['image'],
             )
             if item.name != '' or item.price !='' or item.link != '':

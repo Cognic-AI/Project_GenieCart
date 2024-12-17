@@ -1,8 +1,11 @@
 import DataTypes as dt
 import UserFixedDataConvertor as uc
 import Database as db
-import bcrypt
+from gemini import generate_llm_tags_for_current_tags
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # POST MAN request
 # {
 #     "email": "test@test.com",
@@ -14,12 +17,12 @@ import bcrypt
 # }
 
 def create_machine_customer(request):
-    database = db.Database("localhost","root","root","machine_customer")
+    database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"))
 
     customer = database.get_customer_by_email(request["email"], request["password"])
     if customer is None:
         raise ValueError("Customer not found")
-    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], request["tags"])
+    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]))
     try:
         if request["isHistory"]:
             mc.isHistory = request["history"]
