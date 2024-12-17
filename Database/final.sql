@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `customer_id` int NOT NULL AUTO_INCREMENT,
   `customer_name` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
+  `email` varchar(45) NOT NULL UNIQUE,
   `password` text NOT NULL,
   PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -15,7 +15,7 @@ CREATE TABLE `customer` (
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `item_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL,
+  `name` text NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `description` text,
   `link` text,

@@ -14,8 +14,6 @@ class Model:
         self.no_of_high = 0
         self.no_of_low = 0
         self.no_of_middle = 0
-        print("Building final query...")
-        self.buildFinalQuery()
         print("Initializing prices...")
         self.initializePrices()
         print("Initializing tags vector...")
@@ -34,14 +32,6 @@ class Model:
         result = self.getFinalResult()
         print("Model execution complete")
         return result
-        
-    def buildFinalQuery(self):
-        """Build history list for the customer from database"""
-        print("\n<====================>")
-        print("BUILDING QUERY")
-        print("<====================>")
-        print(f"Building history list for customer {self.machine_customer_query.customer_id}")
-        self.machine_customer_query.history = uc.buildHistoryList(self.machine_customer_query.customer_id)
 
     def assigningScores(self):
         """Assign scores to items based on price, rating and tags"""
@@ -54,6 +44,7 @@ class Model:
             # Calculate and add price score based on price level and availability
             price_score = self.addPriceScore(i.price)
             print(f"Price score: {price_score}")
+            print(f"Item score before: {i.score}")
             i.score += price_score
             
             # Calculate and add rating score using rate score factor
@@ -119,27 +110,27 @@ class Model:
 
         # Calculate mapped gap score
         if len(self.item_array)==1:
-            mapped_gape = 1
+            mapped_gap = 1
         else:
-            mapped_gape = (self.max_p -self.min_p - min_gap)/(self.max_p -self.min_p)
+            mapped_gap = (self.max_p -self.min_p - min_gap)/(self.max_p -self.min_p)
 
-        print(mapped_gape)
+        print(mapped_gap)
         
         # Return final price score based on price level match and availability
         if self.machine_customer_query.price_level == price_level_cal:
             if self.no_of_high>=consts.EXACT_AVAILABILITY_THRESHOLD:
-                return consts.EXACT*mapped_gape + consts.AVAILABLE
+                return consts.EXACT*mapped_gap + consts.AVAILABLE
             else:
-                return consts.EXACT*mapped_gape + consts.NOT_AVAILABLE
+                return consts.EXACT*mapped_gap + consts.NOT_AVAILABLE
         if self.machine_customer_query.price_level == consts.MIDDLE_USER:
             if self.no_of_middle>=consts.NORMAL_AVAILABILITY_THRESHOLD:
-                return consts.NORMAL*mapped_gape + consts.AVAILABLE
+                return consts.NORMAL*mapped_gap + consts.AVAILABLE
             else:
-                return consts.NORMAL*mapped_gape + consts.NOT_AVAILABLE
+                return consts.NORMAL*mapped_gap + consts.NOT_AVAILABLE
         if self.no_of_low>=consts.WORST_AVAILABILITY_THRESHOLD:
-            return consts.WORST*mapped_gape + consts.AVAILABLE
+            return consts.WORST*mapped_gap + consts.AVAILABLE
         else:
-            return consts.WORST*mapped_gape + consts.NOT_AVAILABLE
+            return consts.WORST*mapped_gap + consts.NOT_AVAILABLE
     
     
     def initializeTagsVector(self):
