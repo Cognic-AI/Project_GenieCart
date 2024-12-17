@@ -46,4 +46,3 @@ def fetchHistory(customer_id):
 
 
 # print_machine_customer(create_machine_customer({"customer_id": 1, "item_name": "laptop", "price_level": 1, "tags": ["portable","mac"], "isHistory": True}))
-
