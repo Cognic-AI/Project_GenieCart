@@ -16,12 +16,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} min-h-screen flex flex-col bg-gray-100`}>
         <AuthProvider>
-          {children}
+          <main className="flex-grow flex items-center justify-center">
+            {children}
+          </main>
         </AuthProvider>
       </body>
     </html>
   )
 }
+

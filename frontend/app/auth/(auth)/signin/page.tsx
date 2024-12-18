@@ -33,120 +33,69 @@ export default function SignInPage(): React.JSX.Element {
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen"
-      style={{
-        backgroundColor: '#121212',
-        color: '#ffffff',
-        height: '100vh', // Ensure full viewport height
-      }}
-    >
-      <div
-        className="p-6 rounded-lg shadow-lg"
-        style={{
-          backgroundColor: '#1e1e1e',
-          maxWidth: '90%',
-          width: '400px', // Responsively adjusts
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-        }}
-      >
-        <h1
-          className="text-2xl font-bold mb-6 text-center"
-          style={{ color: '#00cec9' }}
-        >
+    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#121212' }}>
+      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: '#1e1e1e' }}>
+        <h2 className="mt-6 text-center text-3xl font-extrabold" style={{ color: '#00cec9' }}>
           Sign In
-        </h1>
-
+        </h2>
         {error && (
-          <div
-            className="p-3 rounded mb-4"
-            style={{
-              backgroundColor: '#e74c3c',
-              color: '#ffffff',
-              textAlign: 'center',
-              fontSize: '0.9rem',
-            }}
-          >
+          <div className="bg-red-500 text-white p-3 rounded-md text-center text-sm">
             {error}
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm"
-              style={{ color: '#bbbbbb' }}
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-3 rounded"
-              style={{
-                border: '1px solid #444444',
-                backgroundColor: '#2a2a2a',
-                color: '#ffffff',
-              }}
-            />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border text-gray-200 placeholder-gray-500 rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border text-gray-200 placeholder-gray-500 rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm"
-              style={{ color: '#bbbbbb' }}
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-150 ease-in-out"
+              style={{ backgroundColor: '#00cec9' }}
             >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 rounded"
-              style={{
-                border: '1px solid #444444',
-                backgroundColor: '#2a2a2a',
-                color: '#ffffff',
-              }}
-            />
+              Sign In
+            </button>
           </div>
-
-          <button
-            type="submit"
-            className="w-full p-3 rounded text-lg font-semibold"
-            style={{
-              backgroundColor: '#00cec9',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-            onMouseOver={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00b4a6')
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.backgroundColor = '#00cec9')
-            }
-          >
-            Sign In
-          </button>
         </form>
-
-        <div className="mt-4 text-center">
+        <div className="text-center">
           <Link
             href="/auth/signup"
-            style={{
-              color: '#00cec9',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-            }}
+            className="font-medium hover:text-cyan-300 transition duration-150 ease-in-out"
+            style={{ color: '#00cec9', textDecoration: 'none', fontSize: '0.9rem' }}
           >
             Don&apos;t have an account? Sign Up
           </Link>
@@ -155,3 +104,4 @@ export default function SignInPage(): React.JSX.Element {
     </div>
   );
 }
+
