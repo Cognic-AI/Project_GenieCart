@@ -136,21 +136,30 @@ class Database:
             item_array (list): List of items to add
         """
         print(f"\nAdding search items for search ID: {search_id}")
-        conn = self.connect()
-        cursor = conn.cursor()
         for item in item_array:
-            cursor.execute('SET autocommit=0')
-            cursor.execute('START TRANSACTION')
-            cursor.execute('INSERT INTO item (name, price, description, link, rate, tags) VALUES (%s, %s, %s, %s, %s, %s)', 
-                         (item.name, item.price, item.description, item.link, item.rate, ','.join(item.tags)))
-            item_id = cursor.lastrowid
-            cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
-                         (search_id, item_id, item.score))
-            cursor.execute('COMMIT')
-            cursor.execute('SET autocommit=1')
-        conn.commit()
-        cursor.close()
-        conn.close()
+            item_id = self.get_item_id(item.link,item.name)
+            print(f"Item ID: {item_id}")
+            conn = self.connect()
+            cursor = conn.cursor()
+            if item_id<0:
+                print("Item not found, adding to database")
+                cursor.execute('SET autocommit=0')
+                cursor.execute('START TRANSACTION')
+                cursor.execute('INSERT INTO item (name, price, description, link, rate, tags) VALUES (%s, %s, %s, %s, %s, %s)', 
+                             (item.name, item.price, item.description, item.link, item.rate, ','.join(item.tags)))
+                item_id = cursor.lastrowid
+                cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
+                             (search_id, item_id, item.score))
+                cursor.execute('COMMIT')
+                cursor.execute('SET autocommit=1')
+                conn.commit()
+            else:
+                print("Item found, adding to search item")
+                cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
+                             (search_id, item_id, item.score))
+                conn.commit()
+            cursor.close()
+            conn.close()
         print("Database connection closed")
 
     def get_users(self):
@@ -168,3 +177,68 @@ class Database:
         conn.close()
         print("Database connection closed")
         return users
+
+    def get_item_id(self, item_link, item_name):
+        """
+        Get the ID of an item from the database based on link and name
+        
+        Args:
+            item_link (str): Link of the item
+            item_name (str): Name of the item
+
+        Returns:
+            int: Item ID if found, None otherwise
+        """
+        conn = self.connect()
+        cursor = conn.cursor()
+        id = -1
+        try:
+            cursor.execute('SELECT item_id FROM item WHERE link = %s AND name = %s', (item_link, item_name))
+            result = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            print("Database connection closed")
+            print(result)
+            if len(result)>0:
+                id = result[0][0]  # Return just the ID value
+        except Exception as e:
+            print(f"Error fetching item ID: {e}")
+            cursor.close() 
+            conn.close()
+            print("Database connection closed")
+        finally:
+            cursor.close()
+            conn.close()
+            print("Database connection closed")
+            return id
+# if __name__ == "__main__":
+#     import os
+#     from dotenv import load_dotenv
+    
+#     # Load environment variables
+#     load_dotenv()
+    
+#     # Create database instance
+#     database = Database(
+#         host=os.getenv("DB_HOST"),
+#         user=os.getenv("DB_USER"),
+#         password=os.getenv("DB_PASSWORD"), 
+#         database=os.getenv("DB_NAME"),
+#         port=os.getenv("DB_PORT", 13467)
+#     )
+    
+#     # Test get_item_id with some sample items
+#     test_items = [
+#         ("Paper A4 White Printer Copier Fax Paper 100 Sheets", "9.99", "http://example.com/paper"),
+#         ("Pencil", "1.99", "http://example.com/pencil"),
+#         ("80 GSM A4 Paper 500 Sheets Bundle in White Color", "4.99", "https://www.daraz.lk/products/80-gsm-a4-paper-500-sheets-bundle-in-white-color-i196671991.html")
+#     ]
+    
+#     for item_name, price, link in test_items:
+#         print(f"\nTesting get_item_id for item: {item_name}")
+#         item_id = database.get_item_id(link)
+#         if item_id:
+#             print(f"Found item ID: {item_id}")
+#         else:
+#             print(f"No item found with name: {item_name}")
+
