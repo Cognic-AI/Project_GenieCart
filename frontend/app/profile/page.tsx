@@ -23,18 +23,27 @@ export default function ProfilePage() {
         },
         body: JSON.stringify({ email: session.user.email }),
       })
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+          }
+          return response.json();
+        })
         .then((data) => {
           if (data.generatedKey) {
             setGeneratedKey(data.generatedKey);
+          } else {
+            setGeneratedKey('Key not found');
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('Error fetching key:', error.message);
           setGeneratedKey('Error retrieving key');
         });
     }
   }, [session?.user?.email]);
-
+  
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
