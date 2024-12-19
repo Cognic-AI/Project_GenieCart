@@ -1,0 +1,24 @@
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent (to search_agent):
+
+Please execute the `generate_search_results` function. The user query is: A4 bundle. Domains to prioritize: ['https://www.amazon.com', 'https://daraz.lk']. Tags are: ['white', 'photocopy', 'a4']
+
+--------------------------------------------------------------------------------
+search_agent (to entrypoint_agent):
+
+***** Suggested tool call (call_hlhTtvo9a9KorkQstKMshR2s): generate_search_results *****
+Arguments: 
+{"prompt":"A4 bundle","custom_domains":["https://www.amazon.com","https://daraz.lk"],"tags":["white","photocopy","a4"]}
+****************************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION generate_search_results...
+------------------------------------------------------------------------------------------------
+search agent started
+search_query created:  "A4 white photocopy paper bundle" buy USA
+
