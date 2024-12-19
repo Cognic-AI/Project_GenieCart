@@ -121,4 +121,4 @@ def extract_all_links(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("White color A4 paper bundle")
+# extract_all_links("A4 bundle")

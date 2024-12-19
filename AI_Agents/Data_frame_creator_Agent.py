@@ -103,4 +103,4 @@ def json_to_csv(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# json_to_csv("White color A4 paper bundle")
+# json_to_csv("A4 bundle")

@@ -1,5 +1,4 @@
 import os
-import asyncio
 from dotenv import load_dotenv
 from tavily import Client as TavilyClient
 import google.generativeai as genai
@@ -39,7 +38,7 @@ def initialize_clients() -> tuple[TavilyClient, genai.GenerativeModel]:
     
     return tavily_client, gemini_model
 
-def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
+def generate_search_results(prompt: str, custom_domains: List[str],tags: List[str]) -> None:
     """
     Generate search results for a given prompt, restricting to the provided domains.
     
@@ -57,7 +56,7 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     
     final_prompt = f""" 
     role: system, content: You are a helpful assistant in Sri Lanka that converts the user prompt into a search query to find products from the web. The products need to be buy from Sri Lanka. You only provide the search query. No other responds.
-    role: user, content: {prompt}"""
+    role: user, content: {prompt}, tags: {tags}"""
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
 
@@ -115,4 +114,4 @@ def generate_search_results(prompt: str, custom_domains: List[str]) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("White color A4 paper bundle", ["https://www.amazon.com", "https://daraz.lk"])
+# generate_search_results("A4 bundle", ["https://www.amazon.com", "https://daraz.lk"],["white","A4","paper","photocopy"])

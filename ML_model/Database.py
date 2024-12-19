@@ -53,7 +53,7 @@ class Database:
             print(f"Unexpected error while connecting to database: {err}")
             raise
 
-    def get_customer_by_email(self, email, password):
+    def get_customer_by_key(self, key):
         """
         Retrieve customer information using email and password
         
@@ -64,11 +64,11 @@ class Database:
         Returns:
             tuple: Customer data if found, None otherwise
         """
-        print(f"\nFetching customer with email: {email}")
+        print(f"\nFetching customer with key: {key}")
         conn = self.connect()
         cursor = conn.cursor()
         
-        cursor.execute('SELECT * FROM customer WHERE email = %s AND password = %s', (email, password))
+        cursor.execute('SELECT * FROM customer WHERE generated_key = %s', (key,))
         customer = cursor.fetchone()
         print(f"Customer data retrieved: {customer}")
         

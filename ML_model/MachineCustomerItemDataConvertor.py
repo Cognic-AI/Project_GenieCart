@@ -12,7 +12,7 @@ def create_machine_customer(request):
 
     print(database.get_users())
 
-    customer = database.get_customer_by_email(request["email"], request["password"])
+    customer = database.get_customer_by_key(request["key"])
 
     if customer is None:
         raise ValueError("Customer not found")

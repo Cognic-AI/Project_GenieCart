@@ -18,6 +18,7 @@ You are responsible for executing the `generate_search_results` function.
 This function takes two inputs:
 - `user_query`: A string representing the product or item to search for.
 - `custom_domains`: A list of domains where the search should be restricted.
+- `tags`: A list of tags to be used in the search.
 """
 
 
@@ -43,7 +44,7 @@ This function takes one input:
 Execute the function and ensure it runs successfully.
 """
 
-def main(user_query, custom_domains):
+def main(user_query, custom_domains,tags):
     llm_config = {
         "config_list": [
             {"model": "gpt-4o-mini", "api_key": os.getenv("OPENAI_API_KEY")}
@@ -114,7 +115,7 @@ def main(user_query, custom_domains):
     result = entrypoint_agent.initiate_chats([
         {
             "recipient": search_agent,
-            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}",
+            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
