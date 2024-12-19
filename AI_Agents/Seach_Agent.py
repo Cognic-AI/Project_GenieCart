@@ -114,4 +114,4 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("A4 bundle", ["https://www.amazon.com", "https://daraz.lk"],["white","A4","paper","photocopy"])
+# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"])
