@@ -86,7 +86,19 @@ def json_to_csv(item_name: str) -> None:
                 if not filter_json_data(item_name, product_name, LLAMA_client):
                     continue
 
-                print("Product name matches the item name")
+                price = data.get("price", "")
+                if price == "":
+                    continue
+
+                currency = data.get("currency", "")
+                if currency != "$":
+                    continue
+
+                availability = data.get("availability", "")
+                if availability == False:
+                    continue
+
+                print("Product requirements matched")
 
                 # Initialize the CSV writer with headers on the first file
                 if writer is None:
@@ -103,4 +115,4 @@ def json_to_csv(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# json_to_csv("A4 bundle")
+json_to_csv("A4 bundle")

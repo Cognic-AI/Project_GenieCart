@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, request, jsonify
 import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
@@ -32,14 +33,14 @@ def recommend():
         request_data = request.get_json()
         print(f"Request data received: {request_data}")
 
-        print("Generating search results...")
-        result = agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
+        # print("Agent workflow started...")
 
-        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-        with open(output_filename, "w", encoding="utf-8") as f:
-            f.write(result)
+        # output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")        
+        # with open(output_filename, "w") as f:
+        #     sys.stdout = f
+        #     agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
 
-        print(f"Agent workflow output saved to: {output_filename}") 
+        # print("Agent workflow completed...")
 
         print("Matching with machine customer...")
         try:
