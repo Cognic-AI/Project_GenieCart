@@ -33,14 +33,14 @@ def recommend():
         request_data = request.get_json()
         print(f"Request data received: {request_data}")
 
-        # print("Agent workflow started...")
+        print("Agent workflow started...")
 
-        # output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")        
-        # with open(output_filename, "w") as f:
-        #     sys.stdout = f
-        #     agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
+        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")        
+        with open(output_filename, "w") as f:
+            sys.stdout = f
+            agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
 
-        # print("Agent workflow completed...")
+        print("Agent workflow completed...")
 
         print("Matching with machine customer...")
         try:

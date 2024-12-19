@@ -98,6 +98,7 @@ def process_links() -> None:
             Add the following fields to the JSON:
             product_url
             product_name
+            description
             price (There can be previous price and price after discounts add the after discount price)
             currency
             product_rating (Mostly this is available which is usually 0 ot 5 find the rating and add it)
