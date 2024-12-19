@@ -32,14 +32,14 @@ def recommend():
         request_data = request.get_json()
         print(f"Request data received: {request_data}")
 
-        # print("Generating search results...")
-        # result = agent(request_data["item_name"], request_data["custom_domains"])
+        print("Generating search results...")
+        result = agent(request_data["item_name"], request_data["custom_domains"])
 
-        # output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-        # with open(output_filename, "w", encoding="utf-8") as f:
-        #     f.write(result)
+        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+        with open(output_filename, "w", encoding="utf-8") as f:
+            f.write(result)
 
-        # print(f"Agent workflow output saved to: {output_filename}") 
+        print(f"Agent workflow output saved to: {output_filename}") 
 
         print("Matching with machine customer...")
         try:
@@ -74,7 +74,7 @@ def recommend():
             database.add_search_result(machine_customer.customer_id, result)
             print("Sending email...")
             print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
-            return jsonify({"status": "success"})
+            return jsonify({"status": "success and email sent"})
         except Exception as e:
             print(f"Error during model execution: {str(e)}")
             return jsonify({"status": "error", "message": str(e)}), 500

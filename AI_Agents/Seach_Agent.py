@@ -55,7 +55,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     tavily_client, gemini_model = initialize_clients()
     
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant in Sri Lanka that converts the user prompt into a search query to find products from the web. The products need to be buy from Sri Lanka. You only provide the search query. No other responds.
+    role: system, content: You are a helpful assistant in USA that converts the user prompt into a search query to find products from the web. The products need to be buy from Sri Lanka. You only provide the search query. No other responds.
     role: user, content: {prompt}, tags: {tags}"""
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text

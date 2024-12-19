@@ -35,14 +35,14 @@ def send_email(receiver_name, receiver_email, items, item_name):
     <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="background-color: #4CAF50; color: white; text-align: center; padding: 10px;">
-                    <h1>Top Recommendations for {receiver_name}</h1>
+                <td style="background-color: #4CAF50; color: white; text-align: center; padding: 20px;">
+                    <h1 style="margin: 0;">Top Recommendations for {receiver_name}</h1>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 20px;">
-                    <p style="font-size: 16px;">Based on your latest machine customer request for <strong>{item_name}</strong>, here are the top 3 items we think you'll love:</p>
-                    <ul style="list-style: none; padding: 0;">
+                    <p style="font-size: 16px;">Based on your latest machine customer request for <strong>{item_name}</strong>, here are the top 3 items we think best match your request:</p>
+                    <table style="width: 100%; border-collapse: collapse;">
     """
     for item in top_items:
         html_content += f"""
@@ -52,7 +52,6 @@ def send_email(receiver_name, receiver_email, items, item_name):
                             </td>
                             <td style="padding: 10px;">
                                 <h2 style="margin: 0; font-size: 18px;">{item.name}</h2>
-                                <p style="margin: 5px 0; font-size: 14px; color: #555;">{item.description}</p>
                                 <p style="margin: 5px 0; font-size: 14px;"><strong>Price:</strong> {item.currency} {item.price}</p>
                                 <a href="{item.link}" style="color: #4CAF50; text-decoration: none; font-size: 14px;">View Item</a>
                             </td>
