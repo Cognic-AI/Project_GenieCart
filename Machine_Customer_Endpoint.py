@@ -33,7 +33,7 @@ def recommend():
         print(f"Request data received: {request_data}")
 
         print("Generating search results...")
-        result = agent(request_data["item_name"], request_data["custom_domains"])
+        result = agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
 
         output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
         with open(output_filename, "w", encoding="utf-8") as f:
