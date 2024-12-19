@@ -2,10 +2,10 @@ from autogen import ConversableAgent
 import sys
 import os
 from dotenv import load_dotenv
-from Seach_Agent import generate_search_results
-from Product_Selection_Agent import extract_all_links
-from Data_Extract_Agent import process_links
-from Data_frame_creator_Agent import json_to_csv
+from AI_Agents.Seach_Agent import generate_search_results
+from AI_Agents.Product_Selection_Agent import extract_all_links
+from AI_Agents.Data_Extract_Agent import process_links
+from AI_Agents.Data_frame_creator_Agent import json_to_csv
 
 load_dotenv()
 
@@ -140,10 +140,10 @@ def main(user_query, custom_domains):
 
     return result
 
-result = main("White color A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
+# result = main("White color A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
 
-output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-with open(output_filename, "w", encoding="utf-8") as f:
-    f.write(result)
+# output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+# with open(output_filename, "w", encoding="utf-8") as f:
+#     f.write(result)
 
-print(f"Agent workflow output saved to: {output_filename}") 
+# print(f"Agent workflow output saved to: {output_filename}") 

@@ -1,7 +1,7 @@
 import pandas as pd
-from DataTypes import Item
-from consts import USD_TO_LKR
-from gemini import generate_llm_tags_bulk
+from ML_model.DataTypes import Item
+from ML_model.consts import USD_TO_LKR
+from ML_model.gemini import generate_llm_tags_bulk
 
 def csv_to_list(csv_file_path):
     """

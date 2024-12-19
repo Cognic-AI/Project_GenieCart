@@ -1,6 +1,6 @@
 # Import required modules
-import Database as db
-import DataTypes as dt
+import ML_model.Database as db
+import ML_model.DataTypes as dt
 import os
 import dotenv
 

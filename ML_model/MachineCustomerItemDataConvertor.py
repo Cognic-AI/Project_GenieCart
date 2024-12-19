@@ -1,7 +1,7 @@
-import DataTypes as dt
-import UserFixedDataConvertor as uc
-import Database as db
-from gemini import generate_llm_tags_for_current_tags
+import ML_model.DataTypes as dt
+import ML_model.UserFixedDataConvertor as uc
+import ML_model.Database as db
+from ML_model.gemini import generate_llm_tags_for_current_tags
 import os
 from dotenv import load_dotenv
 

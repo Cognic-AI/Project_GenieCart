@@ -1,9 +1,9 @@
 # Import required libraries
-import consts
+import ML_model.consts as consts
 import math
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import Counter
-import DataTypes as dt
+import ML_model.DataTypes as dt
 
 # Print initialization header
 print("<====================>")

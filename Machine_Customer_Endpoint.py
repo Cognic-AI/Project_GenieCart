@@ -174,19 +174,20 @@
 # ]
 
 from flask import Flask, request, jsonify
-import MachineCustomerItemDataConvertor as mc
-import ItemDataConvertor as ic
-import Model as md
-from Database import Database as db
+import ML_model.MachineCustomerItemDataConvertor as mc
+import ML_model.ItemDataConvertor as ic
+import ML_model.Model as md
+from ML_model.Database import Database as db
 import os
 from dotenv import load_dotenv
+from AI_Agents.Conversable_Agent import main as agent
 
 load_dotenv()
 
 # {
-#     "email": "sahan@gmail.com",
-#     "password": "$2b$10$046d0Gtk1CeDcKR7ZdpnV.fwQGSq01h9zsatggogVIuF6vgeGFLdG", 
+#     "generated_key": "1234567890",
 #     "item_name": "A4 bundle", 
+#     "custom_domains": ["https://www.amazon.com", "https://daraz.lk"],
 #     "price_level": 3, 
 #     "tags": ["white","80gsm","photocopy","a4","100 sheets"]
 # }
@@ -204,8 +205,17 @@ def recommend():
         print("Getting request data...")
         request_data = request.get_json()
         print(f"Request data received: {request_data}")
-        
-        print("Creating machine customer...")
+
+        print("Generating search results...")
+        result = agent(request_data["item_name"], request_data["custom_domains"])
+
+        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+        with open(output_filename, "w", encoding="utf-8") as f:
+            f.write(result)
+
+        print(f"Agent workflow output saved to: {output_filename}") 
+
+        print("Matching with machine customer...")
         try:
             machine_customer = mc.create_machine_customer(request_data)
             mc.print_machine_customer(machine_customer)
