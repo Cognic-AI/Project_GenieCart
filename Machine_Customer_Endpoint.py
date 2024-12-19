@@ -13,7 +13,7 @@ load_dotenv()
 # {
 #     "secret_key": "nos9qkca",
 #     "item_name": "A4 bundle", 
-#     "custom_domains": ["https://www.amazon.com", "https://daraz.lk"],
+#     "custom_domains": ["https://www.amazon.com"],
 #     "price_level": 3, 
 #     "tags": ["white","photocopy","a4"]
 # }
