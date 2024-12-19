@@ -47,8 +47,7 @@ def generate_llm_tags_bulk(df):
     """Use an LLM to generate relevant tags for an item based on its name and description"""
     A = set()
     for _,row in df.iterrows():
-        if 'in' in row['availability'].lower():
-            A.add((row['product_name'],row["description"]))
+        A.add((row['product_name'],row["description"]))
     items = dict(A)
     import google.generativeai as genai
     

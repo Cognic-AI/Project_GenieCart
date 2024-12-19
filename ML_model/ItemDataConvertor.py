@@ -18,20 +18,19 @@ def csv_to_list(csv_file_path):
     items_list = []
     tags = generate_llm_tags_bulk(df)  # Generate tags using LLM for all products
     for _, row in df.iterrows():
-        if 'in' in row['availability'].lower():  # Only process items that are in stock
-            item = Item(
-                name=row['product_name'],
-                price=generate_price(row), 
-                description=row['description'],
-                link=row['product_url'],
-                rate=float(row['product_rating']) if row['product_rating'] != '' else 0,
-                tags=tags[row["product_name"]],
-                image_link=row['image'],
-                currency=row['currency']
-            )
-            # Only add items that have at least one of: name, price, or link
-            if item.name != '' or item.price !='' or item.link != '':
-                items_list.append(item)
+        item = Item(
+            name=row['product_name'],
+            price=generate_price(row), 
+            description=row['description'],
+            link=row['product_url'],
+            rate=float(row['product_rating']) if row['product_rating'] != '' else 0,
+            tags=tags[row["product_name"]],
+            image_link=row['image'],
+            currency=row['currency']
+        )
+        # Only add items that have at least one of: name, price, or link
+        if item.name != '' or item.price !='' or item.link != '':
+            items_list.append(item)
     return items_list
 
 def generateTags(df):
