@@ -54,23 +54,13 @@ class Database:
             raise
 
     def get_customer_by_key(self, key):
-        """
-        Retrieve customer information using email and password
-        
-        Args:
-            email (str): Customer's email address
-            password (str): Customer's password
-            
-        Returns:
-            tuple: Customer data if found, None otherwise
-        """
         print(f"\nFetching customer with key: {key}")
         conn = self.connect()
         cursor = conn.cursor()
         
         cursor.execute('SELECT * FROM customer WHERE generated_key = %s', (key,))
         customer = cursor.fetchone()
-        print(f"Customer data retrieved: {customer}")
+        # print(f"Customer data retrieved: {customer}")
         
         cursor.close()
         conn.close()
@@ -124,6 +114,7 @@ class Database:
         cursor.close()
         conn.close()
         search_id = cursor.lastrowid
+        print(item_array)
         self.add_search_item(search_id, item_array)
         print("Database connection closed")
 
@@ -154,9 +145,9 @@ class Database:
                 cursor.execute('SET autocommit=1')
                 conn.commit()
             else:
-                print("Item found, adding to search item")
-                cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
-                             (search_id, item_id, item.score))
+                # print("Item found, adding to search item")
+                # cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
+                #              (search_id, item_id, item.score))
                 conn.commit()
             cursor.close()
             conn.close()

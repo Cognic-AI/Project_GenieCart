@@ -11,13 +11,14 @@ def create_machine_customer(request):
     database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
 
     print(database.get_users())
+    # print(request["secret_key"])
 
-    customer = database.get_customer_by_key(request["key"])
+    customer = database.get_customer_by_key(request["secret_key"])
 
     if customer is None:
         raise ValueError("Customer not found")
     
-    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]))
+    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer[1], customer[2])
     mc.history = fetchHistory(mc.customer_id)
     
     return mc

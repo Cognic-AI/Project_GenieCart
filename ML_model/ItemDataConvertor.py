@@ -27,6 +27,7 @@ def csv_to_list(csv_file_path):
                 rate=float(row['product_rating']) if row['product_rating'] != '' else 0,
                 tags=tags[row["product_name"]],
                 image_link=row['image'],
+                currency=row['currency']
             )
             # Only add items that have at least one of: name, price, or link
             if item.name != '' or item.price !='' or item.link != '':
