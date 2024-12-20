@@ -77,11 +77,11 @@ The GenieCart ML Recommendation Engine analyzes user behavior and product charac
 ### Request Format
 ```json
 {
-"email": "test@test.com",
-"password": "test",
-"item_name": "laptop",
-"price_level": 1,
-"tags": ["portable", "mac"]
+    "secret_key": "your_secret_key_here",
+    "item_name": "A4 bundle", 
+    "custom_domains": ["https://www.amazon.com"],
+    "price_level": 3, 
+    "tags": ["white","photocopy","a4"]
 }
 ```
 
