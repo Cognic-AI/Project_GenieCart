@@ -91,9 +91,13 @@ def json_to_csv(item_name: str) -> None:
                     continue
 
                 currency = data.get("currency", "")
+                if currency == "USD":
+                    data["currency"] = "$"
+
+                currency = data.get("currency", "")
                 if currency != "$":
                     continue
-
+                
                 availability = data.get("availability", "")
                 if availability == False:
                     continue

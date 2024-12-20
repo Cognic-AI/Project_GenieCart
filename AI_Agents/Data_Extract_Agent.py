@@ -4,6 +4,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 from typing import List, Union
+import shutil
 
 # Load environment variables
 load_dotenv()
@@ -118,8 +119,15 @@ def process_links() -> None:
             """
             response = gemini_model.generate_content(contents=prompt)
 
-            # Save the structured response to a separate file
-            filename: str = os.path.join("Final_products", f"product{product_counter}.json")
+            # Clear the folder
+            folder_path = "Final_products"
+
+            if os.path.exists(folder_path):
+                shutil.rmtree(folder_path)  # Remove the folder and its contents
+            os.makedirs(folder_path, exist_ok=True)  # Recreate the folder
+
+            # Write new files
+            filename = os.path.join(folder_path, f"product{product_counter}.json")
             with open(filename, "w", encoding="utf-8") as out_file:
                 out_file.write(response.text)
             print(f"Saved response to: {filename}")

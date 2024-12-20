@@ -5,14 +5,14 @@ Starting a new chat....
 ********************************************************************************
 entrypoint_agent (to search_agent):
 
-Please execute the `generate_search_results` function. The user query is: A4 bundle. Domains to prioritize: ['https://www.amazon.com', 'https://daraz.lk']. Tags are: ['white', 'photocopy', 'a4']
+Please execute the `generate_search_results` function. The user query is: A4 bundle. Domains to prioritize: ['https://www.amazon.com']. Tags are: ['white', 'photocopy', 'a4']
 
 --------------------------------------------------------------------------------
 search_agent (to entrypoint_agent):
 
-***** Suggested tool call (call_hlhTtvo9a9KorkQstKMshR2s): generate_search_results *****
+***** Suggested tool call (call_2FpET4Jpzj2bBcqvWPlz0g6F): generate_search_results *****
 Arguments: 
-{"prompt":"A4 bundle","custom_domains":["https://www.amazon.com","https://daraz.lk"],"tags":["white","photocopy","a4"]}
+{"prompt":"A4 bundle","custom_domains":["https://www.amazon.com"],"tags":["white","photocopy","a4"]}
 ****************************************************************************************
 
 --------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ Arguments:
 search agent started
 search_query created:  "A4 white photocopy paper bundle" buy USA
 
-tavily_context_results:  ['https://www.kangroadlines.us/?k=178881015', 'https://www.h1avionics.com/?h=3872317', 'http://sandglasstheater.org/?s=1071215', 'https://sandglasstheater.org/?s=1075715', 'https://www.alibaba.com/showroom/a4-size-white-paper-bundle.html', 'https://hbxianggao.en.made-in-china.com/product/NQLpErdbXVWB/China-Copy-Paper-A4-White-Copy-Paper-500-Sheets-a-Pack-Office-A4-Printing-Paper.html', 'https://www.aliexpress.com/i/4000926870340.html', 'https://www.ukofficedirect.co.uk/product/a4-white-copy-paper-ream-wrapped-box-of-5-x-500-sheets-pack-of-2500/kev054', 'https://www.staples.com/8-27-x-11-69-a4-Copy-Printer-Paper/cat_CL140691/1qp0m', 'https://www.bing.com/shop?q=A4+Size+Paper+Bundle+Price&cc=us&setlang=en', 'https://shop.modelgroup.com/s/product/printer-paper-a4-in-white-75gm2-500-pieces-per-pack-2500-pieces-per-box/01t09000007Z6qoAAC?srsltid=AfmBOoqqpiC7x1KTXhGXkmf3vq4UxNe6UvIxKgsLW09HkJEZ0P_wT7Gf', 'https://www.walmart.com/tp/cbw-store-white-copy-paper', 'https://www.globalsources.com/Copy-paper/Copy-Paper-1214356966p.htm', 'https://www.tradeling.com/ae-en/product-details/copy-paper-a4-blue-photocopy-paper-80-gsm-white-500-sheets-pack-of-5-619375a7a6780b001bdf77aa-5fba0c6142480f001bed85d4?srsltid=AfmBOoo73c9cQCvaSgAbg2xZTYx9caeHTDmVCe9vh_9dBP9eFrEQLGVa', 'https://www.amazon.com/Copy-paper-A4-sheets-books/dp/B07SFSWVVC', 'https://megaofficesupplies.com.au/office-supplies/reams-of-paper-printing-paper-copy-paper/a4-paper/?srsltid=AfmBOooO25Q3TriPsEDuKnFQBU_em2cVlrWUv36QAG4Y6B2v93Fb_xBv', 'https://www.warehousestationery.co.nz/paper/photocopy-paper/a4?srsltid=AfmBOopj8yIWnlQIlTNa-Q_F_UfkY8AsCqq3fxatOjNoTnStuKCbp1pm', 'https://m.shein.com/A4-Paper-c-6416.html?lang=en', 'https://www.globalsources.com/Copy-paper/IK-PLUS-A4-COPY-PAPER-1200055602p.htm', 'https://m.facebook.com/story.php?story_fbid=1041063521369123&id=100063964541189', 'https://www.ryman.co.uk/paper-printing/paper/a4', 'https://www.antalis.co.uk/eshop/paper-boards-envelopes/office-paper/basic-office-papers/xerox-performer/SKU-617511', 'https://www.officemax.co.nz/Paper/A4-Copy-Paper?srsltid=AfmBOoqeINRJ3Q4DtvtLMosjmbWLw0FZmO_Qch-pvqvEoT4otu_sTqZl', 'https://www.ebay.com/itm/224630838936', 'https://www.officenational.com.au/shop/en/obb2cstore/initiative-a4-office-copy-paper-80gsm-white-pack-500-sheets', 'https://www.riteintherain.com/printer-paper-20-pound?srsltid=AfmBOooX6qldG3WI0wvoOR75ECcLwrRKaiT_oexT_CBRFayIZf3_nj5_', 'https://www.samsclub.com/b/copy-paper/3760129', 'https://www.hammermill.com/products/copy-paper-20lb-92-bright', 'https://www.costco.com/copy-multipurpose-paper.html', 'https://www.walmart.com/ip/A4-White-Paper-For-Copy-Printing-Writing-Pack-of-500-sheets/905729243', 'https://www.amazon.com/Generic-sheets-Printer-Paper-11-69/dp/B0D8TCJJQX', 'https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG6ZG', 'https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWGKZGT', 'https://www.amazon.com/Mohawk-Paper-Reams-Sheets-A428C/dp/B077CW5CQK', 'https://www.amazon.com/Color-Copy-A4-Paper-200gsm/dp/B000SHOOK2', 'https://www.amazon.com/Paper-A4-Printer-Copier-Sheets/dp/B0CGWYPSGG', 'https://www.amazon.com/Color-Copy-Premium-Ream-Wrapped-CCW0324/dp/B000J6A58M', 'https://www.amazon.com/Copy-paper-A4-sheets-books/dp/B07SFSWVVC', 'https://www.amazon.com/WB-75gsm-Office-Copy-Paper/dp/B000UZA334', 'https://www.amazon.com/Sheets-Thermal-Printer-Multipurpose-Office/dp/B07H8VWN6B', 'https://www.amazon.com/Xerox-Plain-paper-white-m2-500/dp/B0002AF3FA', 'https://www.amazon.com/Hammermill-Sustainably-Sourced-American-105500C/dp/B086XKC7SQ', 'https://www.amazon.com/Hammermill-Paper-letter-Bright-Sheets/dp/B01MTJEHYA', 'https://www.amazon.com/Navigator-367052-Photocopy-sheets-package/dp/B004OA24XS', 'https://www.amazon.com/AmazonBasics-Multipurpose-Copy-Printer-Paper/dp/B01FV0F8H8', 'https://www.amazon.com/Fabriano-789103-Paper-Photocopies-White/dp/B0056250M0', 'https://www.amazon.com/A4-Premium-Bright-White-Paper/dp/B07VBP4Y74', 'https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG74G', 'https://www.amazon.com/a4-paper-ream/s?k=a4+paper+ream', 'https://www.amazon.com/A4-Premium-Printer-Paper-Available/dp/B076QK6VLN', 'https://www.daraz.lk/products/promate-photocopy-paper-75gsm-a4-500-sheets-pack-i134684399.html', 'https://www.daraz.lk/products/promate-photocopy-paper-80gsm-a4-500-sheets-pack-i157943494.html', 'https://www.daraz.lk/tag/half-sheet-bundle-price/', 'https://www.daraz.lk/products/fujifilm-a4-photo-copy-paper-500-sheet-bundle-80gsm-i154264011.html', 'https://www.daraz.lk/paper-products/promate-55114/', 'https://www.daraz.lk/products/promate-photocopy-paper-70gsm-a4-500-sheets-pack-i244090158.html', 'https://www.daraz.lk/printer-paper/jk/', 'https://www.daraz.lk/paper-products/?dir=desc&sort=newest&page=14', 'https://www.daraz.lk/printer-paper/jk-papers-123796846/', 'https://www.daraz.lk/products/promate-photocopy-paper-70gsm-a4-bundle-500-sheets-i106198846.html', 'https://www.daraz.lk/tag/dimai-paper-price/', 'https://www.daraz.lk/products/colour-a4-sheets-100-pack-with-10-mix-colours-high-quality-colour-photocopy-papers-100-sheets-i112714050.html', 'https://www.daraz.lk/printer-paper/', 'https://www.daraz.lk/printer-paper/promate-55114/', 'https://www.daraz.lk/printer-paper/double_a/', 'https://www.daraz.lk/paper-products/atlas/', 'https://www.daraz.lk/filing/', 'https://www.daraz.lk/photo-printers/', 'https://www.daraz.lk/other-paper-products/', 'https://www.daraz.lk/products/photo-paper-board-4r-size-230-gsm-20-sheets-per-pack-inkjet-glossy-i160174939.html']
+tavily_context_results:  ['https://www.kangroadlines.us/?k=178881015', 'https://www.h1avionics.com/?h=3872317', 'http://sandglasstheater.org/?s=1071215', 'https://sandglasstheater.org/?s=1075715', 'https://www.alibaba.com/showroom/a4-size-white-paper-bundle.html', 'https://www.allenandbaileyltd.com/stationery-paper-copier-inkjet-laser-paper-a4-white-80gsm.html', 'https://hbxianggao.en.made-in-china.com/product/NQLpErdbXVWB/China-Copy-Paper-A4-White-Copy-Paper-500-Sheets-a-Pack-Office-A4-Printing-Paper.html', 'https://www.ukofficedirect.co.uk/product/a4-white-copy-paper-ream-wrapped-box-of-5-x-500-sheets-pack-of-2500/kev054', 'https://shop.modelgroup.com/s/product/printer-paper-a4-in-white-75gm2-500-pieces-per-pack-2500-pieces-per-box/01t09000007Z6qoAAC?srsltid=AfmBOoomzhHewlBfij4ZzbhyMDEL79PqRgeZb_F0Kwa6tv4RYN6727xT', 'https://www.aliexpress.com/i/4000926870340.html', 'https://www.hammermill.com/products/copy-paper-20lb-92-bright', 'https://www.globalsources.com/Copy-paper/IK-PLUS-A4-COPY-PAPER-1200055602p.htm', 'https://m.facebook.com/story.php?story_fbid=976197487855727&id=100063964541189', 'https://www.globalsources.com/Copy-paper/Copy-Paper-1214356966p.htm', 'https://www.amazon.com/Copy-paper-A4-sheets-books/dp/B07SFSWVVC', 'https://megaofficesupplies.com.au/office-supplies/reams-of-paper-printing-paper-copy-paper/a4-paper/?srsltid=AfmBOopN1Jey5zmmsGE3vgTcDKOajfBWOvlCMadbx71AcrQwLdXBq2wk', 'https://www.bing.com/shop?q=A4+Size+Paper+Bundle+Price&cc=us&setlang=en', 'https://m.shein.com/A4-Paper-c-6416.html?lang=en', 'https://www.officemax.co.nz/Paper/A4-Copy-Paper?srsltid=AfmBOopHmtnJ9sf-NPDAETDWksNOMNa4DTaRHZ-HpMsIukzbUeoXzwuk', 'https://www.warehousestationery.co.nz/paper/photocopy-paper/a4?srsltid=AfmBOooC0UVgdjm4X0dC1_CfAPGXolCAAvYxr16I0hyBC_UR28xOBKlv', 'https://www.ryman.co.uk/paper-printing/paper/a4', 'https://www.staples.com/8-27-x-11-69-a4-Copy-Printer-Paper/cat_CL140691/1qp0m', 'https://www.viking-direct.co.uk/en/paper-labels-c-108/paper-c-10804/copy-printer-paper-c-10804005', 'https://www.ebay.com/itm/224630838936', 'https://www.officenational.com.au/shop/en/obb2cstore/initiative-a4-office-copy-paper-80gsm-white-pack-500-sheets', 'https://www.tradeling.com/ae-en/product-details/copy-paper-a4-blue-photocopy-paper-80-gsm-white-500-sheets-pack-of-5-619375a7a6780b001bdf77aa-5fba0c6142480f001bed85d4?srsltid=AfmBOortI03IfRYa6PJIZCtOMYD5N6JOhjtRr2GrIu18VnFq3ECZFVBP', 'https://www.riteintherain.com/printer-paper-20-pound?srsltid=AfmBOooLTAONTTe790ixtXu9MO4LnIm8vP9KEybWeK7Td_4kAvrBHHZb', 'https://www.walmart.com/ip/A4-White-Paper-For-Copy-Printing-Writing-Pack-of-500-sheets/905729243', 'https://www.officedepot.com/b/copy-and-printer-paper/N-530728', 'https://www.walmart.com/tp/cbw-store-white-copy-paper', 'https://www.amazon.com/Generic-sheets-Printer-Paper-11-69/dp/B0D8TCJJQX', 'https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG74G', 'https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG6ZG', 'https://www.amazon.com/Mohawk-Paper-Reams-Sheets-A428C/dp/B077CW5CQK', 'https://www.amazon.com/Color-Copy-A4-Paper-200gsm/dp/B000SHOOK2', 'https://www.amazon.com/Paper-A4-Printer-Copier-Sheets/dp/B0CGWYPSGG', 'https://www.amazon.com/Color-Copy-Premium-Ream-Wrapped-CCW0324/dp/B000J6A58M', 'https://www.amazon.com/Sheets-Thermal-Printer-Multipurpose-Office/dp/B07H8VWN6B', 'https://www.amazon.com/Copy-paper-A4-sheets-books/dp/B07SFSWVVC', 'https://www.amazon.com/WB-75gsm-Office-Copy-Paper/dp/B000UZA334', 'https://www.amazon.com/Xerox-Plain-paper-white-m2-500/dp/B0002AF3FA', 'https://www.amazon.com/A4-Premium-Bright-White-Paper/dp/B07VBP4Y74', 'https://www.amazon.com/Navigator-367052-Photocopy-sheets-package/dp/B004OA24XS', 'https://www.amazon.com/Hammermill-Sustainably-Sourced-American-105500C/dp/B086XKC7SQ', 'https://www.amazon.com/Hammermill-Paper-letter-Bright-Sheets/dp/B01MTJEHYA', 'https://www.amazon.com/XEROX-Recycled-Paper-80GSM-White/dp/B000NR7P1C', 'https://www.amazon.com/AmazonBasics-Multipurpose-Copy-Printer-Paper/dp/B01FV0F8H8', 'https://www.amazon.com/Fabriano-789103-Paper-Photocopies-White/dp/B0056250M0', 'https://www.amazon.com/A4-Premium-Printer-Paper-Available/dp/B076QK6VLN', 'https://www.amazon.com/a4-paper-ream/s?k=a4+paper+ream']
 
 
 search_agent_output.txt created
@@ -36,14 +36,14 @@ entrypoint_agent (to search_agent):
 
 entrypoint_agent (to search_agent):
 
-***** Response from calling tool (call_hlhTtvo9a9KorkQstKMshR2s) *****
+***** Response from calling tool (call_2FpET4Jpzj2bBcqvWPlz0g6F) *****
 null
 **********************************************************************
 
 --------------------------------------------------------------------------------
 search_agent (to entrypoint_agent):
 
-It seems that the search did not return any results. If you have any other queries or need assistance with a different search, feel free to let me know!
+It seems that there are no search results available for the query "A4 bundle" on the specified domain with the given tags. If you have any other queries or need assistance with something else, feel free to ask!
 
 --------------------------------------------------------------------------------
 
@@ -55,12 +55,12 @@ entrypoint_agent (to product_selection_agent):
 
 Please execute the `extract_all_links` function. product or item name is A4 bundle
 Context: 
-It seems that the search did not return any results. If you have any other queries or need assistance with a different search, feel free to let me know!
+It seems that there are no search results available for the query "A4 bundle" on the specified domain with the given tags. If you have any other queries or need assistance with something else, feel free to ask!
 
 --------------------------------------------------------------------------------
 product_selection_agent (to entrypoint_agent):
 
-***** Suggested tool call (call_osyn9UCIeJCWuK0g0NSmeO6U): extract_all_links *****
+***** Suggested tool call (call_OivlUT2Ei4ekiDXPf9johJFh): extract_all_links *****
 Arguments: 
 {"item_name":"A4 bundle"}
 **********************************************************************************
@@ -70,13 +70,62 @@ Arguments:
 >>>>>>>> EXECUTING FUNCTION extract_all_links...
 ------------------------------------------------------------------------------------------------
 Product selection agent started
-Processing link: https://www.amazon.com/a4-paper-ream/s?k=a4+paper+ream
+Processing link: https://www.alibaba.com/showroom/a4-size-white-paper-bundle.html
+Extracted 178 links from https://www.alibaba.com/showroom/a4-size-white-paper-bundle.html
+Filtered links saved to: Agent_Outputs\Filtered_links.txt
+Product selection agent completed
+------------------------------------------------------------------------------------------------
 entrypoint_agent (to product_selection_agent):
 
 entrypoint_agent (to product_selection_agent):
 
-***** Response from calling tool (call_osyn9UCIeJCWuK0g0NSmeO6U) *****
-Error: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+***** Response from calling tool (call_OivlUT2Ei4ekiDXPf9johJFh) *****
+null
 **********************************************************************
 
 --------------------------------------------------------------------------------
+product_selection_agent (to entrypoint_agent):
+
+It appears that there are no search results available for the query "A4 bundle." If you have any other queries or need assistance with something else, feel free to ask!
+
+--------------------------------------------------------------------------------
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent (to data_extract_agent):
+
+Please execute the `process_links` function.
+Context: 
+It seems that there are no search results available for the query "A4 bundle" on the specified domain with the given tags. If you have any other queries or need assistance with something else, feel free to ask!
+It appears that there are no search results available for the query "A4 bundle." If you have any other queries or need assistance with something else, feel free to ask!
+
+--------------------------------------------------------------------------------
+data_extract_agent (to entrypoint_agent):
+
+***** Suggested tool call (call_iFYnf5BItye1uJA4yxOJPRLt): process_links *****
+Arguments: 
+{}
+******************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION process_links...
+------------------------------------------------------------------------------------------------
+Data extraction agent started
+Processing: https://www.allenandbaileyltd.com/stationery-paper-copier-inkjet-laser-paper-a4-white-80gsm.html
+Saved response to: Final_products\product1.json
+Processing: https://hbxianggao.en.made-in-china.com/product/NQLpErdbXVWB/China-Copy-Paper-A4-White-Copy-Paper-500-Sheets-a-Pack-Office-A4-Printing-Paper.html
+Saved response to: Final_products\product2.json
+Processing: https://shop.modelgroup.com/s/product/printer-paper-a4-in-white-75gm2-500-pieces-per-pack-2500-pieces-per-box/01t09000007Z6qoAAC?srsltid=AfmBOoomzhHewlBfij4ZzbhyMDEL79PqRgeZb_F0Kwa6tv4RYN6727xT
+Saved response to: Final_products\product3.json
+Processing: https://www.officenational.com.au/shop/en/obb2cstore/initiative-a4-office-copy-paper-80gsm-white-pack-500-sheets
+Saved response to: Final_products\product4.json
+Processing: https://www.walmart.com/ip/A4-White-Paper-For-Copy-Printing-Writing-Pack-of-500-sheets/905729243
+Error extracting content from https://www.walmart.com/ip/A4-White-Paper-For-Copy-Printing-Writing-Pack-of-500-sheets/905729243: 404 Client Error: Not Found for url: https://www.walmart.com/ip/A4-White-Paper-For-Copy-Printing-Writing-Pack-of-500-sheets/905729243
+Processing: https://www.amazon.com/Generic-sheets-Printer-Paper-11-69/dp/B0D8TCJJQX
+Saved response to: Final_products\product5.json
+Processing: https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG74G
+Saved response to: Final_products\product6.json
+Processing: https://www.amazon.com/White-Printing-Writing-inches-sheets/dp/B07MWFG6ZG
