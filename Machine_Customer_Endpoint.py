@@ -31,7 +31,7 @@ def recommend():
         # Get request data and create machine customer
         print("Getting request data...")
         request_data = request.get_json()
-        print(f"Request data received: {request_data}")
+        print(f"Request data received")
 
         print("Agent workflow started...")
 
