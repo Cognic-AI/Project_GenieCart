@@ -12,6 +12,7 @@ from emailservice import send_email
 
 load_dotenv()
 
+# Example request data
 # {
 #     "secret_key": "nos9qkca",
 #     "item_name": "A4 bundle", 
