@@ -60,7 +60,7 @@ export default function ProfilePage() {
             <strong>Email:</strong> {session?.user?.email}
           </p>
           <p className="mb-4">
-            <strong>Generated Key:</strong> {generatedKey || 'Loading...'}
+            <strong>Secret Key:</strong> {generatedKey || 'Loading...'}
           </p>
           <button
             onClick={() => signOut({ callbackUrl: '/auth/signin' })}
