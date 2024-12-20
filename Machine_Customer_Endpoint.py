@@ -36,9 +36,9 @@ def recommend():
         print("Agent workflow started...")
 
         output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")        
-        agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
         with open(output_filename, "w") as f:
             sys.stdout = f
+            agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
 
         print("Agent workflow completed...")
 

@@ -79,6 +79,13 @@ def process_links() -> None:
     # Variable to keep track of the product number
     product_counter: int = 1
 
+    # Clear the folder
+    folder_path = "Final_products"
+
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)  # Remove the folder and its contents
+    os.makedirs(folder_path, exist_ok=True)  # Recreate the folder
+
     for link in links:
         print(f"Processing: {link}")
         try:
@@ -119,13 +126,6 @@ def process_links() -> None:
             """
             response = gemini_model.generate_content(contents=prompt)
 
-            # Clear the folder
-            folder_path = "Final_products"
-
-            if os.path.exists(folder_path):
-                shutil.rmtree(folder_path)  # Remove the folder and its contents
-            os.makedirs(folder_path, exist_ok=True)  # Recreate the folder
-
             # Write new files
             filename = os.path.join(folder_path, f"product{product_counter}.json")
             with open(filename, "w", encoding="utf-8") as out_file:
@@ -133,6 +133,9 @@ def process_links() -> None:
             print(f"Saved response to: {filename}")
 
             product_counter += 1
+
+            if product_counter == 31:
+                break
 
         except Exception as e:
             print(f"Error processing {link}: {e}")
