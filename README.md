@@ -23,6 +23,8 @@ TAVILY_API_KEY=your_tavily_api_key
 LLAMA_API_KEY=your_llama_api_key
 OPENAI_API_KEY=your_openai_api_key
 USER_AGENT=your_user_agent_string
+DB_credentials=your_db_credentials(run the db dump in the root to create a local database)
+SMTP server credentials=your_smtp_server_credentials(for sending emails)
 ```
 
 ## Project Structure
@@ -66,14 +68,22 @@ Project_GenieCart/
    echo "LLAMA_API_KEY=your_api_key_here" >> .env
    echo "OPENAI_API_KEY=your_api_key_here" >> .env
    echo "USER_AGENT=your_web_browser_user_agent_here" >> .env
+   echo "PRODUCT_CSV=product.csv" >> .env
+   echo "DB_HOST=your_db_host_here" >> .env
+   echo "DB_USER=your_db_user_here" >> .env
+   echo "DB_PASSWORD=your_db_password_here" >> .env
+   echo "DB_NAME=your_db_name_here" >> .env
+   echo "DB_PORT=your_db_port_here" >> .env
+   echo "SMTP_USER=your_smtp_user_here" >> .env
+   echo "SMTP_PASSWORD=your_smtp_password_here" >> .env
+   echo "SMTP_SERVER_HOST=your_smtp_server_here" >> .env
    ```
 
 ## Usage
 
-### Running the AI Model
-To filter product data and generate a CSV file:
+### Running the Endpoint manually
 ```bash
-python "AI Agents/Conversable Agent.py"
+python "Machine_Customer_Endpoint.py"
 ```
 
 ### Frontend Development
@@ -93,6 +103,8 @@ npm run dev
 - **LLAMA 3.1 from Nvidia** (AI integration)
 - **OpenAI ChatGPT 4o mini** (AI integration)
 - **Machine Learning** (Recommendation system)
+- **MySQL** (Database)
+- **SMTP** (Email server)
 
 ## Contributing
 
