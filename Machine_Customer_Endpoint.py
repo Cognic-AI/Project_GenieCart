@@ -1,10 +1,11 @@
 import sys
+import os
+import io
 from flask import Flask, request, jsonify
 import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
 import ML_model.Model as md
 from ML_model.Database import Database as db
-import os
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
@@ -35,10 +36,32 @@ def recommend():
 
         print("Agent workflow started...")
 
-        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")        
-        with open(output_filename, "w") as f:
-            sys.stdout = f
-            agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
+        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+        original_stdout = sys.stdout  # Save the original stdout
+
+        try:
+            with open(output_filename, "w", encoding="utf-8") as f:
+                class DualStream(io.TextIOBase):
+                    def __init__(self, file, terminal):
+                        self.file = file
+                        self.terminal = terminal
+
+                    def write(self, data):
+                        self.file.write(data)
+                        self.terminal.write(data)
+
+                    def flush(self):
+                        self.file.flush()
+                        self.terminal.flush()
+
+                dual_stream = DualStream(f, original_stdout)
+                sys.stdout = dual_stream  # Redirect stdout to dual stream
+
+                # Run the agent and print output to both file and terminal
+                agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
+
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
 
         print("Agent workflow completed...")
 

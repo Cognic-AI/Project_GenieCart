@@ -20,7 +20,7 @@ def csv_to_list(csv_file_path):
     for _, row in df.iterrows():
         item = Item(
             name=row['product_name'],
-            price=generate_price(row), 
+            price=row['price'], 
             description=row['description'],
             link=row['product_url'],
             rate=float(row['product_rating']) if row['product_rating'] != '' else 0,
