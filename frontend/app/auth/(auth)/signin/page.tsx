@@ -28,6 +28,7 @@ export default function SignInPage(): React.JSX.Element {
         router.push('/profile');
       }
     } catch (err) {
+      console.log(err);
       setError('An error occurred during login');
     }
   };

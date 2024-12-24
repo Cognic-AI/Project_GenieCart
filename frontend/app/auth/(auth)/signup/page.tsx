@@ -32,6 +32,7 @@ export default function SignUpPage(): React.JSX.Element {
         setError(data.error || 'Signup failed');
       }
     } catch (err) {
+      console.log(err);
       setError('An error occurred during signup');
     }
   };

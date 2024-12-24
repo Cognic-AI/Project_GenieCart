@@ -67,6 +67,29 @@ class Database:
         print("Database connection closed")
         return customer
     
+    def get_customer_by_key(self, key):
+        """
+        Retrieve customer information using key
+        
+        Args:
+            key (str): Customer's key
+            
+        Returns:
+            tuple: Customer data if found, None otherwise
+        """
+        print(f"\nFetching customer with key: {key}")
+        conn = self.connect()
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT * FROM customer WHERE generated_key = %s', (key,))
+        customer = cursor.fetchone()
+        print(f"Customer data retrieved: {customer}")
+        
+        cursor.close()
+        conn.close()
+        print("Database connection closed")
+        return customer
+    
     def get_customer_history(self, customer_id):
         """
         Retrieve purchase history for a customer
