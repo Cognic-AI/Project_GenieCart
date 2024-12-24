@@ -1,6 +1,7 @@
-'use client'
+'use client';
 
 import { useSession, signOut } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 
 export default function ProfilePage() {
@@ -11,6 +12,38 @@ export default function ProfilePage() {
     }
   });
 
+  const [generatedKey, setGeneratedKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch('/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: session.user.email }),
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.generatedKey) {
+            setGeneratedKey(data.generatedKey);
+          } else {
+            setGeneratedKey('Key not found');
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching key:', error.message);
+          setGeneratedKey('Error retrieving key');
+        });
+    }
+  }, [session?.user?.email]);
+  
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
@@ -19,16 +52,17 @@ export default function ProfilePage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h1 className="text-2xl font-bold mb-4 text-center">User Profile</h1>
-        
         <div className="text-center">
           <p className="mb-2">
             <strong>Name:</strong> {session?.user?.name}
           </p>
-          <p className="mb-4">
+          <p className="mb-2">
             <strong>Email:</strong> {session?.user?.email}
           </p>
-          
-          <button 
+          <p className="mb-4">
+            <strong>Secret Key:</strong> {generatedKey || 'Loading...'}
+          </p>
+          <button
             onClick={() => signOut({ callbackUrl: '/auth/signin' })}
             className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
           >

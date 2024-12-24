@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connection } from '../../../database/db';
 import bcrypt from 'bcrypt';
+import { ResultSetHeader } from 'mysql2';
 
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     // Check if the user already exists
     const [existingUser] = await connection.query(
-      'SELECT * FROM Customer WHERE email = ?',
+      'SELECT * FROM customer WHERE email = ?',
       [email]
     );
 
@@ -23,13 +24,20 @@ export async function POST(req: NextRequest) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert the new user into the database
-    await connection.query(
-      'INSERT INTO customer (customer_name, email, password) VALUES (?, ?, ?)',
-      [name, email, hashedPassword]
+    // Generate random key
+    const generatedKey = Math.random().toString(36).substr(2, 8);
+
+    // Insert the new user into the database with the generated key
+    const [result] = await connection.query<ResultSetHeader>(
+      'INSERT INTO customer (customer_name, email, password, generated_key) VALUES (?, ?, ?, ?)',
+      [name, email, hashedPassword, generatedKey]
     );
 
-    return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
+    if (result.affectedRows > 0) {
+      return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
+    } else {
+      return NextResponse.json({ error: 'Failed to create user' }, { status: 400 });
+    }
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
