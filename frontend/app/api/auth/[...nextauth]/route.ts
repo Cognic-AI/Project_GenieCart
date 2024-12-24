@@ -15,23 +15,18 @@ const handler = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
         try {
           const [users] = await connection.query(
-            'SELECT * FROM Customer WHERE email = ?',
+            'SELECT * FROM customer WHERE email = ?',
             [credentials.email]
           );
-
           const user = users[0];
           if (!user) return null;
-
           const passwordMatch = await bcrypt.compare(
             credentials.password,
             user.password
           );
-
           if (!passwordMatch) return null;
-
           return {
             id: user.customer_id.toString(),
             email: user.email,
