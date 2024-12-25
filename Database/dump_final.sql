@@ -47,35 +47,6 @@ INSERT INTO `customer` VALUES (2,'Sahan','sahan@gmail.com','$2b$10$046d0Gtk1CeDc
 UNLOCK TABLES;
 
 --
--- Table structure for table `history`
---
-
-DROP TABLE IF EXISTS `history`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `history` (
-  `customer_id` int NOT NULL,
-  `item_id` int NOT NULL,
-  `quantity` int DEFAULT NULL,
-  `time_stamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`customer_id`,`item_id`),
-  KEY `item_id` (`item_id`),
-  CONSTRAINT `history_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
-  CONSTRAINT `history_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `history`
---
-
-LOCK TABLES `history` WRITE;
-/*!40000 ALTER TABLE `history` DISABLE KEYS */;
-INSERT INTO `history` VALUES (1,1,1,NULL),(1,3,2,NULL),(1,5,1,NULL),(1,7,1,NULL),(1,9,1,NULL),(2,2,1,NULL),(2,4,2,NULL),(2,6,1,NULL),(2,8,1,NULL),(3,11,1,NULL),(3,13,2,NULL),(3,15,1,NULL),(6,10,1,NULL),(6,17,1,NULL),(6,19,2,'2024-09-15 18:30:00');
-/*!40000 ALTER TABLE `history` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `item`
 --
 
