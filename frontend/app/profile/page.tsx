@@ -76,8 +76,8 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 w-full">
       <Header onProfileClick={() => setIsOpen(true)} />
-      <main className="flex-grow flex items-center justify-center w-full">
-        <div className="p-4 flex flex-col items-center justify-center w-full">
+      <main className="flex-grow flex items-center justify-center">
+        <div className="p-4 flex flex-col items-center justify-center">
           <div className="flex flex-col items-center justify-center">  
             {showPurchases()}
           </div>
