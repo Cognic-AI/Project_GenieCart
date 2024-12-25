@@ -104,7 +104,27 @@ class Database:
         conn = self.connect()
         cursor = conn.cursor()
         
-        cursor.execute('SELECT DISTINCT * FROM item WHERE item_id IN (SELECT item_id FROM search_item WHERE search_id IN (SELECT search_id FROM search_result WHERE customer_id = %s) ORDER BY score DESC)', (customer_id,))
+        cursor.execute('''WITH RankedItems AS (
+                            SELECT 
+                                si.item_id AS search_item_id, -- Alias to differentiate from the item table's item_id
+                                si.search_id,
+                                i.*,
+                                ROW_NUMBER() OVER (PARTITION BY si.search_id ORDER BY si.score DESC) AS rn
+                            FROM 
+                                search_item si
+                            JOIN 
+                                item i ON si.item_id = i.item_id
+                            WHERE 
+                                si.search_id IN (
+                                    SELECT search_id 
+                                    FROM search_result 
+                                    WHERE customer_id = %s
+                                )
+                        )
+                        SELECT *
+                        FROM RankedItems
+                        WHERE rn <= 3;
+                        ''', (customer_id,))
         history = cursor.fetchall()
         print(f"Retrieved {len(history)} historical purchases")
         
