@@ -92,19 +92,19 @@ class Database:
     
     def get_customer_history(self, customer_id):
         """
-        Retrieve purchase history for a customer
+        Retrieve suggestion history for a customer
         
         Args:
             customer_id (int): ID of the customer
             
         Returns:
-            list: List of items purchased by the customer
+            list: List of top items suggested for the customer
         """
         print(f"\nFetching purchase history for customer ID: {customer_id}")
         conn = self.connect()
         cursor = conn.cursor()
         
-        cursor.execute('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM history WHERE customer_id = %s)', (customer_id,))
+        cursor.execute('SELECT DISTINCT * FROM item WHERE item_id IN (SELECT item_id FROM search_item WHERE search_id IN (SELECT search_id FROM search_result WHERE customer_id = %s) ORDER BY score DESC)', (customer_id,))
         history = cursor.fetchall()
         print(f"Retrieved {len(history)} historical purchases")
         
