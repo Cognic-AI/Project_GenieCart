@@ -1,10 +1,9 @@
-import { Calendar, Star } from 'lucide-react'
+import { Calendar, Clock, Star } from 'lucide-react'
 interface Purchase {
   item_id: string
   name: string
   description: string
   price: number
-  quantity: number
   link: string
   rate: number
   image_link: string
@@ -37,15 +36,18 @@ const PurchaseCard = ({ purchase }: { purchase: Purchase }) =>{
       <p className="text-gray-600 mb-4">{purchase.description}</p>
       <div className="flex justify-between items-center mb-4">
         <span className="text-2xl font-bold text-green-600">${purchase.price}</span>
-        <span className="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded-full">
-          Qty: {purchase.quantity}
-        </span>
       </div>
       <div className="flex items-center justify-between mb-2">
         <StarRating rating={purchase.rate} />
-        <div className="mt-4 flex items-center text-sm text-gray-500">
-          <Calendar className="w-4 h-4 mr-2" />
-          <span>{purchaseDate.toLocaleDateString()}</span>
+        <div className="mt-4 flex flex-col items-start text-sm text-gray-500">
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2" />
+            <span>{purchaseDate.toLocaleDateString()}</span>
+          </div>
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2" />
+            <span>{purchaseDate.toLocaleTimeString()}</span>
+          </div>
         </div>
       </div>
       <a
@@ -65,15 +67,17 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
   if (purchases.length === 0) {
     return (
       <div className="text-center py-10">
-        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Your Purchases</h3>
-        <p className="text-gray-500">No purchases found</p>
+        <div style={{height:50}}></div>
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Your Previouse Suggestions</h3>
+        <p className="text-gray-500">No Previouse suggestions found</p>
       </div>
     )
   }
 
   return (
     <div className="py-10 px-4 sm:px-6 lg:px-8">
-      <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center">Your Purchases</h3>
+      <div style={{height:50}}></div>
+      <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center">Your Previouse Suggestions</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchases.map((purchase) => (
           <PurchaseCard key={purchase.item_id} purchase={purchase} />
@@ -85,8 +89,8 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
 
 export default function PurchasesPage(purchases: Purchase[]) {
     return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-100 w-full">
+      <main className="max-w-7xl mx-auto w-full">
         <PurchasesDisplay purchases={purchases} />
       </main>
     </div>
