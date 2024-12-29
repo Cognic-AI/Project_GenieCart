@@ -31,6 +31,7 @@ CREATE TABLE `customer` (
   `password` text NOT NULL,
   `generated_key` text NOT NULL,
   `image` text,
+  `country` VARCHAR(3) DEFAULT NULL, 
   PRIMARY KEY (`customer_id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -42,7 +43,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (2,'Sahan','sahan@gmail.com','$2b$10$046d0Gtk1CeDcKR7ZdpnV.fwQGSq01h9zsatggogVIuF6vgeGFLdG','123',NULL),(3,'Jane Smith','jane@email.com','pass456','456',NULL),(4,'Bob Wilson','bob@email.com','pass789','789',NULL),(6,'ben 10','ben@email.com','$2b$10$Vjb62q4PjXRfdI/4ZT6jO.8b1nn0s/.KKj7Lm6SyM4yFZGEm.zlaO','p4z8ga02','https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flipkart.com%2Fwallpaper-ben-10-ultimate-alien-gwen-quality-paper-13x19-print%2Fp%2Fitm7319b909d7388&psig=AOvVaw3iS1sdR0HzNr7fKP2gsOMc&ust=1735120184631000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDQmcSQwIoDFQAAAAAdAAAAABAY');
+INSERT INTO `customer` VALUES (2,'Sahan','sahan@gmail.com','$2b$10$046d0Gtk1CeDcKR7ZdpnV.fwQGSq01h9zsatggogVIuF6vgeGFLdG','123',NULL,'LKA'),(3,'Jane Smith','jane@email.com','pass456','456',NULL),(4,'Bob Wilson','bob@email.com','pass789','789',NULL,'USA'),(6,'ben 10','ben@email.com','$2b$10$Vjb62q4PjXRfdI/4ZT6jO.8b1nn0s/.KKj7Lm6SyM4yFZGEm.zlaO','p4z8ga02','https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flipkart.com%2Fwallpaper-ben-10-ultimate-alien-gwen-quality-paper-13x19-print%2Fp%2Fitm7319b909d7388&psig=AOvVaw3iS1sdR0HzNr7fKP2gsOMc&ust=1735120184631000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDQmcSQwIoDFQAAAAAdAAAAABAY','AUS');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
