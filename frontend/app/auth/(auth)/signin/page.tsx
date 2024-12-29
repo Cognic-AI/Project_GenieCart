@@ -34,10 +34,28 @@ export default function SignInPage(): React.JSX.Element {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#5479f7' }}>
-      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white' }}>
-        <h2 className="mt-6 text-center text-3xl font-extrabold" style={{ color: '#5479f7' }}>
-          Sign In
+    <div
+  className="flex items-center min-h-screen w-full bg-[url('sign.png')]"
+  style={{
+    backgroundColor: '#5479f7',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    justifyContent: 'flex-end', // Aligns the box to the right
+  }}
+>
+  <div
+    className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl"
+    style={{
+      backgroundColor: 'white',
+      marginRight: '15%', // Adds spacing from the right edge
+    }}
+  >
+    <h2
+      className="mt-6 text-center text-3xl font-extrabold"
+      style={{ color: '#5479f7' }}
+    >
+      Sign In
         </h2>
         {error && (
           <div className="bg-red-500 text-white p-3 rounded-md text-center text-sm">
