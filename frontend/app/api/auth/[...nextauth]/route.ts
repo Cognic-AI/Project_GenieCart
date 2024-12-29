@@ -32,7 +32,8 @@ const handler = NextAuth({
             email: user.email,
             name: user.customer_name,
             generated_key: user.generated_key,
-            image: user.image
+            image: user.image,
+            country: user.country
           };
         } catch (error) {
           console.error('Error during authentication:', error);
@@ -48,6 +49,7 @@ const handler = NextAuth({
         token.name = user.name;
         token.generated_key = user.generated_key;
         token.image = user.image;
+        token.country = user.country
       }
       return token;
     },
@@ -57,6 +59,7 @@ const handler = NextAuth({
         session.user.name = token.name as string;
         session.user.generated_key = token.generated_key as string;
         session.user.image = token.image as string;
+        session.user.country = token.country as String;
       }
       return session;
     }

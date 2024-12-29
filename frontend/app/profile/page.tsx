@@ -6,7 +6,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -86,28 +85,31 @@ export default function ProfilePage() {
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent  className="w-[300px] sm:w-[400px]">
           <DrawerHeader className="text-left">
-            <DrawerTitle>User Profile</DrawerTitle>
-            <DrawerDescription>View your profile details here.</DrawerDescription>
+            <DrawerTitle color='#5479f7'>User Profile</DrawerTitle>
           </DrawerHeader>
           <div className="px-4 py-2 flex flex-col items-center">
-            <img src={user.image || "/placeholder.svg"} alt={user.name} className="w-full h-40 object-cover mb-4" /> 
-            <div className="space-y-4 w-full">
+          <img src={user.image} alt={user.name} className="w-full h-40 object-cover mb-4" />   
+          <div className="space-y-4 w-full">
               <div>
-                <h3 className="font-medium">Name</h3>
+                <h3 className="font-medium" style={{color:"#5479f7"}}>Name</h3>
                 <p className="text-sm text-gray-500">{user.name}</p>
               </div>
               <div>
-                <h3 className="font-medium">Email</h3>
+                <h3 className="font-medium" style={{color:"#5479f7"}}>Email</h3>
                 <p className="text-sm text-gray-500">{user.email}</p>
               </div>
               <div>
-                <h3 className="font-medium">Secret Key</h3>
+                <h3 className="font-medium" style={{color:"#5479f7"}}>Secret Key</h3>
                 <p className="text-sm text-gray-500">{user.generated_key}</p>
+              </div>
+              <div>
+                <h3 className="font-medium" style={{color:"#5479f7"}}>Country</h3>
+                <p className="text-sm text-gray-500">{user.country}</p>
               </div>
             </div>
           </div>
           <div className="px-4 py-2">
-            <nav className="space-y-2">
+            <nav className="space-y-2" style={{color:"#5479f7"}}>
               <Link href="/settings" className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100">
                 <Settings className="h-5 w-5" />
                 <span>Settings</span>
@@ -119,7 +121,7 @@ export default function ProfilePage() {
             </nav>
           </div>
           <DrawerFooter>
-            <Button variant="destructive" className="w-full" onClick={handleSignOut}>Sign Out</Button>
+            <Button variant="destructive" className="w-full" onClick={handleSignOut}style={{backgroundColor:"#5479f7",color:'white'}}>Sign Out</Button>
             <DrawerClose asChild>
               <Button variant="outline">Close</Button>
             </DrawerClose>

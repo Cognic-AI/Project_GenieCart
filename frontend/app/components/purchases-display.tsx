@@ -31,7 +31,7 @@ const PurchaseCard = ({ purchase }: { purchase: Purchase }) =>{
     return (
   <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105">
     <div className="p-6">
-      <h2 className="text-xl font-bold mb-2 text-gray-800">{purchase.name}</h2>
+      <h2 className="text-xl font-bold mb-2 text-gray-800"style={{color:"#5479f7"}}>{purchase.name}</h2>
       <img src={purchase.image_link} alt={purchase.name} className="w-full h-40 object-cover mb-4" />   
       <p className="text-gray-600 mb-4">{purchase.description}</p>
       <div className="flex justify-between items-center mb-4">
@@ -68,8 +68,8 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
     return (
       <div className="text-center py-10">
         <div style={{height:50}}></div>
-        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Your Previouse Suggestions</h3>
-        <p className="text-gray-500">No Previouse suggestions found</p>
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4" style={{color:"#5479f7"}}>Your Previouse Suggestions</h3>
+        <p className="text-gray-500"style={{color:"#5479f7"}}>No Previouse suggestions found</p>
       </div>
     )
   }
@@ -77,7 +77,7 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
   return (
     <div className="py-10 px-4 sm:px-6 lg:px-8">
       <div style={{height:50}}></div>
-      <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center">Your Previouse Suggestions</h3>
+      <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center"style={{color:"#5479f7"}}>Your Previouse Suggestions</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchases.map((purchase) => (
           <PurchaseCard key={purchase.item_id} purchase={purchase} />
