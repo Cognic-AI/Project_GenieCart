@@ -34,9 +34,9 @@ export default function SignInPage(): React.JSX.Element {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#121212' }}>
-      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: '#1e1e1e' }}>
-        <h2 className="mt-6 text-center text-3xl font-extrabold" style={{ color: '#00cec9' }}>
+    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#5479f7' }}>
+      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white' }}>
+        <h2 className="mt-6 text-center text-3xl font-extrabold" style={{ color: '#5479f7' }}>
           Sign In
         </h2>
         {error && (
@@ -56,8 +56,8 @@ export default function SignInPage(): React.JSX.Element {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border text-gray-200 placeholder-gray-500 rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
-                style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
+                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border text-gray-200 placeholder-white rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth:2,color:'white' }}
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -73,8 +73,8 @@ export default function SignInPage(): React.JSX.Element {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border text-gray-200 placeholder-gray-500 rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
-                style={{ backgroundColor: '#2a2a2a', borderColor: '#444444' }}
+                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border text-gray-200 placeholder-white rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth:2 , color:'white'}}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -86,7 +86,7 @@ export default function SignInPage(): React.JSX.Element {
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-150 ease-in-out"
-              style={{ backgroundColor: '#00cec9' }}
+              style={{ backgroundColor: '#5479f7',color:"white" ,fontWeight:'bold', fontSize:20}}
             >
               Sign In
             </button>
@@ -96,7 +96,7 @@ export default function SignInPage(): React.JSX.Element {
           <Link
             href="/auth/signup"
             className="font-medium hover:text-cyan-300 transition duration-150 ease-in-out"
-            style={{ color: '#00cec9', textDecoration: 'none', fontSize: '0.9rem' }}
+            style={{ color: '#5479f7', textDecoration: 'none', fontSize: '0.9rem' }}
           >
             Don&apos;t have an account? Sign Up
           </Link>

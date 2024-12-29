@@ -46,9 +46,9 @@ export default function SignUpPage(): React.JSX.Element {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: 'white' }}>
-      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: '#5479f7' }}>
-        <h2 className="text-3xl font-extrabold text-center" style={{ color: 'white' }}>
+    <div className="flex items-center justify-center min-h-screen w-full" style={{ backgroundColor: '#5479f7' }}>
+      <div className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white' }}>
+        <h2 className="text-3xl font-extrabold text-center" style={{ color: '#5479f7' }}>
           Sign Up
         </h2>
         
@@ -60,7 +60,7 @@ export default function SignUpPage(): React.JSX.Element {
         
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium" style={{ color: 'white' }}>
+            <label htmlFor="name" className="block text-sm font-medium" style={{ color: '#5479f7' }}>
               Name
             </label>
             <input
@@ -70,12 +70,12 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setName(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: 'white', borderColor: '#101D6B', borderWidth: 3, color: '#5479f7' }}
+              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium" style={{ color: 'white' }}>
+            <label htmlFor="email" className="block text-sm font-medium" style={{ color: '#5479f7' }}>
               Email
             </label>
             <input
@@ -85,12 +85,12 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: 'white', borderColor: '#101D6B', borderWidth: 3, color: '#5479f7' }}
+              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
             />
           </div>
           
           <div>
-            <label htmlFor="password" className="block text-sm font-medium" style={{ color: 'white' }}>
+            <label htmlFor="password" className="block text-sm font-medium" style={{ color: '#5479f7' }}>
               Password
             </label>
             <input
@@ -100,7 +100,7 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: 'white', borderColor: '#101D6B', borderWidth: 3, color: '#5479f7' }}
+              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function SignUpPage(): React.JSX.Element {
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-150 ease-in-out"
-            style={{ backgroundColor: 'white', color:'#5479f7', fontWeight:'bold', fontSize:20}}
+            style={{ backgroundColor: '#5479f7', color:'white', fontWeight:'bold', fontSize:20}}
           >
             Sign Up
           </button>
@@ -128,7 +128,7 @@ export default function SignUpPage(): React.JSX.Element {
           <Link
             href="/auth/signin"
             className="font-medium hover:text-cyan-300 transition duration-150 ease-in-out"
-            style={{ color: 'white', textDecoration: 'none', fontSize: '0.9rem' }}
+            style={{ color: '#5479f7', textDecoration: 'none', fontSize: '0.9rem' }}
           >
             Already have an account? Sign In
           </Link>
