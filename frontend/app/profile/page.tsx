@@ -103,7 +103,7 @@ export default function ProfilePage() {
 
   const showPurchases = () => {
     if (purchases.length === 0) {
-      return <div>No purchases found</div>;
+      return <div>No suggestions found</div>;
     }
     return PurchasesPage(purchases);
   };
