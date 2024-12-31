@@ -29,11 +29,6 @@ const handler = NextAuth({
           if (!passwordMatch) return null;
           return {
             id: user.customer_id.toString(),
-            email: user.email,
-            name: user.customer_name,
-            generated_key: user.generated_key,
-            image: user.image,
-            country: user.country
           };
         } catch (error) {
           console.error('Error during authentication:', error);
@@ -46,20 +41,12 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.name = user.name;
-        token.generated_key = user.generated_key;
-        token.image = user.image;
-        token.country = user.country
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.generated_key = token.generated_key as string;
-        session.user.image = token.image as string;
-        session.user.country = token.country as String;
       }
       return session;
     }
