@@ -1,26 +1,36 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Pencil, Check } from 'lucide-react'
+import { Avatar } from "@/components/ui/avatar"
+import { useSession } from 'next-auth/react';
+
 
 export default function SettingsPage() {
+const { data: session, status } = useSession();
+const user = session?.user;
   const [isEditing, setIsEditing] = useState(false)
-  const [userName, setUserName] = useState('John Doe')
-  const [tempUserName, setTempUserName] = useState(userName)
+  const [tempUserName, setTempUserName] = useState("")
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [avatarSrc, setAvatarSrc] = useState(""); // Avatar image source
-  const [newAvatarLink, setNewAvatarLink] = useState(""); // For the input link
+  const [newAvatarLink, setNewAvatarLink] = useState(user?.image || "https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
+  const [user_,setUser] = useState({
+    customer_id:user?.id,
+    customer_name: '',
+    email: '',
+    image:'',
+    generated_key:'',
+    country:'',
+    price_level:'Low',
+  });
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setAvatarSrc(URL.createObjectURL(file));
+      user_.image =  URL.createObjectURL(file)
     }
   };
 
@@ -29,18 +39,114 @@ export default function SettingsPage() {
   };
 
   const handleSubmitClick = () => {
-    setAvatarSrc(newAvatarLink); // Update avatarSrc with the new link
+    user_.image = newAvatarLink; // Update avatarSrc with the new link
     setIsEditingProfile(false); // Exit edit mode
+    handlePicSaving();
   };
 
   const handleEditToggle = () => {
-    if (isEditing) {
-      setUserName(tempUserName)
-    } else {
-      setTempUserName(userName)
-    }
-    setIsEditing(!isEditing)
+    setIsEditing(!isEditing);
+    setTempUserName(user_.customer_name);
   }
+
+  const handlePriceSaving = async () => {
+    try {
+      const response = await fetch('/api/settings/price', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: user?.id,price_level:user_.price_level }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get the error
+        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+      }
+
+      // Handle successful response (e.g., show success message or update state)
+        console.log('Price level saved successfully.');
+
+    } catch (error) {
+    console.error('Error saving price level:', error.message);
+    // Optionally, you could show the error to the user in the UI as well
+    }
+  };
+
+  const handleNameSaving = async () => {
+    user_.customer_name = tempUserName;
+    try {
+      const response = await fetch('/api/settings/name', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: user?.id,name: tempUserName}),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get the error
+        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+      }
+
+      // Handle successful response (e.g., show success message or update state)
+        console.log('Name saved successfully.');
+        handleEditToggle();
+
+    } catch (error) {
+    console.error('Error saving name:', error.message);
+    // Optionally, you could show the error to the user in the UI as well
+    }
+  };
+
+  const handlePicSaving = async () => {
+    try {
+      const response = await fetch('/api/settings/pic', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: user?.id,pic:newAvatarLink }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the response body to get the error
+        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+      }
+
+      // Handle successful response (e.g., show success message or update state)
+        console.log('Pic saved successfully.');
+
+    } catch (error) {
+    console.error('Error saving pic:', error.message);
+    // Optionally, you could show the error to the user in the UI as well
+    }
+  };
+
+  const handleLoadingProfile = async () => {
+    try {
+      const response = await fetch('/api/profile/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: user?.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch purchases');
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setUser((data)[0]);
+      } else {
+        console.error('Unexpected response structure:', data, data.type);
+      }
+      console.log('API Response:', data); // Log the response to confirm its structure
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      handleLoadingProfile();
+    }
+  }, [user]);
 
   return (
     <div
@@ -62,26 +168,29 @@ export default function SettingsPage() {
       {/* User Price Preference */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold" style={{color:"#5479f7"}}>Price Preference</h3>
-        <RadioGroup defaultValue="middle" className="space-y-3">
+        <RadioGroup value={user_.price_level} className="space-y-3">
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="low" id="low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'/>
-            <Label htmlFor="low" className="cursor-pointer">
+            <RadioGroupItem value="Low" id="Low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {user_.price_level = "Low"}}/>
+            <Label htmlFor="Low" className="cursor-pointer">
               Low range prices
             </Label>
           </div>
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="middle" id="middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'/>
-            <Label htmlFor="middle" className="cursor-pointer">
+            <RadioGroupItem value="Middle" id="Middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() =>  {user_.price_level = "Middle"}}/>
+            <Label htmlFor="Middle" className="cursor-pointer">
               Middle range prices
             </Label>
           </div>
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="high" id="high" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'/>
-            <Label htmlFor="high" className="cursor-pointer">
+            <RadioGroupItem value="High" id="High" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() =>  {user_.price_level = "High"}}/>
+            <Label htmlFor="High" className="cursor-pointer">
               High range prices
             </Label>
           </div>
         </RadioGroup>
+        <Button onClick={handlePriceSaving} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
+                Save
+              </Button>
           </div>
 
           {/* User Name Change */}
@@ -89,17 +198,23 @@ export default function SettingsPage() {
             <h3 className="text-lg font-semibold"  style={{color:"#5479f7"}}>User Name</h3>
             <div className="flex items-center space-x-2">
               {isEditing ? (
+                <div className='flex'>
                 <Input 
                   value={tempUserName} 
                   onChange={(e) => setTempUserName(e.target.value)}
-                  className="flex-grow"
                 />
-              ) : (
-                <span className="text-lg">{userName}</span>
-              )}
-              <Button onClick={handleEditToggle} size="icon"style={{color:"#5479f7", background:'white'}}>
-                {isEditing ? <Check className="h-4 w-4"  /> : <Pencil className="h-4 w-4" />}
+                <Button onClick={handleNameSaving} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
+                Save
               </Button>
+                </div>
+              ) : (
+                <div>
+                <span className="text-lg">{user_.customer_name}</span>
+                <Button onClick={handleEditToggle} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
+                Change
+              </Button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -108,7 +223,7 @@ export default function SettingsPage() {
       <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Profile Picture</h3>
       <div className="flex items-center space-x-4">
       <Avatar className="h-24 w-24">
-      <img src={avatarSrc || 'https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'} alt="Profile" className="w-full h-40 object-cover mb-4" />  
+      <img src={user_.image || 'https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'} alt="Profile" className="w-full h-40 object-cover mb-4" />  
         </Avatar>
         <div>
           {isEditingProfile ? (
@@ -121,7 +236,7 @@ export default function SettingsPage() {
                 className="border p-2"
               />
               <Button onClick={handleSubmitClick} style={{ color: "white", background: "#5479f7" }}>
-                Submit
+                Save
               </Button>
             </div>
           ) : (

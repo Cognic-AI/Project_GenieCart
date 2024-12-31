@@ -10,13 +10,12 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Settings, HelpCircle } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '../components/header';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PurchasesPage from '../components/purchases-display';
-import { Avatar } from '@/components/ui/avatar';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -24,6 +23,16 @@ export default function ProfilePage() {
   const [purchases, setPurchases] = useState([]);
   const { data: session, status } = useSession();
   const user = session?.user;
+  const [user_, setUser] = useState({
+    customer_id:user?.id,
+    customer_name: '',
+    email: '',
+    image:'',
+    price_level:'',
+    generated_key:'',
+    country:''
+  });
+
 
   const handleLoadingPurchases = async () => {
     try {
@@ -52,9 +61,35 @@ export default function ProfilePage() {
     }
   };
 
+  const handleLoadingProfile = async () => {
+    try {
+      const response = await fetch('/api/profile/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: user?.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch purchases');
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setUser((data)[0]);
+      } else {
+        console.error('Unexpected response structure:', data, data.type);
+      }
+      console.log('API Response:', data); // Log the response to confirm its structure
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       handleLoadingPurchases();
+      handleLoadingProfile();
     }
   }, [user]);
 
@@ -89,23 +124,23 @@ export default function ProfilePage() {
             <DrawerTitle color='#5479f7'>User Profile</DrawerTitle>
           </DrawerHeader>
           <div className="px-4 py-2 flex flex-col items-center">
-          <img style={{borderRadius:30}} src={user.image||"https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"} alt={user.name} className="w-full h-40 object-cover mb-4" />   
+          <img style={{borderRadius:30}} src={user_.image||"https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"} alt={user.name} className="w-full h-40 object-cover mb-4" />   
           <div className="space-y-4 w-full">
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Name</h3>
-                <p className="text-sm text-gray-500">{user.name}</p>
+                <p className="text-sm text-gray-500">{user_.customer_name}</p>
               </div>
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Email</h3>
-                <p className="text-sm text-gray-500">{user.email}</p>
+                <p className="text-sm text-gray-500">{user_.email}</p>
               </div>
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Secret Key</h3>
-                <p className="text-sm text-gray-500">{user.generated_key}</p>
+                <p className="text-sm text-gray-500">{user_.generated_key}</p>
               </div>
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Country</h3>
-                <p className="text-sm text-gray-500">{user.country}</p>
+                <p className="text-sm text-gray-500">{user_.country}</p>
               </div>
             </div>
           </div>
