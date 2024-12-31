@@ -5,31 +5,25 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <div
-    className="w-full max-w mx-auto px-4 bg-[url('back.png')]"
+  className="flex items-center min-h-screen w-full bg-[url('back.png')]"
+  style={{
+    backgroundColor: '#5479f7',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    justifyContent: 'flex-start', // Aligns the box to the right
+  }}
+>
+  <div
+    className="w-full max-w-md p-8 space-y-8 rounded-xl shadow-2xl"
     style={{
-      backgroundSize: 'cover',
-      height: '100vh',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: 'white',
+      marginLeft: '15%', // Adds spacing from the right edge
     }}
   >
-    <div
-      className="bg-white p-8 rounded-lg shadow-md text-center"
-      style={{
-        width: '400px',
-        height: '300px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
       <h1
         className="text-3xl font-bold mb-6 text-gray-800"
-        style={{ color: '#5479f7' }}
+        style={{ color: '#5479f7' }} 
       >
           Welcome to Customer Management App
         </h1>
