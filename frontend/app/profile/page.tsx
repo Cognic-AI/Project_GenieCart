@@ -16,6 +16,7 @@ import { Header } from '../components/header';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PurchasesPage from '../components/purchases-display';
+import { Avatar } from '@/components/ui/avatar';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -88,7 +89,7 @@ export default function ProfilePage() {
             <DrawerTitle color='#5479f7'>User Profile</DrawerTitle>
           </DrawerHeader>
           <div className="px-4 py-2 flex flex-col items-center">
-          <img src={user.image} alt={user.name} className="w-full h-40 object-cover mb-4" />   
+          <img style={{borderRadius:30}} src={user.image||"https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"} alt={user.name} className="w-full h-40 object-cover mb-4" />   
           <div className="space-y-4 w-full">
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Name</h3>
@@ -113,10 +114,6 @@ export default function ProfilePage() {
               <Link href="/settings" className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100">
                 <Settings className="h-5 w-5" />
                 <span>Settings</span>
-              </Link>
-              <Link href="/help" className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100">
-                <HelpCircle className="h-5 w-5" />
-                <span>Help</span>
               </Link>
             </nav>
           </div>
