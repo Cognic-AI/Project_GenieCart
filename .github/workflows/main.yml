@@ -1,0 +1,42 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: mydatabase
+          MYSQL_USER: myuser
+          MYSQL_PASSWORD: mypassword
+        ports:
+          - "3306:3306"
+        volumes:
+          - ./path/to/your/db.sql:/docker-entrypoint-initdb.d/db.sql
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and start services
+        run: |
+          docker-compose up -d
+
+      - name: Run tests
+        run: |
+          docker-compose run --rm frontend npm test
+
+      - name: Cleanup
+        run: |
+          docker-compose down
