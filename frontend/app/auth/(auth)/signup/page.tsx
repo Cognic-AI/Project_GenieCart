@@ -29,7 +29,7 @@ export default function SignUpPage(): React.JSX.Element {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password, name, country }),
       });
 
       const data = await response.json();

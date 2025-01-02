@@ -38,14 +38,15 @@ def initialize_clients() -> tuple[TavilyClient, genai.GenerativeModel]:
     
     return tavily_client, gemini_model
 
-def generate_search_results(prompt: str, custom_domains: List[str],tags: List[str]) -> None:
+def generate_search_results(prompt: str, custom_domains: List[str],tags: List[str],country: str) -> None:
     """
     Generate search results for a given prompt, restricting to the provided domains.
     
     Args:
     - prompt (str): The search prompt to generate queries for.
     - custom_domains (List[str]): A list of domains to restrict the search to.
-
+    - tags A list of tags to be used in the search.
+    - country The country where the products searched.
     Returns:
     - None
     """
@@ -55,7 +56,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     tavily_client, gemini_model = initialize_clients()
     
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant in USA that converts the user prompt into a search query to find products from the web. The products need to be buy from USA. You only provide the search query. No other responds.
+    role: system, content: You are a helpful assistant in {country} that converts the user prompt into a search query to find products from the web. The products need to be buy from {country}. You only provide the search query. No other responds.
     role: user, content: {prompt}, tags: {tags}"""
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
@@ -114,4 +115,4 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"])
+# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"],USA)

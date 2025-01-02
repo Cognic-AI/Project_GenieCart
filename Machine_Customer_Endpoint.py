@@ -35,6 +35,13 @@ def recommend():
         request_data = request.get_json()
         print(f"Request data received")
 
+        print("Matching with machine customer...")
+        try:
+            machine_customer = mc.create_machine_customer(request_data)
+            mc.print_machine_customer(machine_customer)
+        except ValueError as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
+
         print("Agent workflow started...")
 
         output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
@@ -59,19 +66,12 @@ def recommend():
                 sys.stdout = dual_stream  # Redirect stdout to dual stream
 
                 # Run the agent and print output to both file and terminal
-                agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"])
+                agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"],machine_customer.country)
 
         finally:
             sys.stdout = original_stdout  # Restore original stdout
 
         print("Agent workflow completed...")
-
-        print("Matching with machine customer...")
-        try:
-            machine_customer = mc.create_machine_customer(request_data)
-            mc.print_machine_customer(machine_customer)
-        except ValueError as e:
-            return jsonify({"status": "error", "message": str(e)}), 400
         
         # Get items from CSV and create model
         print("\nLoading items from CSV...")

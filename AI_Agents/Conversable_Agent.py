@@ -15,10 +15,11 @@ You are the supervisor agent coordinating multiple sub-agents to fulfill user qu
 
 search_agent_system_message = """
 You are responsible for executing the `generate_search_results` function.
-This function takes two inputs:
+This function takes four inputs:
 - `user_query`: A string representing the product or item to search for.
 - `custom_domains`: A list of domains where the search should be restricted.
 - `tags`: A list of tags to be used in the search.
+- `country`: The country where the products searched.
 """
 
 
@@ -44,7 +45,7 @@ This function takes one input:
 Execute the function and ensure it runs successfully.
 """
 
-def main(user_query, custom_domains,tags):
+def main(user_query, custom_domains,tags,country):
     llm_config = {
         "config_list": [
             {"model": "gpt-4o-mini", "api_key": os.getenv("OPENAI_API_KEY")}
@@ -115,7 +116,7 @@ def main(user_query, custom_domains,tags):
     result = entrypoint_agent.initiate_chats([
         {
             "recipient": search_agent,
-            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}",
+            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}. country is : {country}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },

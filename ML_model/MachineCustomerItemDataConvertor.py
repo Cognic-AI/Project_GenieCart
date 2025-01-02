@@ -18,7 +18,7 @@ def create_machine_customer(request):
     if customer is None:
         raise ValueError("Customer not found")
     
-    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer[1], customer[2])
+    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer[1], customer[2], customer[6])
     mc.history = fetchHistory(mc.customer_id)
     
     return mc

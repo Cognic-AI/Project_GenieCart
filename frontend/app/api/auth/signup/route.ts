@@ -22,9 +22,9 @@ function generateKey(length: number = 12): string {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, email, password } = await req.json();
+  const { name, email, password, country } = await req.json();
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !country) {
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
   }
 
@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     // Insert the new user into the database with the generated key
     const [result] = await connection.query<ResultSetHeader>(
-      'INSERT INTO customer (customer_name, email, password, generated_key) VALUES (?, ?, ?, ?)',
-      [name, email, hashedPassword, generatedKey]
+      'INSERT INTO customer (customer_name, email, password, generated_key, country) VALUES (?, ?, ?, ?, ?)',
+      [name, email, hashedPassword, generatedKey, country]
     );
 
     if (result.affectedRows > 0) {
