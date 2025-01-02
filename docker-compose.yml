@@ -28,7 +28,9 @@ services:
       - SERVER_URL=http://backend:8000
 
   database:
-    image: mysql:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.database
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: machine_customer
@@ -36,8 +38,6 @@ services:
       MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
-    volumes:
-      - dump_final.sql:/docker-entrypoint-initdb.d/db.sql
     networks:
       - app-network
     healthcheck:
@@ -48,4 +48,4 @@ services:
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
