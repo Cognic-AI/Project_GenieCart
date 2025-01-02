@@ -44,7 +44,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Jane Smith','jane@email.com','pass456','456',NULL,'AFA','Low'),(2,'Bob Wilson','bob@email.com','pass789','789',NULL,'USA','Middle'),(3,'ben 10','ben@email.com','$2b$10$Vjb62q4PjXRfdI/4ZT6jO.8b1nn0s/.KKj7Lm6SyM4yFZGEm.zlaO','p4z8ga02','https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flipkart.com%2Fwallpaper-ben-10-ultimate-alien-gwen-quality-paper-13x19-print%2Fp%2Fitm7319b909d7388&psig=AOvVaw3iS1sdR0HzNr7fKP2gsOMc&ust=1735120184631000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDQmcSQwIoDFQAAAAAdAAAAABAY','AUS','High');
+INSERT INTO `customer` VALUES (1,'Jane Smith','jane@email.com','pass456','456',NULL,'AFA','Low'),(2,'Bob Wilson','bob@email.com','pass789','789',NULL,'USA','Middle'),(3,'Bruce','bruce@email.com','$2b$10$Vjb62q4PjXRfdI/4ZT6jO.8b1nn0s/.KKj7Lm6SyM4yFZGEm.zlaO','p4z8ga02','https://t3.ftcdn.net/jpg/08/50/47/20/360_F_850472001_eLLSs2ZOAAqJBpJN0r3cTtBZVSdDt3TH.jpg','AUS','High');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
