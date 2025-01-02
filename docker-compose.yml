@@ -9,7 +9,7 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3305:3306"
     networks:
       - app-network
     healthcheck:
