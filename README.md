@@ -1,4 +1,4 @@
-# Project GenieCart
+# Project GenieCart 
 
 **Project GenieCart** is an AI-driven e-commerce tool designed to streamline product data management and categorization. It leverages advanced machine learning models and AI agents to automate data analysis, filtering, and organization.
 

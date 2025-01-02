@@ -3,6 +3,24 @@ import { connection } from '../../../database/db';
 import bcrypt from 'bcrypt';
 import { ResultSetHeader } from 'mysql2';
 
+// Generate a more robust key with letters and numbers
+function generateKey(length: number = 12): string {
+  const numbers = '0123456789';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const allChars = numbers + letters;
+  
+  // Ensure we start with at least one letter and one number
+  let key = letters.charAt(Math.floor(Math.random() * letters.length)) +
+            numbers.charAt(Math.floor(Math.random() * numbers.length));
+  
+  // Fill the rest with random characters
+  for (let i = key.length; i < length; i++) {
+    key += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+  
+  return key;
+}
+
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
 
@@ -25,7 +43,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate random key
-    const generatedKey = Math.random().toString(36).substr(2, 8);
+    const generatedKey = generateKey();
 
     // Insert the new user into the database with the generated key
     const [result] = await connection.query<ResultSetHeader>(
