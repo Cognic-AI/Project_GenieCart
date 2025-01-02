@@ -109,4 +109,4 @@ def recommend():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5000, threaded=True, use_reloader=False)
+    app.run(debug=False, port=8000, threaded=True, use_reloader=False)
