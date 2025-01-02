@@ -97,8 +97,15 @@ export default function ProfilePage() {
   if (!user) return <div>Not authenticated</div>;
 
   const handleSignOut = async () => {
-    await signOut();
-    router.replace('/'); // Use `replace` to prevent going forward
+    try {
+      await signOut({ 
+        callbackUrl: '/',
+        redirect: true
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      router.replace('/');
+    }
   };
 
   const showPurchases = () => {
@@ -153,7 +160,7 @@ export default function ProfilePage() {
             </nav>
           </div>
           <DrawerFooter>
-            <Button variant="destructive" className="w-full" onClick={handleSignOut}style={{backgroundColor:"#5479f7",color:'white'}}>Sign Out</Button>
+            <Button variant="destructive" className="w-full" onClick={handleSignOut} style={{backgroundColor:"#5479f7",color:'white'}}>Sign Out</Button>
             <DrawerClose asChild>
               <Button variant="outline">Close</Button>
             </DrawerClose>
@@ -163,4 +170,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-
