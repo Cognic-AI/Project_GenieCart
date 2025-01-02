@@ -8,3 +8,6 @@ requests
 python-dotenv
 autogen
 DataTypes
+Flask
+python-dotenv
+smtplib
