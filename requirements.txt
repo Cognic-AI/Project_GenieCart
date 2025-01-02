@@ -10,4 +10,3 @@ autogen
 DataTypes
 Flask
 python-dotenv
-smtplib
