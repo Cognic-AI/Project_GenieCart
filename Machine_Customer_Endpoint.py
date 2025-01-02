@@ -8,7 +8,7 @@ import ML_model.Model as md
 from ML_model.Database import Database as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
-#from emailservice import send_email
+from emailservice import send_email
 
 load_dotenv()
 
@@ -98,7 +98,7 @@ def recommend():
             )
             database.add_search_result(machine_customer.customer_id, result)
             print("Sending email...")
-            #print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
+            print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
             return jsonify({"status": "success and email sent"})
         except Exception as e:
             print(f"Error during model execution: {str(e)}")
