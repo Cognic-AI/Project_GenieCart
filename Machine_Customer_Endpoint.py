@@ -23,7 +23,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/api/recommend', methods=['POST'])
 def recommend():
     try:
         print("\n<====================>")
@@ -107,6 +107,10 @@ def recommend():
     except Exception as e:
         print(f"\nERROR: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
+    
+@app.route('/api/health', methods=['GET']) 
+def health_check(): 
+    return jsonify({"status": "healthy"}),200
 
 if __name__ == '__main__':
     app.run(debug=False, port=8000, threaded=True, use_reloader=False)

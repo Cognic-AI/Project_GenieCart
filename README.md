@@ -78,6 +78,16 @@ Project_GenieCart/
    echo "SMTP_PASSWORD=your_smtp_password_here" >> .env
    echo "SMTP_SERVER_HOST=your_smtp_server_here" >> .env
    ```
+4. Run the backend:
+   ```bash
+   python Machine_Customer_Endpoint.py
+   ```
+5. Initialize the database(dump_final.db)
+6. Run the frontend:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
 
 ## Usage
 

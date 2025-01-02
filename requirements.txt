@@ -10,4 +10,7 @@ autogen
 DataTypes
 Flask
 python-dotenv
-smtplib
+pandas
+numpy
+scikit-learn
+pytest-shutil
