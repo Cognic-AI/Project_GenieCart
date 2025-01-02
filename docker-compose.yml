@@ -48,6 +48,23 @@ services:
       - app-network
     environment:
       - SERVER_URL=http://backend:8000
+      
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: machine_customer
+    ports:
+      - "3307:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   app-network:
