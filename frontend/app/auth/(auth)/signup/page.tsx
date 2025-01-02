@@ -87,7 +87,7 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setName(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
+              style={{ color: '#5479f7', borderColor: '#101D6B', borderWidth: 3, backgroundColor: 'white' }}
             />
           </div>
           
@@ -102,7 +102,7 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
+              style={{ color: '#5479f7', borderColor: '#101D6B', borderWidth: 3, backgroundColor: 'white' }}
             />
           </div>
           
@@ -117,7 +117,7 @@ export default function SignUpPage(): React.JSX.Element {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm"
-              style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth: 3, color: 'white' }}
+              style={{ color: '#5479f7', borderColor: '#101D6B', borderWidth: 3, backgroundColor: 'white' }}
             />
           </div>
 
