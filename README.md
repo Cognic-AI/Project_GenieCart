@@ -78,7 +78,6 @@ Project_GenieCart/
    echo "SMTP_PASSWORD=your_smtp_password_here" >> .env
    echo "SMTP_SERVER_HOST=your_smtp_server_here" >> .env
    ```
-
 ## Usage
 
 ### Running the Endpoint manually

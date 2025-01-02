@@ -74,8 +74,8 @@ export default function SignInPage(): React.JSX.Element {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border text-gray-200 placeholder-white rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
-                style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth:2,color:'white' }}
+                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border text-gray-200 placeholder-grey-200 rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ color: '#5479f7', borderColor: '#101D6B', borderWidth:2,backgroundColor:'white' }}
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -91,8 +91,8 @@ export default function SignInPage(): React.JSX.Element {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border text-gray-200 placeholder-white rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
-                style={{ backgroundColor: '#5479f7', borderColor: '#101D6B', borderWidth:2 , color:'white'}}
+                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border text-gray-200 placeholder-grey-200 rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm"
+                style={{ color: '#5479f7', borderColor: '#101D6B', borderWidth:2 , backgroundColor:'white'}}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
