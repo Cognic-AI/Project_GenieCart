@@ -92,6 +92,12 @@ cd frontend
 npm install
 npm run dev
 ```
+```bash
+Example singup to the site 
+   email: akinduhiman2@gmail.com
+   password: 1234
+```
+
 ### Calling the endpoint with postman
 
 To test the API endpoint using Postman:
