@@ -15,10 +15,10 @@ load_dotenv()
 # Example request data
 # {
 #     "secret_key": "G6QJ6DDNI0C9",
-    # "item_name": "A4 bundle", 
-    # "custom_domains": ["https://www.amazon.com"],
-    # "price_level": 3, 
-    # "tags": ["white","photocopy","a4"]
+#     "item_name": "Tomato Sauce Bottle", 
+#     "custom_domains": ["https://www.amazon.com"],
+#     "price_level": 3, 
+#     "tags": ["Tomato","Quality"]
 # }
 
 app = Flask(__name__)
