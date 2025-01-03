@@ -93,7 +93,7 @@ npm install
 npm run dev
 ```
 
-#### Example singup to the site 
+#### Example login to the site 
 ```bash
    email: akinduhiman2@gmail.com
    password: 1234
