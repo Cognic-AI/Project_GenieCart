@@ -95,8 +95,8 @@ npm run dev
 
 #### Example login to the site 
 ```bash
-   email: akinduhiman2@gmail.com
-   password: 1234
+email: akinduhiman2@gmail.com
+password: 1234
 ```
 
 ### Calling the endpoint with postman
