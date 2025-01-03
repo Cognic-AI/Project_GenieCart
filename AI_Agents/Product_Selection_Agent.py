@@ -53,12 +53,13 @@ def slow_scroll_page(driver: webdriver.Chrome) -> None:
         # Update the total height (to handle dynamically loaded content)
         total_height = driver.execute_script("return document.body.scrollHeight")
 
-def extract_all_links(item_name: str) -> None:
+def extract_all_links(item_name: str,country_code: str) -> None:
     """
     Extracts all product links by searching for the item name on given websites, handling various website structures.
 
     Args:
     - item_name (str): The name of the item to search for.
+    - country_code (str): The country code where the products searched.
 
     Returns:
     - None
@@ -68,6 +69,7 @@ def extract_all_links(item_name: str) -> None:
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
+    options.add_argument(f'--geo-location={country_code}')  # Set geolocation 
     # options.add_argument('--headless')  
 
     print("------------------------------------------------------------------------------------------------")
@@ -106,7 +108,7 @@ def extract_all_links(item_name: str) -> None:
         gemini_model = initialize_gemini()
 
         final_prompt = f"""
-            role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name. Return the full link with the website. Return line by line. Make sure you return only the links that are related to a one specific item (Analyze the link and get an understanding of it).
+            role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name and from {country_code}. Return the full link with the website. Return line by line. Make sure you return only the links that are related to a one specific item (Analyze the link and get an understanding of it).   
             role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
         response = gemini_model.generate_content(contents=final_prompt)
@@ -121,4 +123,4 @@ def extract_all_links(item_name: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("A4 bundle")
+# extract_all_links("A4 bundle", "US")

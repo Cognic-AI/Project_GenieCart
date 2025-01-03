@@ -49,14 +49,15 @@ def initialize_gemini(gemini_api_key: str) -> genai.GenerativeModel:
     )
 
 # Function to extract all visible text from a webpage
-def extract_page_content(url: str) -> Union[str, BeautifulSoup]:
+def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup]:
     """Extracts and parses the content of a webpage."""
     try:
         headers: dict = {
             "User-Agent": os.getenv("USER_AGENT"),
-            "Accept-Language": "en-US,en;q=0.9"
+            "Accept-Language": "en-US,en;q=0.9",
+            "geo-location": country_code
         }
-        response: requests.Response = requests.get(url, headers=headers)
+        response: requests.Response = requests.get(url, headers=headers, timeout=30)
         response.raise_for_status()  # Raise HTTPError for bad responses
 
         # Parse the HTML using BeautifulSoup
@@ -67,7 +68,7 @@ def extract_page_content(url: str) -> Union[str, BeautifulSoup]:
         return f"Error extracting content from {url}: {e}"
 
 # Process each link and save responses in separate files
-def process_links() -> None:
+def process_links(country_code: str) -> None:
     """Processes each link and saves structured responses in separate files."""
     print("------------------------------------------------------------------------------------------------")
     print("Data extraction agent started")
@@ -85,12 +86,11 @@ def process_links() -> None:
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)  # Remove the folder and its contents
     os.makedirs(folder_path, exist_ok=True)  # Recreate the folder
-
     for link in links:
         print(f"Processing: {link}")
         try:
             # Extract page content
-            page_content: Union[str, BeautifulSoup] = extract_page_content(link)
+            page_content: Union[str, BeautifulSoup] = extract_page_content(link,country_code)
 
             if isinstance(page_content, str):
                 print(page_content)
@@ -102,7 +102,8 @@ def process_links() -> None:
 
             # Send the content to Gemini for structuring
             prompt: str = f"""
-            Structure the following product details in JSON format from the webpage html content(give in the same name as the fields):
+            Structure the following product details in JSON format from the webpage html content(give in the same name as the fields).
+            Only extract data if the product is available to ship to {country_code}. If not available to {country_code}, return an empty JSON object.
             Add the following fields to the JSON:
             product_url
             product_name
@@ -112,7 +113,7 @@ def process_links() -> None:
             product_rating (Mostly this is available which is usually 0 ot 5 find the rating and add it)
             Color (all colors available)
             availability(make false if mentioned as out of stock otherwise always true)
-            shipping (if mentioned as not shipping to the current location, mention false otherwise always true)
+            shipping (if mentioned as not shipping to {country_code}, mention false otherwise always true)
             delivery_date (add the delivery date or how long it takes to deliver)
             delivery_cost(or shipping cost)
             warranty(ture or false on availablity)
@@ -124,6 +125,7 @@ def process_links() -> None:
             URL: {link}
             HTML Content: {page_content}
             """
+            
             response = gemini_model.generate_content(contents=prompt)
 
             # Write new files
@@ -149,4 +151,4 @@ def sanitize_filename(url: str) -> str:
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 # Example usage
-# process_links()
+# process_links("US")

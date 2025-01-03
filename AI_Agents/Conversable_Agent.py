@@ -19,7 +19,7 @@ This function takes four inputs:
 - `user_query`: A string representing the product or item to search for.
 - `custom_domains`: A list of domains where the search should be restricted.
 - `tags`: A list of tags to be used in the search.
-- `country`: The country where the products searched.
+- `country_code`: The country code where the products searched. 
 """
 
 
@@ -27,12 +27,15 @@ product_selection_agent_system_message = """
 Your task is to execute the `extract_all_links` function when invoked. 
 This function takes one input:
 - A string representing the product or item name.
+- A string representing the country code where the products searched.
 
 Execute the function with the given input and ensure it runs successfully.
 """
 
-data_extract_agent_system_message="""" 
+data_extract_agent_system_message=""" 
 Your task is to execute the `process_links` function when invoked.
+This function takes one input:
+- A string representing the country code where the products searched.
 
 Execute the function and ensure it runs successfully.
 """
@@ -45,7 +48,7 @@ This function takes one input:
 Execute the function and ensure it runs successfully.
 """
 
-def main(user_query, custom_domains,tags,country):
+def main(user_query, custom_domains,tags,country_code):
     llm_config = {
         "config_list": [
             {"model": "gpt-4o-mini", "api_key": os.getenv("OPENAI_API_KEY")}
@@ -116,19 +119,19 @@ def main(user_query, custom_domains,tags,country):
     result = entrypoint_agent.initiate_chats([
         {
             "recipient": search_agent,
-            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}. country is : {country}",
+            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}. country code is : {country_code}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": product_selection_agent,
-            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}",
+            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": data_extract_agent,
-            "message": f"Please execute the `process_links` function.",
+            "message": f"Please execute the `process_links` function. country code is {country_code}", 
             "max_turns": 2,
             "summary_method": "last_msg",
         },
