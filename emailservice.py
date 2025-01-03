@@ -60,7 +60,7 @@ def send_email(receiver_name, receiver_email, items, item_name):
 
     html_content += """
                     </table>
-                    <p style="font-size: 14px; margin-top: 20px;">Thank you for using Geniecart! We’re here to help you find the best products for your needs.</p>
+                    <p style="font-size: 14px; margin-top: 20px;">Thank you for using Geniecart! We're here to help you find the best products for your needs.</p>
                 </td>
             </tr>
             <tr>
@@ -73,16 +73,20 @@ def send_email(receiver_name, receiver_email, items, item_name):
     </html>
     """
 
-
-
     # Attach the HTML content to the email
     message.attach(MIMEText(html_content, "html"))
 
-    # Connect to the SMTP server and send the email
-    with smtplib.SMTP(os.getenv("SMTP_SERVER_HOST"), 587) as server:
-        server.starttls()
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message.as_string())
+    try:
+        # Connect to the SMTP server and send the email
+        with smtplib.SMTP(os.getenv("SMTP_SERVER_HOST"), 587) as server:
+            server.starttls()
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        return "Email sent successfully!"
+    except smtplib.SMTPAuthenticationError:
+        raise Exception("Failed to authenticate with SMTP server. Please check your email credentials in the .env file and ensure you're using an App Password if using Gmail.")
+    except Exception as e:
+        raise Exception(f"Failed to send email: {str(e)}")
 
-    return "Email sent successfully!"
-
+# For testing - commented out to prevent accidental sends
+# send_email("John Doe", "akinduhiman2@gmail.com", [], "Item Name")

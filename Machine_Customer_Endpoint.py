@@ -42,36 +42,36 @@ def recommend():
         except ValueError as e:
             return jsonify({"status": "error", "message": str(e)}), 400
 
-        print("Agent workflow started...")
+        # print("Agent workflow started...")
 
-        output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-        original_stdout = sys.stdout  # Save the original stdout
+        # output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
+        # original_stdout = sys.stdout  # Save the original stdout
 
-        try:
-            with open(output_filename, "w", encoding="utf-8") as f:
-                class DualStream(io.TextIOBase):
-                    def __init__(self, file, terminal):
-                        self.file = file
-                        self.terminal = terminal
+        # try:
+        #     with open(output_filename, "w", encoding="utf-8") as f:
+        #         class DualStream(io.TextIOBase):
+        #             def __init__(self, file, terminal):
+        #                 self.file = file
+        #                 self.terminal = terminal
 
-                    def write(self, data):
-                        self.file.write(data)
-                        self.terminal.write(data)
+        #             def write(self, data):
+        #                 self.file.write(data)
+        #                 self.terminal.write(data)
 
-                    def flush(self):
-                        self.file.flush()
-                        self.terminal.flush()
+        #             def flush(self):
+        #                 self.file.flush()
+        #                 self.terminal.flush()
 
-                dual_stream = DualStream(f, original_stdout)
-                sys.stdout = dual_stream  # Redirect stdout to dual stream
+        #         dual_stream = DualStream(f, original_stdout)
+        #         sys.stdout = dual_stream  # Redirect stdout to dual stream
 
-                # Run the agent and print output to both file and terminal
-                agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"],machine_customer.country)
+        #         # Run the agent and print output to both file and terminal
+        #         agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"],machine_customer.country)
 
-        finally:
-            sys.stdout = original_stdout  # Restore original stdout
+        # finally:
+        #     sys.stdout = original_stdout  # Restore original stdout
 
-        print("Agent workflow completed...")
+        # print("Agent workflow completed...")
         
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
