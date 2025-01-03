@@ -109,7 +109,7 @@ To test the API endpoint using Postman:
        "secret_key": "YOUR_SECRET_KEY",
        "item_name": "Your Item Name", 
        "custom_domains": ["custom_domain1", "custom_domain2"],
-       "price_level": 1/2/3,
+       "price_level": 2,
        "tags": ["tag1", "tag2"]
    }
    ```
