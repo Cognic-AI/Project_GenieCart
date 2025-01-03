@@ -179,8 +179,8 @@ class Database:
                 print("Item not found, adding to database")
                 cursor.execute('SET autocommit=0')
                 cursor.execute('START TRANSACTION')
-                cursor.execute('INSERT INTO item (name, price, description, link, rate, tags) VALUES (%s, %s, %s, %s, %s, %s)', 
-                             (item.name, item.price, item.description, item.link, item.rate, ','.join(item.tags)))
+                cursor.execute('INSERT INTO item (name, price, description, link, rate, tags,image_link) VALUES (%s, %s, %s, %s, %s, %s,%s)', 
+                             (item.name, item.price, item.description, item.link, item.rate, ','.join(item.tags),item.image))
                 item_id = cursor.lastrowid
                 cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
                              (search_id, item_id, item.score))
