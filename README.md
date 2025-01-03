@@ -85,13 +85,36 @@ Project_GenieCart/
 python "Machine_Customer_Endpoint.py"
 ```
 
-### Frontend Development
+### Frontend
 Navigate to the `frontend` directory and start the development server:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+### Calling the endpoint with postman
+
+To test the API endpoint using Postman:
+
+1. Create a new POST request to `http://localhost:8000/api/recommend`
+
+2. Set the request headers:
+   ```
+   Content-Type: application/json
+   ```
+
+3. Add the following JSON body:
+   ```json
+   {
+       "secret_key": "YOUR_SECRET_KEY",
+       "item_name": "Your Item Name", 
+       "custom_domains": ["custom_domain1", "custom_domain2"],
+       "price_level": 1/2/3,
+       "tags": ["tag1", "tag2"]
+   }
+   ```
+
+4. Send the request and you should receive the response the status.
 
 ## Technologies Used
 
