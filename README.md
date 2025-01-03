@@ -92,8 +92,9 @@ cd frontend
 npm install
 npm run dev
 ```
+
+#### Example singup to the site 
 ```bash
-Example singup to the site 
    email: akinduhiman2@gmail.com
    password: 1234
 ```
