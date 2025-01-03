@@ -33,7 +33,6 @@ const PurchaseCard = ({ purchase }: { purchase: Purchase }) =>{
     <div className="p-6">
       <h2 className="text-xl font-bold mb-2 text-gray-800"style={{color:"#5479f7"}}>{purchase.name}</h2>
       <img src={purchase.image_link} alt={purchase.name} className="w-full h-40 object-cover mb-4" />   
-      <p className="text-gray-600 mb-4">{purchase.description}</p>
       <div className="flex justify-between items-center mb-4">
         <span className="text-2xl font-bold text-green-600">${purchase.price}</span>
       </div>
