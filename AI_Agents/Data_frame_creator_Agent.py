@@ -47,13 +47,13 @@ def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) ->
     response = get_LLAMA_response(LLAMA_client, prompt)
     return "true" in response.lower()
 
-def json_to_csv(item_name: str) -> None:
+def json_to_csv(item_name: str,request_id: str) -> None:
 
     print("------------------------------------------------------------------------------------------------")
     print("Data frame creator agent started")
 
-    json_folder = "Final_products"
-    output_csv = "products.csv"
+    json_folder = os.path.join("Final_products",f"Final_products_{request_id}")
+    output_csv = os.path.join("Final_products",f"products_{request_id}.csv")
 
     # Initialize Gemini
     LLAMA_client = initialize_LLAMA()
@@ -87,7 +87,11 @@ def json_to_csv(item_name: str) -> None:
                     continue
 
                 price = data.get("price", "")
-                if price == "":
+                if price == "" or price is None:
+                    continue
+                try:
+                    float(price)  # Try converting to float
+                except (ValueError, TypeError):
                     continue
 
                 currency = data.get("currency", "")

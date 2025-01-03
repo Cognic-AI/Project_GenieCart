@@ -68,12 +68,12 @@ def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup
         return f"Error extracting content from {url}: {e}"
 
 # Process each link and save responses in separate files
-def process_links(country_code: str) -> None:
+def process_links(country_code: str,request_id: str) -> None:
     """Processes each link and saves structured responses in separate files."""
     print("------------------------------------------------------------------------------------------------")
     print("Data extraction agent started")
 
-    input_filename: str = os.path.join("Agent_Outputs", "Filtered_links.txt")
+    input_filename: str = os.path.join("Agent_Outputs", f"Filtered_links_{request_id}.txt")
     with open(input_filename, "r", encoding="utf-8") as f:
         links: List[str] = [line.strip() for line in f.readlines() if line.strip()]
 
@@ -81,7 +81,7 @@ def process_links(country_code: str) -> None:
     product_counter: int = 1
 
     # Clear the folder
-    folder_path = "Final_products"
+    folder_path = os.path.join("Final_products",f"Final_products_{request_id}")
 
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)  # Remove the folder and its contents

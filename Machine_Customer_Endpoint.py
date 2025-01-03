@@ -9,7 +9,7 @@ from ML_model.Database import Database as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
-
+import uuid
 load_dotenv()
 
 # Example request data
@@ -29,6 +29,8 @@ def recommend():
         print("\n<====================>")
         print("RECOMMENDATION REQUEST")
         print("<====================>")
+
+        request_id = str(uuid.uuid4())
         
         # Get request data and create machine customer
         print("Getting request data...")
@@ -42,40 +44,29 @@ def recommend():
         except ValueError as e:
             return jsonify({"status": "error", "message": str(e)}), 400
 
-        # print("Agent workflow started...")
+        print(f"Agent workflow started for request {request_id}...")
+        output_filename: str = os.path.join("Agent_Outputs", f"Agent_workflow_output_{request_id}.txt")
+        original_stdout = sys.stdout  # Save the original stdout
 
-        # output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-        # original_stdout = sys.stdout  # Save the original stdout
+        try:
+            with open(output_filename, "w", encoding="utf-8") as f:
+                sys.stdout = f  # Redirect stdout to file only
+                
+                # Run the agent - output will only go to file
+                agent(request_data["item_name"], 
+                      request_data["custom_domains"], 
+                      request_data["tags"],
+                      machine_customer.country,
+                      request_id)
 
-        # try:
-        #     with open(output_filename, "w", encoding="utf-8") as f:
-        #         class DualStream(io.TextIOBase):
-        #             def __init__(self, file, terminal):
-        #                 self.file = file
-        #                 self.terminal = terminal
+        finally:
+            sys.stdout = original_stdout  # Restore original stdout
 
-        #             def write(self, data):
-        #                 self.file.write(data)
-        #                 self.terminal.write(data)
-
-        #             def flush(self):
-        #                 self.file.flush()
-        #                 self.terminal.flush()
-
-        #         dual_stream = DualStream(f, original_stdout)
-        #         sys.stdout = dual_stream  # Redirect stdout to dual stream
-
-        #         # Run the agent and print output to both file and terminal
-        #         agent(request_data["item_name"], request_data["custom_domains"], request_data["tags"],machine_customer.country)
-
-        # finally:
-        #     sys.stdout = original_stdout  # Restore original stdout
-
-        # print("Agent workflow completed...")
+        print("Agent workflow completed...")
         
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
-        items = ic.csv_to_list('products.csv')
+        items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
         print(f"Loaded {len(items)} items")
         
         # Create model with items and machine customer

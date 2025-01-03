@@ -1,5 +1,6 @@
 from autogen import ConversableAgent
 import sys
+import uuid
 import os
 from dotenv import load_dotenv
 from AI_Agents.Seach_Agent import generate_search_results
@@ -20,6 +21,7 @@ This function takes four inputs:
 - `custom_domains`: A list of domains where the search should be restricted.
 - `tags`: A list of tags to be used in the search.
 - `country_code`: The country code where the products searched. 
+- `request_id`: A unique identifier for this specific search task.
 """
 
 
@@ -28,6 +30,7 @@ Your task is to execute the `extract_all_links` function when invoked.
 This function takes one input:
 - A string representing the product or item name.
 - A string representing the country code where the products searched.
+- A string representing the request ID for this specific product selection task.
 
 Execute the function with the given input and ensure it runs successfully.
 """
@@ -36,7 +39,7 @@ data_extract_agent_system_message="""
 Your task is to execute the `process_links` function when invoked.
 This function takes one input:
 - A string representing the country code where the products searched.
-
+- A string representing the request ID for this specific data extraction task.
 Execute the function and ensure it runs successfully.
 """
 
@@ -44,11 +47,12 @@ data_frame_creator_agent_system_message="""
 Your task is to execute the `json_to_csv` function when invoked.
 This function takes one input:
 - A string representing the product or item name.
+- A string representing the request ID for this specific data frame creation task.
 
 Execute the function and ensure it runs successfully.
 """
 
-def main(user_query, custom_domains,tags,country_code):
+def main(user_query, custom_domains,tags,country_code,request_id):
     llm_config = {
         "config_list": [
             {"model": "gpt-4o-mini", "api_key": os.getenv("OPENAI_API_KEY")}
@@ -57,7 +61,7 @@ def main(user_query, custom_domains,tags,country_code):
 
     # Main entrypoint/supervisor agent
     entrypoint_agent = ConversableAgent(
-        name="entrypoint_agent",
+        name=f"entrypoint_agent_{request_id}",
         system_message=entrypoint_agent_system_message,
         llm_config=llm_config,
         human_input_mode='NEVER',
@@ -69,7 +73,7 @@ def main(user_query, custom_domains,tags,country_code):
 
     # Search agent
     search_agent = ConversableAgent(
-        name="search_agent",
+        name=f"search_agent_{request_id}",
         system_message=search_agent_system_message,
         llm_config=llm_config,
         human_input_mode='NEVER',
@@ -81,7 +85,7 @@ def main(user_query, custom_domains,tags,country_code):
 
     # Product selection agent
     product_selection_agent = ConversableAgent(
-        name="product_selection_agent",
+        name=f"product_selection_agent_{request_id}",
         system_message=product_selection_agent_system_message,
         llm_config=llm_config,
         human_input_mode='NEVER',
@@ -93,7 +97,7 @@ def main(user_query, custom_domains,tags,country_code):
 
     # Data extraction agent
     data_extract_agent = ConversableAgent(
-        name="data_extract_agent",
+        name=f"data_extract_agent_{request_id}",
         system_message=data_extract_agent_system_message,
         llm_config=llm_config,
         human_input_mode='NEVER',
@@ -105,7 +109,7 @@ def main(user_query, custom_domains,tags,country_code):
 
     # Data frame creator agent
     data_frame_creator_agent = ConversableAgent(
-        name="data_frame_creator_agent",
+        name=f"data_frame_creator_agent_{request_id}",
         system_message=data_frame_creator_agent_system_message,
         llm_config=llm_config,
         human_input_mode='NEVER',
@@ -119,25 +123,25 @@ def main(user_query, custom_domains,tags,country_code):
     result = entrypoint_agent.initiate_chats([
         {
             "recipient": search_agent,
-            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}. country code is : {country_code}",
+            "message": f"Please execute the `generate_search_results` function. The user query is: {user_query}. Domains to prioritize: {custom_domains}. Tags are: {tags}. country code is : {country_code}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": product_selection_agent,
-            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}",
+            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": data_extract_agent,
-            "message": f"Please execute the `process_links` function. country code is {country_code}", 
+            "message": f"Please execute the `process_links` function. country code is {country_code}. Request ID: {request_id}", 
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": data_frame_creator_agent,
-            "message": f"Please execute the `json_to_csv` function. product or item name is {user_query}",
+            "message": f"Please execute the `json_to_csv` function. product or item name is {user_query}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },

@@ -38,7 +38,7 @@ def initialize_clients() -> tuple[TavilyClient, genai.GenerativeModel]:
     
     return tavily_client, gemini_model
 
-def generate_search_results(prompt: str, custom_domains: List[str],tags: List[str],country_code: str) -> None:
+def generate_search_results(prompt: str, custom_domains: List[str],tags: List[str],country_code: str,request_id: str) -> None:
     """
     Generate search results for a given prompt, restricting to the provided domains.
     
@@ -47,6 +47,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     - custom_domains (List[str]): A list of domains to restrict the search to.
     - tags A list of tags to be used in the search.
     - country_code The country code where the products searched.
+    - request_id A unique identifier for this specific search task.
     Returns:
     - None
     """
@@ -90,7 +91,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     role: user, content: {response_1}"""
     response_ = gemini_model.generate_content(contents=result_prompt_)
 
-    filename: str = os.path.join("Agent_Outputs", f"search_agent_output.txt")
+    filename: str = os.path.join("Agent_Outputs", f"search_agent_output_{request_id}.txt")
     with open(filename, "w", encoding="utf-8") as f:
         f.write(response_.text)
 
@@ -102,7 +103,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     role: user, content: {tavily_context_results}"""
     response_2 = gemini_model.generate_content(contents=result_prompt_2)
 
-    filename: str = os.path.join("Agent_Outputs", f"Filtered_links.txt")
+    filename: str = os.path.join("Agent_Outputs", f"Filtered_links_{request_id}.txt")
     with open(filename, "w", encoding="utf-8") as f:
         f.write(response_2.text)
 
@@ -114,4 +115,4 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"],"US")
+# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"],"US","1234567890")

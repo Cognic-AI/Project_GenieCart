@@ -53,13 +53,14 @@ def slow_scroll_page(driver: webdriver.Chrome) -> None:
         # Update the total height (to handle dynamically loaded content)
         total_height = driver.execute_script("return document.body.scrollHeight")
 
-def extract_all_links(item_name: str,country_code: str) -> None:
+def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     """
     Extracts all product links by searching for the item name on given websites, handling various website structures.
 
     Args:
     - item_name (str): The name of the item to search for.
     - country_code (str): The country code where the products searched.
+    - request_id (str): A unique identifier for this specific product selection task.
 
     Returns:
     - None
@@ -75,7 +76,7 @@ def extract_all_links(item_name: str,country_code: str) -> None:
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
 
-    input_filename: str = os.path.join("Agent_Outputs", "search_agent_output.txt")
+    input_filename: str = os.path.join("Agent_Outputs", f"search_agent_output_{request_id}.txt")
     with open(input_filename, "r", encoding="utf-8") as f:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
@@ -113,7 +114,7 @@ def extract_all_links(item_name: str,country_code: str) -> None:
 
         response = gemini_model.generate_content(contents=final_prompt)
 
-        output_filename: str = os.path.join("Agent_Outputs", "Filtered_links.txt")
+        output_filename: str = os.path.join("Agent_Outputs", f"Filtered_links_{request_id}.txt")
         with open(output_filename, "a", encoding="utf-8") as f:
             f.write(response.text)
 
