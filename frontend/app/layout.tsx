@@ -6,8 +6,14 @@ import AuthProvider from '@/components/AuthProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'My App',
-  description: 'Customer Management App',
+  title: 'GenieCart',
+  description: 'Your AI Shopping Assistant',
+  icons: {
+    icon: '/favicon.ico',
+    // Optional: Add additional icon sizes
+    // apple: '/apple-icon.png',
+    // shortcut: '/favicon-16x16.png',
+  },
 }
 
 export default function RootLayout({
