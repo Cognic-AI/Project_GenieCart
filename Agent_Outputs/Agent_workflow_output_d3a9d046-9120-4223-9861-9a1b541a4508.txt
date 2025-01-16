@@ -1,0 +1,26 @@
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_d3a9d046-9120-4223-9861-9a1b541a4508 (to search_agent_d3a9d046-9120-4223-9861-9a1b541a4508):
+
+Please execute the `generate_search_results` function. The user query is: Tomato Sauce Bottle. Domains to prioritize: ['https://www.amazon.com']. Tags are: ['Tomato', 'Quality']. country code is : AUS. Request ID: d3a9d046-9120-4223-9861-9a1b541a4508
+
+--------------------------------------------------------------------------------
+search_agent_d3a9d046-9120-4223-9861-9a1b541a4508 (to entrypoint_agent_d3a9d046-9120-4223-9861-9a1b541a4508):
+
+***** Suggested tool call (call_ZioTp0pkLzoxps8k7Jc3Gjw0): generate_search_results *****
+Arguments: 
+{"prompt":"Tomato Sauce Bottle","custom_domains":["https://www.amazon.com"],"tags":["Tomato","Quality"],"country_code":"AUS","request_id":"d3a9d046-9120-4223-9861-9a1b541a4508"}
+****************************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION generate_search_results...
+Call ID: call_ZioTp0pkLzoxps8k7Jc3Gjw0
+Input arguments: {'prompt': 'Tomato Sauce Bottle', 'custom_domains': ['https://www.amazon.com'], 'tags': ['Tomato', 'Quality'], 'country_code': 'AUS', 'request_id': 'd3a9d046-9120-4223-9861-9a1b541a4508'}
+------------------------------------------------------------------------------------------------
+search agent started
+search_query created:  Tomato Sauce Bottle Quality AUS
+
