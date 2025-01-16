@@ -8,13 +8,12 @@ WORKDIR /app/backend
 COPY ./Agent_Outputs /app/backend/Agent_Outputs
 COPY ./AI_Agents /app/backend/AI_Agents
 COPY ./Final_products /app/backend/Final_products
-COPY .env /app/backend/.env
-COPY emailservice.py /app/backend/emailservice.py
-COPY Machine_Customer_Endpoint.py /app/backend/Machine_Customer_Endpoint.py
-COPY requirements.txt /app/backend/requirements.txt
+COPY .env .
+COPY emailservice.py .
+COPY Machine_Customer_Endpoint.py .
+COPY requirements.txt .
 
-
-# CMD ["pip", "install", "requirements.txt"]
+RUN pip install -r requirements.txt
 
 # Expose the port the app runs on
 EXPOSE 8000
