@@ -1,8 +1,11 @@
 "use client"
 
 import Link from 'next/link'
+import CollapsibleCard from './components/CollapsibleCard';
+
 
 export default function Home() {
+
   return (
     <div
   className="flex items-center min-h-screen w-full bg-[url('back.png')]"
@@ -48,6 +51,8 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      {/* Collapsible card */}
+      <CollapsibleCard />
     </div>
   )
 }

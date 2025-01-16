@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
 import uuid
+from flask_cors import CORS
 load_dotenv()
 
 # Example request data
@@ -22,6 +23,7 @@ load_dotenv()
 # }
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
