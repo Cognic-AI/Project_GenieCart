@@ -1,0 +1,23 @@
+# Use an official Node.js runtime as a parent image
+FROM python:3.11-slim
+
+# Set the working directory
+WORKDIR /app/backend
+
+# Copy the rest of the application code
+COPY ./Agent_Outputs /app/backend/Agent_Outputs
+COPY ./AI_Agents /app/backend/AI_Agents
+COPY ./Final_products /app/backend/Final_products
+COPY .env /app/backend/.env
+COPY emailservice.py /app/backend/emailservice.py
+COPY Machine_Customer_Endpoint.py /app/backend/Machine_Customer_Endpoint.py
+COPY requirements.txt /app/backend/requirements.txt
+
+
+# CMD ["pip", "install", "requirements.txt"]
+
+# Expose the port the app runs on
+EXPOSE 8000
+
+# Command to run the application
+CMD ["python", "Machine_Customer_Endpoint.py"]

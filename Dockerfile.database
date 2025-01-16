@@ -1,0 +1,15 @@
+# Use the official MySQL image from the Docker Hub
+FROM mysql:latest
+
+# Set the database name, user, and password as environment variables
+ENV MYSQL_DATABASE=machine_customer
+ENV MYSQL_ROOT_PASSWORD=root
+
+# Copy the SQL file to the Docker image
+COPY dump_final.sql /docker-entrypoint-initdb.d/
+
+# Expose the default MySQL port
+EXPOSE 3306
+
+# Optional: Persist MySQL data 
+VOLUME /var/lib/mysql
