@@ -1,0 +1,76 @@
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to search_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+Please execute the `generate_search_results` function. The user query is: mango. Domains to prioritize: ['https://www.amazon.com']. Tags are: ['fresh', 'nice']. country code is : AUS. Request ID: 85b0c534-eb58-4a74-b392-ec0c6fe223c3
+
+--------------------------------------------------------------------------------
+search_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+***** Suggested tool call (call_dmoka1zy3oeEvBrS6bs589nF): generate_search_results *****
+Arguments: 
+{"prompt":"mango","custom_domains":["https://www.amazon.com"],"tags":["fresh","nice"],"country_code":"AUS","request_id":"85b0c534-eb58-4a74-b392-ec0c6fe223c3"}
+****************************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION generate_search_results...
+Call ID: call_dmoka1zy3oeEvBrS6bs589nF
+Input arguments: {'prompt': 'mango', 'custom_domains': ['https://www.amazon.com'], 'tags': ['fresh', 'nice'], 'country_code': 'AUS', 'request_id': '85b0c534-eb58-4a74-b392-ec0c6fe223c3'}
+------------------------------------------------------------------------------------------------
+search agent started
+search_query created:  fresh nice mango
+
+tavily_context_results:  ['https://www.mintfruit.com/how-to-tell-a-mango-is-good/', 'https://shiftychevre.com/how-to-pick-a-fresh-mango/', 'https://shiftychevre.com/how-do-you-prepare-a-fresh-mango/', 'https://www.youtube.com/watch?v=FGMRVK7hlt4', 'https://tastevn.com/how-to-make-fresh-sweet-mango-salad-refreshing-day-17148/', 'https://www.orientaltrading.com/wholesale-nuts-and-dried-fruit-store-bulk-organic-mango-slices-unsweetened-unsulfured-dry-mangoes-25-pounds-a2-14499635.fltr', 'https://www.texasrealfood.com/promptuary/fruits/mangoes/', 'https://www.msn.com/en-us/food-and-drink/recipes/how-to-cut-a-mango-and-10-easy-refreshing-ways-to-use-it/ar-BB1keAiz', 'https://extension.oregonstate.edu/food/preservation/preserving-fruits-mangoes']
+
+
+search_agent_output.txt created
+Filtered_links.txt created
+
+
+
+Search agent completed
+------------------------------------------------------------------------------------------------
+entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to search_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+***** Response from calling tool (call_dmoka1zy3oeEvBrS6bs589nF) *****
+null
+**********************************************************************
+
+--------------------------------------------------------------------------------
+search_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+It seems that there was an issue with generating the search results for your request. Would you like to try again or adjust any parameters?
+
+--------------------------------------------------------------------------------
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to product_selection_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+Please execute the `extract_all_links` function. product or item name is mango. country code is AUS. Request ID: 85b0c534-eb58-4a74-b392-ec0c6fe223c3
+Context: 
+It seems that there was an issue with generating the search results for your request. Would you like to try again or adjust any parameters?
+
+--------------------------------------------------------------------------------
+product_selection_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3 (to entrypoint_agent_85b0c534-eb58-4a74-b392-ec0c6fe223c3):
+
+***** Suggested tool call (call_ybMiBv2mRecspOOs3xc3P35s): extract_all_links *****
+Arguments: 
+{"item_name":"mango","country_code":"AUS","request_id":"85b0c534-eb58-4a74-b392-ec0c6fe223c3"}
+**********************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION extract_all_links...
+Call ID: call_ybMiBv2mRecspOOs3xc3P35s
+Input arguments: {'item_name': 'mango', 'country_code': 'AUS', 'request_id': '85b0c534-eb58-4a74-b392-ec0c6fe223c3'}
+------------------------------------------------------------------------------------------------
+Product selection agent started
+Processing link: https://www.orientaltrading.com/wholesale-nuts-and-dried-fruit-store-bulk-organic-mango-slices-unsweetened-unsulfured-dry-mangoes-25-pounds-a2-14499635.fltr
+Extracted 128 links from https://www.orientaltrading.com/wholesale-nuts-and-dried-fruit-store-bulk-organic-mango-slices-unsweetened-unsulfured-dry-mangoes-25-pounds-a2-14499635.fltr
