@@ -1,6 +1,6 @@
 // firestore.js
 import { db } from "../database/firebase_config.js";
-import { collection, addDoc, getDocs,setDoc,doc ,getDoc} from "firebase/firestore";
+import { collection, addDoc, getDocs,setDoc,doc ,getDoc, updateDoc} from "firebase/firestore";
 
 // Add a new document
 export const addData = async (collectionName, data) => {
@@ -81,6 +81,47 @@ export const createAccount = async (collectionName, data) => {
       return items;
     } catch (error) {
       console.error("Error fetching history items:", error);
+      throw error;
+    }
+  };
+  export const updatePriceLevel = async (uid,price_level) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        price_level: price_level // Update the 'price_level' field
+      }); // Create or overwrite the document
+      console.log("Price level updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating price level:", error);
+      throw error;
+    }
+  };
+
+  export const updateName = async (uid,name) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        name: name // Update the 'price_level' field
+      }); // Create or overwrite the document
+      console.log("Name updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating name:", error);
+      throw error;
+    }
+  };
+
+  export const updatePic = async (uid,pic) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        image_link: pic // Update the 'price_level' field
+      }); // Create or overwrite the document
+      console.log("Image updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating image:", error);
       throw error;
     }
   };
