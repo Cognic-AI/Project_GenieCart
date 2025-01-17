@@ -1,6 +1,6 @@
 // firestore.js
 import { db } from "../database/firebase_config.js";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs,setDoc,doc } from "firebase/firestore";
 
 // Add a new document
 export const addData = async (collectionName, data) => {
@@ -26,7 +26,9 @@ export const fetchData = async (collectionName) => {
 
 export const createAccount = async (collectionName, data) => {
     try {
-      const docRef = await addDoc(collection(db, collectionName,data['id']), data);
+      const docRef = doc(db, collectionName, data['id']); // Reference to the specific document
+      await setDoc(docRef, data); // Create or overwrite the document
+      console.log("Document successfully written!");
       return docRef.id;
     } catch (error) {
       console.error("Error adding document:", error);
