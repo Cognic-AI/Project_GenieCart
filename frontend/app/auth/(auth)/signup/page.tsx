@@ -6,6 +6,25 @@ import Link from 'next/link';
 import { COUNTRIES } from '../../../../lib/countries';
 import CountrySelector from '../../../components/selector';
 import { SelectMenuOption } from '@/lib/types';
+import { signUp } from "../../../api/auth.js";
+import { createAccount } from "../../../api/firestore.js";
+
+function generateKey(length: number = 12): string {
+  const numbers = '0123456789';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const allChars = numbers + letters;
+  
+  // Ensure we start with at least one letter and one number
+  let key = letters.charAt(Math.floor(Math.random() * letters.length)) +
+            numbers.charAt(Math.floor(Math.random() * numbers.length));
+  
+  // Fill the rest with random characters
+  for (let i = key.length; i < length; i++) {
+    key += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+  
+  return key;
+}
 
 export default function SignUpPage(): React.JSX.Element {
   const [email, setEmail] = useState<string>('');
@@ -19,26 +38,49 @@ export default function SignUpPage(): React.JSX.Element {
   const [country, setCountry] = useState('AF');
 
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setError('');
+
+  //   try {
+  //     const response = await fetch('/api/auth/signup', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email, password, name, country }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       router.push('/auth/signin');
+  //     } else {
+  //       setError(data.error || 'Signup failed');
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     setError('An error occurred during signup');
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, name, country }),
+      const user = await signUp(email,password);
+      await createAccount("customer",{
+        name:name,
+        email:email,
+        id:user.uid,
+        country:country,
+        generated_key:generateKey(),
+        price_level:"LOW",
+        image:""
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push('/auth/signin');
-      } else {
-        setError(data.error || 'Signup failed');
-      }
+      console.log("User signed up:", user);
+      router.push('/auth/signin');
     } catch (err) {
       console.log(err);
       setError('An error occurred during signup');

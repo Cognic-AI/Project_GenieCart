@@ -7,18 +7,16 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar } from "@/components/ui/avatar"
-import { useSession } from 'next-auth/react';
+import {updatePriceLevel,updateName,updatePic, fetchProfile} from '../api/firestore.js';
 
 
 export default function SettingsPage() {
-const { data: session, status } = useSession();
-const user = session?.user;
   const [isEditing, setIsEditing] = useState(false)
   const [tempUserName, setTempUserName] = useState("")
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [newAvatarLink, setNewAvatarLink] = useState(user?.image || "https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
+  const [newAvatarLink, setNewAvatarLink] = useState("https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
   const [user_,setUser] = useState({
-    customer_id:user?.id,
+    customer_id:"",
     customer_name: '',
     email: '',
     image:'',
@@ -49,18 +47,31 @@ const user = session?.user;
     setTempUserName(user_.customer_name);
   }
 
+  // const handlePriceSaving = async () => {
+  //   try {
+  //     const response = await fetch('/api/settings/price', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ uid: user?.id,price_level:user_.price_level }),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json(); // Parse the response body to get the error
+  //       throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+  //     }
+
+  //     // Handle successful response (e.g., show success message or update state)
+  //       console.log('Price level saved successfully.');
+
+  //   } catch (error) {
+  //   console.error('Error saving price level:', error.message);
+  //   // Optionally, you could show the error to the user in the UI as well
+  //   }
+  // };
+
   const handlePriceSaving = async () => {
     try {
-      const response = await fetch('/api/settings/price', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: user?.id,price_level:user_.price_level }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Parse the response body to get the error
-        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
-      }
+        await updatePriceLevel(sessionStorage.getItem('uid'),user_.price_level);
 
       // Handle successful response (e.g., show success message or update state)
         console.log('Price level saved successfully.');
@@ -71,20 +82,34 @@ const user = session?.user;
     }
   };
 
+  // const handleNameSaving = async () => {
+  //   user_.customer_name = tempUserName;
+  //   try {
+  //     const response = await fetch('/api/settings/name', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ uid: user?.id,name: tempUserName}),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json(); // Parse the response body to get the error
+  //       throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+  //     }
+
+  //     // Handle successful response (e.g., show success message or update state)
+  //       console.log('Name saved successfully.');
+  //       handleEditToggle();
+
+  //   } catch (error) {
+  //   console.error('Error saving name:', error.message);
+  //   // Optionally, you could show the error to the user in the UI as well
+  //   }
+  // };
+
   const handleNameSaving = async () => {
     user_.customer_name = tempUserName;
     try {
-      const response = await fetch('/api/settings/name', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: user?.id,name: tempUserName}),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Parse the response body to get the error
-        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
-      }
-
+      await updateName(sessionStorage.getItem('uid'),user_.customer_name);
       // Handle successful response (e.g., show success message or update state)
         console.log('Name saved successfully.');
         handleEditToggle();
@@ -95,19 +120,31 @@ const user = session?.user;
     }
   };
 
+  // const handlePicSaving = async () => {
+  //   try {
+  //     const response = await fetch('/api/settings/pic', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ uid: user?.id,pic:newAvatarLink }),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json(); // Parse the response body to get the error
+  //       throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
+  //     }
+
+  //     // Handle successful response (e.g., show success message or update state)
+  //       console.log('Pic saved successfully.');
+
+  //   } catch (error) {
+  //   console.error('Error saving pic:', error.message);
+  //   // Optionally, you could show the error to the user in the UI as well
+  //   }
+  // };
+
   const handlePicSaving = async () => {
     try {
-      const response = await fetch('/api/settings/pic', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: user?.id,pic:newAvatarLink }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Parse the response body to get the error
-        throw new Error(errorData.error || 'An unknown error occurred'); // Use the error message from the body
-      }
-
+      await updatePic(sessionStorage.getItem('uid'),user_.image);
       // Handle successful response (e.g., show success message or update state)
         console.log('Pic saved successfully.');
 
@@ -116,37 +153,31 @@ const user = session?.user;
     // Optionally, you could show the error to the user in the UI as well
     }
   };
-
   const handleLoadingProfile = async () => {
     try {
-      const response = await fetch('/api/profile/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: user?.id }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch purchases');
-      }
-
-      const data = await response.json();
-
-      if (Array.isArray(data)) {
-        setUser((data)[0]);
-      } else {
-        console.error('Unexpected response structure:', data, data.type);
-      }
-      console.log('API Response:', data); // Log the response to confirm its structure
+      const profile = await fetchProfile("customer",sessionStorage.getItem("uid"));
+      if (profile) {
+        setUser({
+          customer_id: sessionStorage.getItem("uid"),
+          customer_name: profile.name, // Access the 'name' property from the fetched profile
+          email: profile.email || "", // Handle undefined fields gracefully
+          image: profile.image || "",
+          price_level: profile.price_level || "",
+          generated_key: profile.generated_key || "",
+          country: profile.country || "",
+        });}else{
+          console.error("Profile not found!");
+        }
     } catch (error) {
-      console.error('Error fetching purchases:', error);
+      console.error('Error fetching suggestions:', error);
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (sessionStorage.getItem('uid')) {
       handleLoadingProfile();
     }
-  }, [user]);
+  }, []);
 
   return (
     <div
@@ -170,19 +201,28 @@ const user = session?.user;
         <h3 className="text-lg font-semibold" style={{color:"#5479f7"}}>Price Preference</h3>
         <RadioGroup value={user_.price_level} className="space-y-3">
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="Low" id="Low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {user_.price_level = "Low"}}/>
+            <RadioGroupItem value="Low" id="Low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {setUser((prevUser) => ({
+                ...prevUser, // Spread the previous state
+                price_level: "Low", // Update the price_level
+              }));}}/>
             <Label htmlFor="Low" className="cursor-pointer">
               Low range prices
             </Label>
           </div>
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="Middle" id="Middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() =>  {user_.price_level = "Middle"}}/>
+            <RadioGroupItem value="Middle" id="Middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() => {setUser((prevUser) => ({
+                ...prevUser, // Spread the previous state
+                price_level: "Middle", // Update the price_level
+              }));}}/>
             <Label htmlFor="Middle" className="cursor-pointer">
               Middle range prices
             </Label>
           </div>
           <div className="flex items-center space-x-3">
-            <RadioGroupItem value="High" id="High" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() =>  {user_.price_level = "High"}}/>
+            <RadioGroupItem value="High" id="High" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() => {setUser((prevUser) => ({
+                ...prevUser, // Spread the previous state
+                price_level: "High", // Update the price_level
+              }));}}/>
             <Label htmlFor="High" className="cursor-pointer">
               High range prices
             </Label>
