@@ -71,7 +71,7 @@ export const createAccount = async (collectionName, data) => {
             const itemRef = doc(db, "item", itemId); // Reference to the 'items' document
             const itemDoc = await getDoc(itemRef);
             if (itemDoc.exists()) {
-              items.push({ id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp') }); // Add item data with ID
+              items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp') }); // Add item data with ID
             }
           }
         }

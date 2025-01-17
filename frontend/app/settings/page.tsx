@@ -7,17 +7,14 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar } from "@/components/ui/avatar"
-import { useSession } from 'next-auth/react';
 import {updatePriceLevel,updateName,updatePic, fetchProfile} from '../api/firestore.js';
 
 
 export default function SettingsPage() {
-const { data: session } = useSession();
-const user = session?.user;
   const [isEditing, setIsEditing] = useState(false)
   const [tempUserName, setTempUserName] = useState("")
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [newAvatarLink, setNewAvatarLink] = useState(user?.image || "https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
+  const [newAvatarLink, setNewAvatarLink] = useState("https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
   const [user_,setUser] = useState({
     customer_id:"",
     customer_name: '',
@@ -177,10 +174,10 @@ const user = session?.user;
   };
 
   useEffect(() => {
-    if (user) {
+    if (sessionStorage.getItem('uid')) {
       handleLoadingProfile();
     }
-  }, [user]);
+  }, []);
 
   return (
     <div
