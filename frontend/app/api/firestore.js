@@ -42,8 +42,6 @@ export const createAccount = async (collectionName, data) => {
       // Fetch the document's data
       const docSnap = await getDoc(docRef);
 
-      console.log(uid);
-
       if (docSnap.exists()) {
         return docSnap.data(); // Return the document's data
       } else {
@@ -57,23 +55,32 @@ export const createAccount = async (collectionName, data) => {
   };
   export const fetchHistory = async (uid) => {
     try {
-      const docs = await getDoc(collection(db, "customer",uid,"history"));
-      // Fetch the document's data
-      for (const doc of docs.docs) {
-        for(const itemId of doc['item']){
-          console.log(itemId);
+      // Fetch all documents in the 'history' subcollection
+      const docCollection = collection(db, "customer", uid, "history");
+      const querySnapshot = await getDocs(docCollection);
+  
+      const items = [];
+  
+      // Iterate over each document in the 'history' collection
+      for (const historyDoc of querySnapshot.docs) {
+        const historyItems = historyDoc.get("items"); // Assume 'items' is an array of item IDs
+  
+        if (Array.isArray(historyItems)) {
+          // Sequentially fetch each item
+          for (const itemId of historyItems) {
+            const itemRef = doc(db, "item", itemId); // Reference to the 'items' document
+            const itemDoc = await getDoc(itemRef);
+            if (itemDoc.exists()) {
+              items.push({ id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp') }); // Add item data with ID
+            }
+          }
         }
       }
-      console.log(uid);
-
-      if (docSnap.exists()) {
-        return docSnap.data(); // Return the document's data
-      } else {
-        console.error("No such document!");
-        return null;
-      }
+  
+      console.log("Fetched Items:", items);
+      return items;
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching history items:", error);
       throw error;
     }
   };

@@ -16,7 +16,7 @@ import { Header } from '../components/header';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PurchasesPage from '../components/purchases-display';
-import {fetchProfile} from '../api/firestore.js';
+import {fetchProfile, fetchHistory} from '../api/firestore.js';
  
 export default function ProfilePage() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function ProfilePage() {
   const { data: session, status } = useSession();
   const user = session?.user;
   const [user_, setUser] = useState({
-    customer_id:sessionStorage.getItem("uid"),
+    customer_id:"",
     customer_name: '',
     email: '',
     image:'',
@@ -35,32 +35,32 @@ export default function ProfilePage() {
   });
 
 
-  const handleLoadingPurchases = async () => {
-    try {
-      const response = await fetch('/api/profile/history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: user?.id }),
-      });
+  // const handleLoadingPurchases = async () => {
+  //   try {
+  //     const response = await fetch('/api/profile/history', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ key: user?.id }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch purchases');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch purchases');
+  //     }
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      // Ensure the response is an array
-      if (Array.isArray(data)) {
-        setPurchases(data as []);
-      } else {
-        console.error('Unexpected response structure:', data, data.type);
-        setPurchases([]);
-      }
-      console.log('API Response:', data); // Log the response to confirm its structure
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
-    }
-  };
+  //     // Ensure the response is an array
+  //     if (Array.isArray(data)) {
+  //       setPurchases(data as []);
+  //     } else {
+  //       console.error('Unexpected response structure:', data, data.type);
+  //       setPurchases([]);
+  //     }
+  //     console.log('API Response:', data); // Log the response to confirm its structure
+  //   } catch (error) {
+  //     console.error('Error fetching purchases:', error);
+  //   }
+  // };
 
   // const handleLoadingProfile = async () => {
   //   try {
@@ -106,10 +106,26 @@ export default function ProfilePage() {
       console.error('Error fetching suggestions:', error);
     }
   };
+  const handleLoadingPurchases = async () => {
+    try {
+      
+      const res = await fetchHistory(sessionStorage.getItem('uid'));
+
+      if (Array.isArray(res)) {
+        setPurchases(res as []);
+      } else {
+        console.error('Unexpected response structure:', res);
+        setPurchases([]);
+      }
+      console.log('API Response:', res); // Log the response to confirm its structure
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
-      //handleLoadingPurchases();
+      handleLoadingPurchases();
       handleLoadingProfile();
     }
   }, [user]);
