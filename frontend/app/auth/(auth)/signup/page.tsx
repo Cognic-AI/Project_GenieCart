@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { COUNTRIES } from '../../../../lib/countries';
 import CountrySelector from '../../../components/selector';
 import { SelectMenuOption } from '@/lib/types';
+import { auth } from "../../../database/firebase_config.js";
 
 export default function SignUpPage(): React.JSX.Element {
   const [email, setEmail] = useState<string>('');
@@ -18,6 +19,32 @@ export default function SignUpPage(): React.JSX.Element {
   // Default this to a country's code to preselect it
   const [country, setCountry] = useState('AF');
 
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setError('');
+
+  //   try {
+  //     const response = await fetch('/api/auth/signup', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email, password, name, country }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       router.push('/auth/signin');
+  //     } else {
+  //       setError(data.error || 'Signup failed');
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     setError('An error occurred during signup');
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
