@@ -7,7 +7,7 @@ import dotenv
 dotenv.load_dotenv()
 
 # Initialize database connection
-database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
+database = db.Database("0.0.0.0","root","root","machine_customer",3306)
 
 def buildHistoryList(customer_id):
     """Build list of historical items purchased by a customer"""

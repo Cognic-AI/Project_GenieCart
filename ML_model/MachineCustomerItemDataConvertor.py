@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def create_machine_customer(request):
-    database = db.Database(os.getenv("DB_HOST"),os.getenv("DB_USER"),os.getenv("DB_PASSWORD"),os.getenv("DB_NAME"),os.getenv("DB_PORT"))
+    database = db.Database("0.0.0.0","root","root","machine_customer",3306)
 
     print(database.get_users())
     # print(request["secret_key"])

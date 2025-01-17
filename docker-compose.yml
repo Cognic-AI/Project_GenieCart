@@ -6,8 +6,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: machine_customer
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     ports:
       - "3305:3306"
     networks:
@@ -30,10 +28,15 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health')"]
       interval: 10s
-      timeout: 5s
+      timeout: 15s
       retries: 3
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+    #   interval: 10s
+    #   timeout: 15s
+    #   retries: 3
 
   frontend:
     build:
@@ -43,6 +46,8 @@ services:
       - "5000:5000"
     depends_on:
       backend:
+        condition: service_healthy
+      database:
         condition: service_healthy
     networks:
       - app-network

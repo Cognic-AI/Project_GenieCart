@@ -7,6 +7,7 @@ WORKDIR /app/backend
 # Copy the rest of the application code
 COPY ./Agent_Outputs /app/backend/Agent_Outputs
 COPY ./AI_Agents /app/backend/AI_Agents
+COPY ./ML_model /app/backend/ML_model
 COPY ./Final_products /app/backend/Final_products
 COPY .env .
 COPY emailservice.py .

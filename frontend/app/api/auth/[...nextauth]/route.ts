@@ -1,8 +1,22 @@
 
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import { createHash } from 'crypto';
 import { connection } from '../../../database/db';
+
+// Function to verify a password
+async function verifyPassword(storedPassword: string, inputPassword: string): Promise<boolean> {
+  const [salt, storedHash] = storedPassword.split(':');
+
+  // Recompute the hash using the input password and the stored salt
+  const inputHash = createHash('sha256')
+    .update(inputPassword + salt)
+    .digest('hex');
+
+  return storedHash === inputHash;
+}
+
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -22,9 +36,9 @@ const handler = NextAuth({
           );
           const user = users[0];
           if (!user) return null;
-          const passwordMatch = await bcrypt.compare(
-            credentials.password,
-            user.password
+          const passwordMatch = await verifyPassword(
+            user.password,
+            credentials.password
           );
           if (!passwordMatch) return null;
           return {
@@ -55,5 +69,7 @@ const handler = NextAuth({
     signIn: '/auth/signin'
   }
 });
+
+
 
 export { handler as GET, handler as POST };
