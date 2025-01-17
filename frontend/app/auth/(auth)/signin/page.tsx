@@ -38,7 +38,11 @@ export default function SignInPage(): React.JSX.Element {
     setError('');
 
     try {
-      await signIn(email,password);
+      const uid = await signIn(email,password);
+      console.log(uid);
+      sessionStorage.setItem(
+        'uid',uid
+      );
         router.push('/profile');
       
     } catch (err) {

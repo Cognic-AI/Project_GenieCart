@@ -6,7 +6,8 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 export const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    console.log(userCredential.user.uid)
+    return userCredential.user.uid;
   } catch (error) {
     console.error("Error signing in:", error);
     throw error;

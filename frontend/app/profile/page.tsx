@@ -16,7 +16,8 @@ import { Header } from '../components/header';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PurchasesPage from '../components/purchases-display';
-
+import {fetchProfile} from '../api/firestore.js';
+ 
 export default function ProfilePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +25,7 @@ export default function ProfilePage() {
   const { data: session, status } = useSession();
   const user = session?.user;
   const [user_, setUser] = useState({
-    customer_id:user?.id,
+    customer_id:sessionStorage.getItem("uid"),
     customer_name: '',
     email: '',
     image:'',
@@ -61,34 +62,54 @@ export default function ProfilePage() {
     }
   };
 
+  // const handleLoadingProfile = async () => {
+  //   try {
+  //     const response = await fetch('/api/profile/profile', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ key: user?.id }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch purchases');
+  //     }
+
+  //     const data = await response.json();
+
+  //     if (Array.isArray(data)) {
+  //       setUser((data)[0]);
+  //     } else {
+  //       console.error('Unexpected response structure:', data, data.type);
+  //     }
+  //     console.log('API Response:', data); // Log the response to confirm its structure
+  //   } catch (error) {
+  //     console.error('Error fetching purchases:', error);
+  //   }
+  // };
+
   const handleLoadingProfile = async () => {
     try {
-      const response = await fetch('/api/profile/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: user?.id }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch purchases');
-      }
-
-      const data = await response.json();
-
-      if (Array.isArray(data)) {
-        setUser((data)[0]);
-      } else {
-        console.error('Unexpected response structure:', data, data.type);
-      }
-      console.log('API Response:', data); // Log the response to confirm its structure
+      const profile = await fetchProfile("customer",sessionStorage.getItem("uid"));
+      if (profile) {
+        setUser({
+          customer_id: sessionStorage.getItem("uid"),
+          customer_name: profile.name, // Access the 'name' property from the fetched profile
+          email: profile.email || "", // Handle undefined fields gracefully
+          image: profile.image || "",
+          price_level: profile.price_level || "",
+          generated_key: profile.generated_key || "",
+          country: profile.country || "",
+        });}else{
+          console.error("Profile not found!");
+        }
     } catch (error) {
-      console.error('Error fetching purchases:', error);
+      console.error('Error fetching suggestions:', error);
     }
   };
 
   useEffect(() => {
     if (user) {
-      handleLoadingPurchases();
+      //handleLoadingPurchases();
       handleLoadingProfile();
     }
   }, [user]);
