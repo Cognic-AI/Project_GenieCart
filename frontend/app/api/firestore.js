@@ -23,3 +23,13 @@ export const fetchData = async (collectionName) => {
     throw error;
   }
 };
+
+export const createAccount = async (collectionName, data) => {
+    try {
+      const docRef = await addDoc(collection(db, collectionName,data['id']), data);
+      return docRef.id;
+    } catch (error) {
+      console.error("Error adding document:", error);
+      throw error;
+    }
+  };
