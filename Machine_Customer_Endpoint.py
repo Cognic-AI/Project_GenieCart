@@ -50,23 +50,14 @@ def recommend():
             return jsonify({"status": "error", "message": str(e)}), 400
 
         print(f"Agent workflow started for request {request_id}...")
-        output_filename: str = os.path.join("Agent_Outputs", f"Agent_workflow_output_{request_id}.txt")
-        original_stdout = sys.stdout  # Save the original stdout
-
-        try:
-            with open(output_filename, "w", encoding="utf-8") as f:
-                sys.stdout = f  # Redirect stdout to file only
+        
+        # Run the agent - output will only go to file
+        agent(request_data["item_name"], 
+              request_data["custom_domains"], 
+              request_data["tags"],
+              machine_customer.country,
+              request_id)
                 
-                # Run the agent - output will only go to file
-                agent(request_data["item_name"], 
-                      request_data["custom_domains"], 
-                      request_data["tags"],
-                      machine_customer.country,
-                      request_id)
-
-        finally:
-            sys.stdout = original_stdout  # Restore original stdout
-
         print("Agent workflow completed...")
         # Get items from CSV and create model
         print("\nLoading items from CSV...")

@@ -67,17 +67,20 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
 
     print("search_query created: ", search_query)
 
-    tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=30)
     tavily_context_results = []
-    for result in tavily_context['results']:
-        if 'url' in result:
-            tavily_context_results.append(result['url'])
-
-    # Perform searches for each domain
-    for domain in custom_domains:
-        domain_query = f"{search_query} site:{domain} location:{country_code}"  # Restrict search to the domain and country
-        tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=20)
-        
+    
+    # If custom domains provided, only search those domains
+    if custom_domains:
+        for domain in custom_domains:
+            domain_query = f"{search_query} site:{domain} location:{country_code}"
+            tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=20)
+            
+            for result in tavily_context['results']:
+                if 'url' in result:
+                    tavily_context_results.append(result['url'])
+    else:
+        # If no custom domains, do a general search
+        tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=30)
         for result in tavily_context['results']:
             if 'url' in result:
                 tavily_context_results.append(result['url'])
@@ -118,4 +121,5 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
+# generate_search_results("White Sauce",None,["white","Sauce","Quality"],"US","1234567890")
 generate_search_results("White Sauce", ["https://www.amazon.com"],["white","Sauce","Quality"],"US","1234567890")

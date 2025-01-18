@@ -71,7 +71,7 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     options.add_argument('--no-sandbox')
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
     options.add_argument(f'--geo-location={country_code}')  # Set geolocation 
-    # options.add_argument('--headless')  
+    options.add_argument('--headless')
 
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
