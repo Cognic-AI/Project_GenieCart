@@ -1,0 +1,133 @@
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to search_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+Please execute the `generate_search_results` function. The user query is: Olive Oil. Domains to prioritize: ['https://www.amazon.com']. Tags are: ['Olive', 'fresh', 'clean']. country code is : LK. Request ID: a93850ef-8aee-4c62-a0c4-54fdfd0841fe
+
+--------------------------------------------------------------------------------
+search_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+***** Suggested tool call (call_eqjbFaOC2AY3npsWRMKduLxO): generate_search_results *****
+Arguments: 
+{"prompt":"Olive Oil","custom_domains":["https://www.amazon.com"],"tags":["Olive","fresh","clean"],"country_code":"LK","request_id":"a93850ef-8aee-4c62-a0c4-54fdfd0841fe"}
+****************************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION generate_search_results...
+Call ID: call_eqjbFaOC2AY3npsWRMKduLxO
+Input arguments: {'prompt': 'Olive Oil', 'custom_domains': ['https://www.amazon.com'], 'tags': ['Olive', 'fresh', 'clean'], 'country_code': 'LK', 'request_id': 'a93850ef-8aee-4c62-a0c4-54fdfd0841fe'}
+------------------------------------------------------------------------------------------------
+search agent started
+search_query created:  Olive Oil
+
+tavily_context_results:  ['https://www.daraz.lk/products/olive-oil-100ml-i190072284.html', 'https://www.daraz.lk/products/bertini-4l-olive-oil-i148753650.html', 'https://www.daraz.lk/tag/olive-oil-price/', 'https://glomark.lk/coopoliva-extra-virgin-olive-oil-250ml/p/7525', 'https://www.daraz.lk/products/bertini-spanish-extra-virgin-olive-oil-1l-i151987553.html', 'https://glomark.lk/fragata-traditional-olive-oil-250ml/p/8415', 'https://glomark.lk/good-look-hair-oil-olive-oil-150ml/p/9129', 'https://www.daraz.lk/products/olive-oil-tin-400g-i110844583.html', 'https://www.daraz.lk/products/extra-virgin-olive-oil-1l-dante-made-in-italy-i112426314.html', 'https://www.daraz.lk/cooking-oils/', 'https://www.findit.lk/teleseen-marketing-(pvt)-ltd/store/olive-pan', 'https://www.daraz.lk/products/royal-extra-virgin-olive-oil-250mlspanish-oil-i263313656.html', 'https://www.auramart.lk/product/1715929687/roushun-olive-oil-hair-treatment-500ml', 'https://www.findit.lk/products/home-and-kitchen/kitchen-appliances/olive-pan', 'https://www.daraz.lk/products/extra-virgin-olive-oil-1l-cirio-made-in-italy-i112422709.html', 'https://www.daraz.lk/products/coopoliva-extra-virgin-olive-oil-1lt-i191167595.html', 'https://www.ubuy.com.lk/en/product/2C7I6Z7S-asaro-organic-extra-virgin-olive-oil-5-liter-tin-169-07-fl-oz', 'http://foodforthought.lk/', 'https://www.daraz.lk/tag/jojoba-oil-price/', 'https://www.daraz.lk/oil-sprayers-dispenser/', 'https://www.yamu.lk/kamu/park-street-gourmet/', 'https://shoppingcentre.lk/', 'https://en.wikipedia.org/wiki/Olive_oil', 'https://www.healthline.com/nutrition/11-proven-benefits-of-olive-oil', 'https://puwath.lk/article/olive-oil-1647677905', 'https://www.eatingwell.com/is-olive-oil-good-for-you-8766002', 'https://www.teleseen.com/collections/home-lifestyle', 'https://www.teleseen.com/products/teleseen-cordless-steam-iron-combo-1', 'https://shopanddispatch.com/products/coles-refined-olive-oil-500ml', 'https://www.teleseen.com/collections/all', 'https://www.amazon.com/s/?k=olive+oil', 'https://www.amazon.com/Pompeian-Delicate-Stir-Frying-Naturally-Non-Allergenic/dp/B015ONU4JE']
+
+
+search_agent_output.txt created
+Filtered_links.txt created
+
+
+
+Search agent completed
+------------------------------------------------------------------------------------------------
+entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to search_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+***** Response from calling tool (call_eqjbFaOC2AY3npsWRMKduLxO) *****
+null
+**********************************************************************
+
+--------------------------------------------------------------------------------
+search_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+It seems that there was an issue executing the `generate_search_results` function, as it returned no results. Please check the parameters provided or let me know if there is something else I can assist you with.
+
+--------------------------------------------------------------------------------
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to product_selection_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+Please execute the `extract_all_links` function. product or item name is Olive Oil. country code is LK. Request ID: a93850ef-8aee-4c62-a0c4-54fdfd0841fe
+Context: 
+It seems that there was an issue executing the `generate_search_results` function, as it returned no results. Please check the parameters provided or let me know if there is something else I can assist you with.
+
+--------------------------------------------------------------------------------
+product_selection_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+***** Suggested tool call (call_aRADvNScmrAfegdqeLHXXBeJ): extract_all_links *****
+Arguments: 
+{"item_name":"Olive Oil","country_code":"LK","request_id":"a93850ef-8aee-4c62-a0c4-54fdfd0841fe"}
+**********************************************************************************
+
+--------------------------------------------------------------------------------
+
+>>>>>>>> EXECUTING FUNCTION extract_all_links...
+Call ID: call_aRADvNScmrAfegdqeLHXXBeJ
+Input arguments: {'item_name': 'Olive Oil', 'country_code': 'LK', 'request_id': 'a93850ef-8aee-4c62-a0c4-54fdfd0841fe'}
+------------------------------------------------------------------------------------------------
+Product selection agent started
+Processing link: https://www.daraz.lk/tag/olive-oil-price/
+entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to product_selection_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+***** Response from calling tool (call_aRADvNScmrAfegdqeLHXXBeJ) *****
+Error: Message: target frame detached
+  (failed to check if window was closed: disconnected: Unable to receive message from renderer)
+  (Session info: chrome=131.0.6778.265)
+Stacktrace:
+	GetHandleVerifier [0x00007FF6B46280D5+2992373]
+	(No symbol) [0x00007FF6B42BBFD0]
+	(No symbol) [0x00007FF6B4155739]
+	(No symbol) [0x00007FF6B41435DB]
+	(No symbol) [0x00007FF6B4141251]
+	(No symbol) [0x00007FF6B4141CFF]
+	(No symbol) [0x00007FF6B41509CE]
+	(No symbol) [0x00007FF6B4164A9D]
+	(No symbol) [0x00007FF6B416B26A]
+	(No symbol) [0x00007FF6B4142464]
+	(No symbol) [0x00007FF6B41645EA]
+	(No symbol) [0x00007FF6B41EF467]
+	(No symbol) [0x00007FF6B41CF113]
+	(No symbol) [0x00007FF6B419A918]
+	(No symbol) [0x00007FF6B419BA81]
+	GetHandleVerifier [0x00007FF6B4686A2D+3379789]
+	GetHandleVerifier [0x00007FF6B469C32D+3468109]
+	GetHandleVerifier [0x00007FF6B4690043+3418211]
+	GetHandleVerifier [0x00007FF6B441C78B+847787]
+	(No symbol) [0x00007FF6B42C757F]
+	(No symbol) [0x00007FF6B42C2FC4]
+	(No symbol) [0x00007FF6B42C315D]
+	(No symbol) [0x00007FF6B42B2979]
+	BaseThreadInitThunk [0x00007FF98DB8259D+29]
+	RtlUserThreadStart [0x00007FF98F1EAF38+40]
+
+**********************************************************************
+
+--------------------------------------------------------------------------------
+product_selection_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+It seems there was an error while attempting to execute the `extract_all_links` function. The error message indicates that there was an issue with the target frame being detached, which typically occurs in web scraping or browser automation contexts due to the browser context being lost or interrupted.
+
+Would you like to try executing the function again, or is there anything else I can assist you with?
+
+--------------------------------------------------------------------------------
+
+********************************************************************************
+Starting a new chat....
+
+********************************************************************************
+entrypoint_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe (to data_extract_agent_a93850ef-8aee-4c62-a0c4-54fdfd0841fe):
+
+Please execute the `process_links` function. country code is LK. Request ID: a93850ef-8aee-4c62-a0c4-54fdfd0841fe
+Context: 
+It seems that there was an issue executing the `generate_search_results` function, as it returned no results. Please check the parameters provided or let me know if there is something else I can assist you with.
+It seems there was an error while attempting to execute the `extract_all_links` function. The error message indicates that there was an issue with the target frame being detached, which typically occurs in web scraping or browser automation contexts due to the browser context being lost or interrupted.
+
+Would you like to try executing the function again, or is there anything else I can assist you with?
+
+--------------------------------------------------------------------------------
