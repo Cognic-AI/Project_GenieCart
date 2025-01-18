@@ -134,3 +134,69 @@ export const createAccount = async (collectionName, data) => {
       throw error;
     }
   };
+
+  export const fetchPurchases = async (uid) => {
+    try {
+      // Fetch all documents in the 'history' subcollection
+      const docCollection = collection(db, "customer", uid, "purchase");
+      const querySnapshot = await getDocs(docCollection);
+
+      const docs_ = querySnapshot.docs;
+      docs_.sort((a, b) => {
+        // Get the timestamps as Firestore Timestamp objects
+        const timeA = a.get('timestamp');
+        const timeB = b.get('timestamp');
+  
+        // Convert Firestore Timestamp to Date objects if necessary
+        const parseDate = (dateStr) => {
+          const [datePart, timePart] = dateStr.split(' '); // Split date and time
+          const [year, month, day] = datePart.split('-').map(num => parseInt(num, 10));
+          const [hour, minute, second] = timePart.split(':').map(num => parseInt(num, 10));
+      
+          return new Date(year, month - 1, day, hour, minute, second); // Create a Date object
+        };
+
+        // Convert time strings to Date objects
+        const dateA = parseDate(timeA);
+        const dateB = parseDate(timeB);
+
+        console.log(dateB)
+  
+        // Sort in descending order by how recent the timestamp is
+        return dateB - dateA; // Compare timestamps directly
+      });
+  
+      console.log(docs_);
+
+      const items = [];
+  
+      // Iterate over each document in the 'purchased' collection
+      for (const purchaseDoc of docs_) {
+        const purchaseItem = purchaseDoc.get("item"); 
+        const itemRef = doc(db, "item", purchaseItem); // Reference to the 'items' document
+        const itemDoc = await getDoc(itemRef);
+        if (itemDoc.exists()) {
+          items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:purchaseDoc.get('timestamp') }); // Add item data with ID
+        }
+      }  
+      console.log("Fetched Items:", items);
+      return items;
+    } catch (error) {
+      console.error("Error fetching purchased items:", error);
+      throw error;
+    }
+  };
+
+  export const updateKey = async (uid,key) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        generated_key: key 
+      }); // Create or overwrite the document
+      console.log("Key updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating Key:", error);
+      throw error;
+    }
+  };

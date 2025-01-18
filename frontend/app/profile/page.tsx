@@ -10,18 +10,21 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Settings } from 'lucide-react';
+import { AlertCircle, Download, DownloadCloud, MessageCircle, Settings, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '../components/header';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PurchasesPage from '../components/purchases-display';
-import {fetchProfile, fetchHistory} from '../api/firestore.js';
+import {fetchProfile, fetchHistory, fetchPurchases} from '../api/firestore.js';
  
 export default function ProfilePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [purchaseTab, setPurchaseTab] = useState(true);
   const [purchases, setPurchases] = useState([]);
+  const [realPurchases, setRealPurchases] = useState([]);
+  const [isLoading,setIsLoading] = useState(true);
   const [user_, setUser] = useState({
     customer_id:"",
     customer_name: '',
@@ -86,6 +89,8 @@ export default function ProfilePage() {
   // };
 
   const handleLoadingProfile = async () => {
+    setIsLoading(true);
+
     try {
       const profile = await fetchProfile("customer",sessionStorage.getItem("uid"));
       if (profile) {
@@ -103,8 +108,12 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching suggestions:', error);
     }
+    setIsLoading(false);
+
   };
   const handleLoadingPurchases = async () => {
+    setIsLoading(true);
+
     try {
       
       const res = await fetchHistory(sessionStorage.getItem('uid'));
@@ -119,15 +128,40 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching purchases:', error);
     }
+    setIsLoading(false);
   };
 
+  const handleLoadingRealPurchases = async () => {
+    setIsLoading(true);
+    try {
+      
+      const res = await fetchPurchases(sessionStorage.getItem('uid'));
+
+      if (Array.isArray(res)) {
+        setRealPurchases(res as []);
+      } else {
+        console.error('Unexpected response structure:', res);
+        setRealPurchases([]);
+      }
+      console.log('API Response:', res); // Log the response to confirm its structure
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
+    }
+    setIsLoading(false);
+  };
   useEffect(() => {
     if (sessionStorage.getItem('uid')) {
       handleLoadingPurchases();
       handleLoadingProfile();
+      handleLoadingRealPurchases();
     }
   }, [sessionStorage.getItem('uid')]);
 
+  if(isLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid border-opacity-50"></div>
+    </div>
+  );
   
   if (!sessionStorage.getItem('uid')) return <div>Not authenticated</div>;
 
@@ -146,18 +180,43 @@ export default function ProfilePage() {
 
   const showPurchases = () => {
     if (purchases.length === 0) {
-      return <div>No suggestions found</div>;
+      return <div className='justiy-center flex flex-col items-center w-full' style={{alignItems:'center'}}>No suggestions found</div>;
     }
     return PurchasesPage(purchases);
   };
+
+  const showRealPurchases = () => {
+    if (realPurchases.length === 0) {
+      return <div className='justiy-center flex flex-col items-center w-full' style={{alignItems:'center'}}>No Purchases found</div>;
+    }
+    return PurchasesPage(realPurchases);
+  };
+
+  const handleTabChange = (e) => {
+    if(e=="purchase"){
+      setPurchaseTab(true);
+    }else{
+      setPurchaseTab(false);
+    }
+  }
   
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 w-full">
       <Header onProfileClick={() => setIsOpen(true)} />
-      <main className="flex-grow flex items-center justify-center">
-        <div className="p-4 flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center justify-center">  
-            {showPurchases()}
+      <main className="flex-grow flex flex-col">
+        <div className="flex flex-row gap-5 items-center" style={{marginTop:80,marginBottom:0,alignSelf:'start', paddingLeft:20, paddingBottom:0}}>
+          <Button key="purchase" name='purchase' variant="outline" className="flex items-center gap-2" style={{color:(purchaseTab?"#ffffff":"#5479f7"),backgroundColor:(purchaseTab?"#5479f7":"#ffffff")}} onClick={()=>{handleTabChange("purchase")}}>
+            <Download className="h-5 w-5" />
+              Purchses
+          </Button>
+          <Button name='suggestions' variant="outline" className="flex items-center gap-2" style={{color:(!purchaseTab?"#ffffff":"#5479f7"),backgroundColor:(!purchaseTab?"#5479f7":"#ffffff")}} onClick={()=>{handleTabChange("suggestions")}}>
+            <MessageCircle className="h-5 w-5" />
+              Suggestions
+          </Button>
+        </div>
+        <div className="p-4 flex flex-col" style={{marginTop:0,paddingTop:0}}>
+          <div className="flex flex-col">  
+            {purchaseTab?showRealPurchases():showPurchases()}
           </div>
         </div>
       </main>
