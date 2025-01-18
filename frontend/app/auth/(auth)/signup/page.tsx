@@ -64,21 +64,56 @@ export default function SignUpPage(): React.JSX.Element {
   //   }
   // };
 
+  const sendEmail = async (email,generated_key,name)=>{
+      // alert(JSON.stringify(submittedData));
+      try {      
+          // Create the request body
+          const body = {
+            email:email,
+            name:name, 
+            generated_key:generated_key,
+          };
+      
+          // Make the POST request
+          const response = await fetch("http://localhost:8000/api/sendSecret", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          });
+      
+          // Handle the response
+          if (response.ok) {
+            const data = await response.json();
+            console.log(`Response: ${JSON.stringify(data)}`);
+          } else {
+            const error = await response.json();
+            console.log(`Error: ${JSON.stringify(error)}`);
+          }
+        } catch (err) {
+          console.log(`Error: ${err.message}`);
+        }
+    
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
     try {
       const user = await signUp(email,password);
+      const key  = generateKey();
       await createAccount("customer",{
         name:name,
         email:email,
         id:user.uid,
         country:country,
-        generated_key:generateKey(),
+        generated_key:key,
         price_level:"LOW",
         image:""
       });
+      await sendEmail(email,key,name);
       console.log("User signed up:", user);
       router.push('/auth/signin');
     } catch (err) {
