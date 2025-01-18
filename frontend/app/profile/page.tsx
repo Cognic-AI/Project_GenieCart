@@ -21,9 +21,10 @@ import {fetchProfile, fetchHistory, fetchPurchases} from '../api/firestore.js';
 export default function ProfilePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [purchaseTab, setPurchaseTab] = useState(false);
+  const [purchaseTab, setPurchaseTab] = useState(true);
   const [purchases, setPurchases] = useState([]);
   const [realPurchases, setRealPurchases] = useState([]);
+  const [isLoading,setIsLoading] = useState(true);
   const [user_, setUser] = useState({
     customer_id:"",
     customer_name: '',
@@ -88,6 +89,8 @@ export default function ProfilePage() {
   // };
 
   const handleLoadingProfile = async () => {
+    setIsLoading(true);
+
     try {
       const profile = await fetchProfile("customer",sessionStorage.getItem("uid"));
       if (profile) {
@@ -105,8 +108,12 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching suggestions:', error);
     }
+    setIsLoading(false);
+
   };
   const handleLoadingPurchases = async () => {
+    setIsLoading(true);
+
     try {
       
       const res = await fetchHistory(sessionStorage.getItem('uid'));
@@ -121,9 +128,11 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching purchases:', error);
     }
+    setIsLoading(false);
   };
 
   const handleLoadingRealPurchases = async () => {
+    setIsLoading(true);
     try {
       
       const res = await fetchPurchases(sessionStorage.getItem('uid'));
@@ -138,6 +147,7 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error fetching purchases:', error);
     }
+    setIsLoading(false);
   };
   useEffect(() => {
     if (sessionStorage.getItem('uid')) {
@@ -147,6 +157,11 @@ export default function ProfilePage() {
     }
   }, [sessionStorage.getItem('uid')]);
 
+  if(isLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid border-opacity-50"></div>
+    </div>
+  );
   
   if (!sessionStorage.getItem('uid')) return <div>Not authenticated</div>;
 
