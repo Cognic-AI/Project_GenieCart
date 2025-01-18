@@ -126,8 +126,9 @@ export default function ProfilePage() {
       handleLoadingPurchases();
       handleLoadingProfile();
     }
-  }, [user_]);
+  }, [sessionStorage.getItem('uid')]);
 
+  
   if (!sessionStorage.getItem('uid')) return <div>Not authenticated</div>;
 
   const handleSignOut = async () => {

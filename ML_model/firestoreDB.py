@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+from datetime import datetime
 
 class FirestoreDB:
     def __init__(self):
@@ -53,7 +54,7 @@ class FirestoreDB:
     def add_search_result(self, item_id, item_score, customer_id):
         print(f"\nAdding search result for Item ID(s): {item_id}, score(s): {item_score}")
         self.db.collection("customer").document(customer_id).collection("history").add({
-            "timestamp": firestore.SERVER_TIMESTAMP,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "items": item_id,
             "score": item_score
         })
