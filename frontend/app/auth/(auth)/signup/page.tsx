@@ -31,6 +31,8 @@ export default function SignUpPage(): React.JSX.Element {
   const [password, setPassword] = useState<string>('');
   const [name, setName] = useState<string>('');
    const [error, setError] = useState<string>('');
+   const [generatedKey, setGeneratedKey] = useState(""); // To store the key for the popup
+  const [showPopup, setShowPopup] = useState(false); // To control popup visibility
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -64,38 +66,38 @@ export default function SignUpPage(): React.JSX.Element {
   //   }
   // };
 
-  const sendEmail = async (email,generated_key,name)=>{
-      // alert(JSON.stringify(submittedData));
-      try {      
-          // Create the request body
-          const body = {
-            email:email,
-            name:name, 
-            generated_key:generated_key,
-          };
+  // const sendEmail = async (email,generated_key,name)=>{
+  //     // alert(JSON.stringify(submittedData));
+  //     try {      
+  //         // Create the request body
+  //         const body = {
+  //           email:email,
+  //           name:name, 
+  //           generated_key:generated_key,
+  //         };
       
-          // Make the POST request
-          const response = await fetch("http://localhost:8000/api/sendSecret", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          });
+  //         // Make the POST request
+  //         const response = await fetch("http://localhost:8000/api/sendSecret", {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify(body),
+  //         });
       
-          // Handle the response
-          if (response.ok) {
-            const data = await response.json();
-            console.log(`Response: ${JSON.stringify(data)}`);
-          } else {
-            const error = await response.json();
-            console.log(`Error: ${JSON.stringify(error)}`);
-          }
-        } catch (err) {
-          console.log(`Error: ${err.message}`);
-        }
+  //         // Handle the response
+  //         if (response.ok) {
+  //           const data = await response.json();
+  //           console.log(`Response: ${JSON.stringify(data)}`);
+  //         } else {
+  //           const error = await response.json();
+  //           console.log(`Error: ${JSON.stringify(error)}`);
+  //         }
+  //       } catch (err) {
+  //         console.log(`Error: ${err.message}`);
+  //       }
     
-  };
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -104,6 +106,8 @@ export default function SignUpPage(): React.JSX.Element {
     try {
       const user = await signUp(email,password);
       const key  = generateKey();
+      setGeneratedKey(key); // Store the key in state
+
       await createAccount("customer",{
         name:name,
         email:email,
@@ -113,13 +117,21 @@ export default function SignUpPage(): React.JSX.Element {
         price_level:"LOW",
         image:""
       });
-      await sendEmail(email,key,name);
+      // await sendEmail(email,key,name);
+      //Instead of sending mail, just showing one time secretkey 
+      // Show the popup with the key, and after closing it my manual close btn, popup will dissapear
+      setShowPopup(true);
       console.log("User signed up:", user);
-      router.push('/auth/signin');
+
     } catch (err) {
       console.log(err);
       setError('An error occurred during signup');
     }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false); // Hide the popup
+      router.push('/auth/signin');
   };
 
   return (
@@ -228,6 +240,24 @@ export default function SignUpPage(): React.JSX.Element {
           </Link>
         </div>
       </div>
+      {/* Popup */}
+      {showPopup?(
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Your Secret Key</h2>
+            <p className="mb-4">
+              Please save this key securely. It will only be shown once.
+            </p>
+            <p className="mb-6 p-2 bg-gray-200 rounded">{generatedKey}</p>
+            <button
+              onClick={handleClosePopup}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ):<></>}
     </div>
   );
 }
