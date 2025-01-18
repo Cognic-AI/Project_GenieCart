@@ -1,6 +1,7 @@
 import ML_model.DataTypes as dt
 import ML_model.UserFixedDataConvertor as uc
-import ML_model.Database as db
+# import ML_model.Database as db
+import ML_model.firestoreDB as db
 from ML_model.gemini import generate_llm_tags_for_current_tags
 import os
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def create_machine_customer(request):
-    database = db.Database("0.0.0.0","root","root","machine_customer",3306)
+    database = db.FirestoreDB()
 
     print(database.get_users())
     # print(request["secret_key"])
@@ -18,8 +19,12 @@ def create_machine_customer(request):
     if customer is None:
         raise ValueError("Customer not found")
     
-    mc= dt.MachineCustomer(customer[0], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer[1], customer[2], customer[6])
+    print(customer)
+
+    mc= dt.MachineCustomer(customer['id'], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer['name'], customer['email'], customer['country'])
+    print("Machine customer has been created")
     mc.history = fetchHistory(mc.customer_id)
+    print("History has been fetched")
     
     return mc
 

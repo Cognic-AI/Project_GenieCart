@@ -5,7 +5,8 @@ from flask import Flask, request, jsonify
 import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
 import ML_model.Model as md
-from ML_model.Database import Database as db
+# from ML_model.Database import Database as db
+import ML_model.firestoreDB as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
@@ -54,28 +55,30 @@ def recommend():
             return jsonify({"status": "error", "message": str(e)}), 400
 
         print(f"Agent workflow started for request {request_id}...")
-        output_filename: str = os.path.join("Agent_Outputs", f"Agent_workflow_output_{request_id}.txt")
-        original_stdout = sys.stdout  # Save the original stdout
+#########        
+        # output_filename: str = os.path.join("Agent_Outputs", f"Agent_workflow_output_{request_id}.txt")
+        # original_stdout = sys.stdout  # Save the original stdout
 
-        try:
-            with open(output_filename, "w", encoding="utf-8") as f:
-                sys.stdout = f  # Redirect stdout to file only
+        # try:
+        #     with open(output_filename, "w", encoding="utf-8") as f:
+        #         sys.stdout = f  # Redirect stdout to file only
                 
-                # Run the agent - output will only go to file
-                agent(request_data["item_name"], 
-                      request_data["custom_domains"], 
-                      request_data["tags"],
-                      machine_customer.country,
-                      request_id)
+        #         # Run the agent - output will only go to file
+        #         agent(request_data["item_name"], 
+        #               request_data["custom_domains"], 
+        #               request_data["tags"],
+        #               machine_customer.country,
+        #               request_id)
 
-        finally:
-            sys.stdout = original_stdout  # Restore original stdout
+        # finally:
+        #     sys.stdout = original_stdout  # Restore original stdout
 
-        print("Agent workflow completed...")
-        
+        # print("Agent workflow completed...")
+##############        
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
-        items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
+        # items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
+        items = ic.csv_to_list("test.csv")
         print(f"Loaded {len(items)} items")
         
         # Create model with items and machine customer
@@ -89,14 +92,8 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            database = db(
-                host=os.getenv("DB_HOST"),
-                user=os.getenv("DB_USER"), 
-                password=os.getenv("DB_PASSWORD"),
-                database=os.getenv("DB_NAME"),
-                port=os.getenv("DB_PORT")
-            )
-            database.add_search_result(machine_customer.customer_id, result)
+            database = db.FirestoreDB()
+            database.add_search_item(machine_customer.customer_id, result)
             print("Sending email...")
             print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
             return jsonify({"status": "success and email sent"})
