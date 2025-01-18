@@ -13,6 +13,7 @@ COPY .env .
 COPY emailservice.py .
 COPY Machine_Customer_Endpoint.py .
 COPY requirements.txt .
+COPY genie-cart-firebase-service-account.json .
 
 RUN pip install -r requirements.txt
 
