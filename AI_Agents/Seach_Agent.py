@@ -54,10 +54,13 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
     print("search agent started")
 
+    # Create Agent_Outputs directory if it doesn't exist
+    os.makedirs("Agent_Outputs", exist_ok=True)
+
     tavily_client, gemini_model = initialize_clients()
     
     final_prompt = f""" 
-    role: system, content: You are a helpful assistant that converts the user prompt into a search query to find products from {country_code}. You only provide the search query. No other responds.
+    role: system, content: You are a helpful assistant that converts the user prompt into a search query to find products from {country_code} using web search. You only provide the search query. In the search query mention as buy from the given country(convert the country code to country name). No other responds.
     role: user, content: {prompt}, tags: {tags}"""
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
@@ -115,4 +118,4 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("A4 bundle", ["https://www.amazon.com"],["white","A4","paper","photocopy"],"US","1234567890")
+generate_search_results("White Sauce", ["https://www.amazon.com"],["white","Sauce","Quality"],"US","1234567890")

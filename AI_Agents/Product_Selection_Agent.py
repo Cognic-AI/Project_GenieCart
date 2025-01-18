@@ -82,8 +82,22 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
 
     for link in links:
         driver = webdriver.Chrome(options=options)
+        
+        # # Set geolocation coordinates
+        # latitude = 45.2496824
+        # longitude = -76.1299012
+        # accuracy = 100
+        
+        # driver.maximize_window()
+        # driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+        #     "latitude": latitude,
+        #     "longitude": longitude,
+        #     "accuracy": accuracy
+        # })
+        
         print(f"Processing link: {link}")
         driver.get(link)
+
 
         # Wait for the page to initially load
         time.sleep(5)
@@ -124,4 +138,4 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("A4 bundle", "US")
+extract_all_links("White Sauce", "US", "1234567890")
