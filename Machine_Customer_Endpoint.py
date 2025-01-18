@@ -5,10 +5,12 @@ from flask import Flask, request, jsonify
 import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
 import ML_model.Model as md
-from ML_model.Database import Database as db
+# from ML_model.Database import Database as db
+import ML_model.firestoreDB as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
+from secretemailservice import send_secret_email
 import uuid
 from flask_cors import CORS
 load_dotenv()
@@ -24,6 +26,7 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
@@ -65,7 +68,6 @@ def recommend():
             sys.stdout = original_stdout  # Restore original stdout
 
         print("Agent workflow completed...")
-        
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
         items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
@@ -82,14 +84,8 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            database = db(
-                host=os.getenv("DB_HOST"),
-                user=os.getenv("DB_USER"), 
-                password=os.getenv("DB_PASSWORD"),
-                database=os.getenv("DB_NAME"),
-                port=os.getenv("DB_PORT")
-            )
-            database.add_search_result(machine_customer.customer_id, result)
+            database = db.FirestoreDB()
+            database.add_search_item(machine_customer.customer_id, result)
             print("Sending email...")
             print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
             return jsonify({"status": "success and email sent"})
@@ -102,8 +98,16 @@ def recommend():
         return jsonify({"status": "error", "message": str(e)}), 500
     
 @app.route('/api/health', methods=['GET']) 
-def health_check(): 
+def health(): 
+    print("got the request")
     return jsonify({"status": "healthy"}),200
 
+@app.route('/api/sendSecret', methods=['POST']) 
+def sendSecret(): 
+    print("Sending email...")
+    request_data = request.get_json()
+    print(send_secret_email(request_data['email'], request_data['generated_key'], request_data['name']))
+    return jsonify({"status": "success and email sent"})
+
 if __name__ == '__main__':
-    app.run(debug=False, port=8000, threaded=True, use_reloader=False)
+    app.run(host="0.0.0.0",debug=False, port=8000, threaded=True, use_reloader=False)

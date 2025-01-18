@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connection } from '../../../database/db';
-import bcrypt from 'bcrypt';
+import { createHash, randomBytes } from 'crypto';
 import { ResultSetHeader } from 'mysql2';
 
 // Generate a more robust key with letters and numbers
@@ -21,6 +21,21 @@ function generateKey(length: number = 12): string {
   return key;
 }
 
+// Function to hash a password
+async function hashPassword(password: string): Promise<string> {
+  // Generate a random salt
+  const salt = randomBytes(16).toString('hex');
+
+  // Hash the password with the salt
+  const hash = createHash('sha256')
+    .update(password + salt)
+    .digest('hex');
+
+  // Return the combined salt and hash
+  return `${salt}:${hash}`;
+}
+
+
 export async function POST(req: NextRequest) {
   const { name, email, password, country } = await req.json();
 
@@ -40,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     // Generate random key
     const generatedKey = generateKey();

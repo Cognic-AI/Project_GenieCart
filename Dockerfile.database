@@ -6,7 +6,7 @@ ENV MYSQL_DATABASE=machine_customer
 ENV MYSQL_ROOT_PASSWORD=root
 
 # Copy the SQL file to the Docker image
-COPY dump_final.sql /docker-entrypoint-initdb.d/
+COPY db_dump.sql /docker-entrypoint-initdb.d/
 
 # Expose the default MySQL port
 EXPOSE 3306

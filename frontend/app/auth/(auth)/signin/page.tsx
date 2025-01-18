@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signIn } from "../../../api/auth.js";
+
 
 export default function SignInPage(): React.JSX.Element {
   const [email, setEmail] = useState<string>('');
@@ -11,28 +12,44 @@ export default function SignInPage(): React.JSX.Element {
   const [error, setError] = useState<string>('');
   const router = useRouter();
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setError('');
+
+  //   try {
+  //     const result = await signIn('credentials', {
+  //       redirect: false,
+  //       email,
+  //       password,
+  //     });
+
+  //     if (result?.error) {
+  //       setError('Invalid email or password');
+  //     } else {
+  //       router.push('/profile');
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     setError('An error occurred during login');
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
     try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-      });
-
-      if (result?.error) {
-        setError('Invalid email or password');
-      } else {
+      const uid = await signIn(email,password);
+      console.log(uid);
+      sessionStorage.setItem(
+        'uid',uid
+      );
         router.push('/profile');
-      }
+      
     } catch (err) {
       console.log(err);
       setError('An error occurred during login');
     }
   };
-
   return (
     <div
   className="flex items-center min-h-screen w-full bg-[url('sign.png')]"
