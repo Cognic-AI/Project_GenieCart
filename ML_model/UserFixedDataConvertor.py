@@ -21,9 +21,9 @@ def buildHistoryList(customer_id):
     history = []
     # Convert each history record into Item object
     for h in customer_history:
-        print(f"Processing history record: {h[3]}")
+        print(f"Processing history record: {h}")
         # Create Item with: name, price, description, link, rating, tags, quantity
-        item = dt.Item(h[1], h[2], h[3], h[4], h[5], h[6].lower().split(','))
+        item = dt.Item(h['name'], h['price'], h['description'], h['link'], h['rate'], h['tags'].lower().split(','))
         history.append(item)
         print(f"Added {item.name} to history list")
     

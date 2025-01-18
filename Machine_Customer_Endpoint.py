@@ -6,7 +6,7 @@ import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
 import ML_model.Model as md
 # from ML_model.Database import Database as db
-from ML_model.firestoreDB import FirestoreDB as db
+import ML_model.firestoreDB as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
@@ -77,7 +77,8 @@ def recommend():
 ##############        
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
-        items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
+        # items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
+        items = ic.csv_to_list("test.csv")
         print(f"Loaded {len(items)} items")
         
         # Create model with items and machine customer
@@ -91,7 +92,8 @@ def recommend():
             print("Recommendations generated successfully")
             print("\nSending response to database...")
             # Initialize database connection
-            db.add_search_item(machine_customer.customer_id, result)
+            database = db.FirestoreDB()
+            database.add_search_item(machine_customer.customer_id, result)
             print("Sending email...")
             print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
             return jsonify({"status": "success and email sent"})
