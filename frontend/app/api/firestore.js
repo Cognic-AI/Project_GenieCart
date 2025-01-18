@@ -1,34 +1,12 @@
 // firestore.js
 import { db } from "../database/firebase_config.js";
-import { collection, addDoc, getDocs,setDoc,doc ,getDoc, updateDoc} from "firebase/firestore";
-
-// Add a new document
-export const addData = async (collectionName, data) => {
-  try {
-    const docRef = await addDoc(collection(db, collectionName), data);
-    return docRef.id;
-  } catch (error) {
-    console.error("Error adding document:", error);
-    throw error;
-  }
-};
-
-// Fetch all documents
-export const fetchData = async (collectionName) => {
-  try {
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
-  }
-};
+import { collection, getDocs,setDoc,doc ,getDoc, updateDoc} from "firebase/firestore";
 
 export const createAccount = async (collectionName, data) => {
     try {
       const docRef = doc(db, collectionName, data['id']); // Reference to the specific document
       await setDoc(docRef, data); // Create or overwrite the document
-      console.log("Document successfully written!");
+      console.log("Document successfully written!");  
       return docRef.id;
     } catch (error) {
       console.error("Error adding document:", error);
