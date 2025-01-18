@@ -1,5 +1,6 @@
 # Import required modules
-import ML_model.Database as db
+# import ML_model.Database as db
+import ML_model.firestoreDB as db
 import ML_model.DataTypes as dt
 import os
 import dotenv
@@ -7,7 +8,7 @@ import dotenv
 dotenv.load_dotenv()
 
 # Initialize database connection
-database = db.Database("0.0.0.0","root","root","machine_customer",3306)
+database = db.FirestoreDB()
 
 def buildHistoryList(customer_id):
     """Build list of historical items purchased by a customer"""

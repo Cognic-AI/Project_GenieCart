@@ -74,68 +74,25 @@ class FirestoreDB:
 
         return items_docs
     
-    def add_search_result(self, customer_id, item_array):
-        """
-        Add a new search result for a customer
-        
-        Args:
-            customer_id (int): ID of the customer
-            item_array (list): List of items from search result
-            
-        Raises:
-            ValueError: If customer_id doesn't exist
-        """
-        print(f"\nAdding search result for customer ID: {customer_id}")
-        conn = self.connect()
-        cursor = conn.cursor()
-        # Check if customer exists before inserting
-        cursor.execute('SELECT customer_id FROM customer WHERE customer_id = %s', (customer_id,))
-        if not cursor.fetchone():
-            raise ValueError(f"Customer ID {customer_id} does not exist")
-            
-        cursor.execute('INSERT INTO search_result (time_stamp, customer_id) VALUES (NOW(), %s)', (customer_id,))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        search_id = cursor.lastrowid
-        print(item_array)
-        self.add_search_item(search_id, item_array)
-        print("Database connection closed")
+    def add_search_result(self, item_id,item_score,customer_id):
+        print(f"\nAdding search result for Item ID: {item_id}, score: {item_score}")
+        self.db.collection("customer").document(customer_id).collection("history").add(dict({("timestamp",""),("items",item_id),("score",item_score)}))
 
-    def add_search_item(self, search_id, item_array):
-        """
-        Add items from a search result to the database
-        
-        Args:
-            search_id (int): ID of the search result
-            item_array (list): List of items to add
-        """
-        print(f"\nAdding search items for search ID: {search_id}")
+    def add_search_item(self,customer_id, item_array):
+        print(f"\nAdding search items for Customer ID: {customer_id}")
+        item_suggested = []
+        item_suggested_score = []
         for item in item_array:
-            item_id = self.get_item_id(item.link,item.name)
+            state,item_id = self.get_item_id(item.link,item.name)
             print(f"Item ID: {item_id}")
-            conn = self.connect()
-            cursor = conn.cursor()
-            if item_id<0:
+            if not state:
                 print("Item not found, adding to database")
-                cursor.execute('SET autocommit=0')
-                cursor.execute('START TRANSACTION')
-                cursor.execute('INSERT INTO item (name, price, description, link, rate, tags,image_link) VALUES (%s, %s, %s, %s, %s, %s,%s)', 
-                             (item.name, item.price, item.description, item.link, item.rate, ','.join(item.tags),item.image_link))
-                item_id = cursor.lastrowid
-                cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
-                             (search_id, item_id, item.score))
-                cursor.execute('COMMIT')
-                cursor.execute('SET autocommit=1')
-                conn.commit()
-            else:
-                # print("Item found, adding to search item")
-                # cursor.execute('INSERT INTO search_item (search_id, item_id, score) VALUES (%s, %s, %s)',
-                #              (search_id, item_id, item.score))
-                conn.commit()
-            cursor.close()
-            conn.close()
-        print("Database connection closed")
+                doc = self.db.collection("item").add(dict({("name",item.name),("link",item.link),("price",item.price),("description",item.description),("rate",item.rate),("tags",item.tags),("image_link",item.image_link)}))
+                item_id = doc.id
+            item_suggested.append(item_id)
+            item_suggested_score.append(item.score)
+        self.add_search_result(item_suggested,item_suggested_score,customer_id)
+
 
     def get_users(self):
         """
@@ -144,48 +101,18 @@ class FirestoreDB:
         Returns:
             list: List of all users
         """
-        conn = self.connect()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM customer')
-        users = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        print("Database connection closed")
-        return users
+        docs = self.db.collection("customer").get()
+        return docs
 
     def get_item_id(self, item_link, item_name):
-        """
-        Get the ID of an item from the database based on link and name
-        
-        Args:
-            item_link (str): Link of the item
-            item_name (str): Name of the item
-
-        Returns:
-            int: Item ID if found, None otherwise
-        """
-        conn = self.connect()
-        cursor = conn.cursor()
-        id = -1
-        try:
-            cursor.execute('SELECT item_id FROM item WHERE link = %s AND name = %s', (item_link, item_name))
-            result = cursor.fetchall()
-            cursor.close()
-            conn.close()
-            print("Database connection closed")
-            print(result)
-            if len(result)>0:
-                id = result[0][0]  # Return just the ID value
-        except Exception as e:
-            print(f"Error fetching item ID: {e}")
-            cursor.close() 
-            conn.close()
-            print("Database connection closed")
-        finally:
-            cursor.close()
-            conn.close()
-            print("Database connection closed")
-            return id
+        query = self.db.collection("item").where("name","==",item_name)
+        query = query.where("link","==",item_link)
+        query = query.stream()
+        if query.count() > 0:
+            item = query.get()
+            return True,item.id
+        else:
+            return False,0
 # if __name__ == "__main__":
 #     import os
 #     from dotenv import load_dotenv

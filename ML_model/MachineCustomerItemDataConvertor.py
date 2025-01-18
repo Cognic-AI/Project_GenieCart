@@ -1,6 +1,7 @@
 import ML_model.DataTypes as dt
 import ML_model.UserFixedDataConvertor as uc
-import ML_model.Database as db
+# import ML_model.Database as db
+import ML_model.firestoreDB as db
 from ML_model.gemini import generate_llm_tags_for_current_tags
 import os
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def create_machine_customer(request):
-    database = db.Database("0.0.0.0","root","root","machine_customer",3306)
+    database = db.FirestoreDB()
 
     print(database.get_users())
     # print(request["secret_key"])
