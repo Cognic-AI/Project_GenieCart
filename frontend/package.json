@@ -25,6 +25,7 @@
     "mysql2": "^3.11.5",
     "next": "15.1.0",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.9.16",
     "react": "^19.0.0",
     "react-country-region-selector": "^4.0.2",
     "react-dom": "^19.0.0",
