@@ -10,7 +10,7 @@ import ML_model.firestoreDB as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
-from secretemailservice import send_secret_email
+# from secretemailservice import send_secret_email
 import uuid
 from flask_cors import CORS
 load_dotenv()
@@ -50,23 +50,14 @@ def recommend():
             return jsonify({"status": "error", "message": str(e)}), 400
 
         print(f"Agent workflow started for request {request_id}...")
-        output_filename: str = os.path.join("Agent_Outputs", f"Agent_workflow_output_{request_id}.txt")
-        original_stdout = sys.stdout  # Save the original stdout
-
-        try:
-            with open(output_filename, "w", encoding="utf-8") as f:
-                sys.stdout = f  # Redirect stdout to file only
+        
+        # Run the agent - output will only go to file
+        agent(request_data["item_name"], 
+              request_data["custom_domains"], 
+              request_data["tags"],
+              machine_customer.country,
+              request_id)
                 
-                # Run the agent - output will only go to file
-                agent(request_data["item_name"], 
-                      request_data["custom_domains"], 
-                      request_data["tags"],
-                      machine_customer.country,
-                      request_id)
-
-        finally:
-            sys.stdout = original_stdout  # Restore original stdout
-
         print("Agent workflow completed...")
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
@@ -102,12 +93,12 @@ def health():
     print("got the request")
     return jsonify({"status": "healthy"}),200
 
-@app.route('/api/sendSecret', methods=['POST']) 
-def sendSecret(): 
-    print("Sending email...")
-    request_data = request.get_json()
-    print(send_secret_email(request_data['email'], request_data['generated_key'], request_data['name']))
-    return jsonify({"status": "success and email sent"})
+# @app.route('/api/sendSecret', methods=['POST']) 
+# def sendSecret(): 
+#     print("Sending email...")
+#     request_data = request.get_json()
+#     print(send_secret_email(request_data['email'], request_data['generated_key'], request_data['name']))
+#     return jsonify({"status": "success and email sent"})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",debug=False, port=8000, threaded=True, use_reloader=False)
