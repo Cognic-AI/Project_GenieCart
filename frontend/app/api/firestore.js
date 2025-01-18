@@ -186,3 +186,17 @@ export const createAccount = async (collectionName, data) => {
       throw error;
     }
   };
+
+  export const updateKey = async (uid,key) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        generated_key: key 
+      }); // Create or overwrite the document
+      console.log("Key updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating Key:", error);
+      throw error;
+    }
+  };

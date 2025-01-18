@@ -7,13 +7,32 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar } from "@/components/ui/avatar"
-import {updatePriceLevel,updateName,updatePic, fetchProfile} from '../api/firestore.js';
+import {updatePriceLevel,updateName,updatePic, fetchProfile, updateKey} from '../api/firestore.js';
+import { KeyIcon } from 'lucide-react'
 
+function generateKey(length: number = 12): string {
+  const numbers = '0123456789';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const allChars = numbers + letters;
+  
+  // Ensure we start with at least one letter and one number
+  let key = letters.charAt(Math.floor(Math.random() * letters.length)) +
+            numbers.charAt(Math.floor(Math.random() * numbers.length));
+  
+  // Fill the rest with random characters
+  for (let i = key.length; i < length; i++) {
+    key += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+  
+  return key;
+}
 
 export default function SettingsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [tempUserName, setTempUserName] = useState("")
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [secret, setSecretKey] = useState('');
+  const [showPopup, setShowPopup] = useState(false); // To control popup visibility
   const [newAvatarLink, setNewAvatarLink] = useState("https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
   const [user_,setUser] = useState({
     customer_id:"",
@@ -24,6 +43,10 @@ export default function SettingsPage() {
     country:'',
     price_level:'Low',
   });
+
+  const handleClosePopup = () => {
+    setShowPopup(false); // Hide the popup
+  };
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
@@ -173,6 +196,15 @@ export default function SettingsPage() {
     }
   };
 
+  const handleGenerateKey = async() => {
+    
+      const secretKey = generateKey();
+      setSecretKey(secretKey);
+      await updateKey(sessionStorage.getItem('uid'),secretKey);
+      setShowPopup(true);
+    
+  };
+
   useEffect(() => {
     if (sessionStorage.getItem('uid')) {
       handleLoadingProfile();
@@ -295,10 +327,33 @@ export default function SettingsPage() {
           )}
         </div>
       </div>
+      <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Secret Key</h3>
+      <Button variant="outline" className="flex items-center gap-2" style={{color:"#5479f7"}} onClick={handleGenerateKey}>
+                <KeyIcon className="h-5 w-5" />
+                Generate New Secret Key
+            </Button>
     </div>
         </CardContent>
       </Card>
     </div>
+    {/* Popup */}
+    {showPopup?(
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Your Secret Key</h2>
+            <p className="mb-4">
+              Please save this key securely. It will only be shown once.
+            </p>
+            <p className="mb-6 p-2 bg-gray-200 rounded">{secret}</p>
+            <button
+              onClick={handleClosePopup}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ):<></>}
     </div>
   )
 }
