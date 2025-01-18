@@ -66,8 +66,6 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
   if (purchases.length === 0) {
     return (
       <div className="text-center py-10">
-        <div style={{height:50}}></div>
-        <h3 className="text-2xl font-semibold text-gray-700 mb-4" style={{color:"#5479f7"}}>Your Previouse Suggestions</h3>
         <p className="text-gray-500"style={{color:"#5479f7"}}>No Previouse suggestions found</p>
       </div>
     )
@@ -75,8 +73,6 @@ const PurchasesDisplay = ({ purchases }: { purchases: Purchase[] }) => {
 
   return (
     <div className="py-10 px-4 sm:px-6 lg:px-8">
-      <div style={{height:50}}></div>
-      <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center"style={{color:"#5479f7"}}>Your Previouse Suggestions</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchases.map((purchase) => (
           <PurchaseCard key={purchase.item_id} purchase={purchase} />

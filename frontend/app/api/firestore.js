@@ -172,11 +172,11 @@ export const createAccount = async (collectionName, data) => {
   
       // Iterate over each document in the 'purchased' collection
       for (const purchaseDoc of docs_) {
-        const purchaseItem = purchaseDoc.get("items"); 
+        const purchaseItem = purchaseDoc.get("item"); 
         const itemRef = doc(db, "item", purchaseItem); // Reference to the 'items' document
         const itemDoc = await getDoc(itemRef);
         if (itemDoc.exists()) {
-          items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp') }); // Add item data with ID
+          items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:purchaseDoc.get('timestamp') }); // Add item data with ID
         }
       }  
       console.log("Fetched Items:", items);
