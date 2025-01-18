@@ -178,10 +178,6 @@ export default function ProfilePage() {
                 <p className="text-sm text-gray-500">{user_.email}</p>
               </div>
               <div>
-                <h3 className="font-medium" style={{color:"#5479f7"}}>Secret Key</h3>
-                <p className="text-sm text-gray-500">{user_.generated_key}</p>
-              </div>
-              <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Country</h3>
                 <p className="text-sm text-gray-500">{user_.country}</p>
               </div>
