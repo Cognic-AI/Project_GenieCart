@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
+    depends_on:
+      - selenium
     ports:
       - "8000:8000"
     networks:
@@ -12,12 +14,7 @@ services:
       interval: 10s
       timeout: 15s
       retries: 3
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
-    #   interval: 10s
-    #   timeout: 15s
-    #   retries: 3
-
+      
   frontend:
     build:
       context: .
@@ -31,6 +28,17 @@ services:
       - app-network
     environment:
       - SERVER_URL=http://backend:8000
+  
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium
+    shm_size: 2g # To prevent browser crashes due to limited shared memory
+    environment:
+      - DEBUG=true
+    ports:
+      - "4444:4444" # Expose Selenium's WebDriver port
+    networks:
+      - app-network
 
 networks:
   app-network:
