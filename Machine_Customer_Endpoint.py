@@ -5,12 +5,10 @@ from flask import Flask, request, jsonify
 import ML_model.MachineCustomerItemDataConvertor as mc
 import ML_model.ItemDataConvertor as ic
 import ML_model.Model as md
-# from ML_model.Database import Database as db
 import ML_model.firestoreDB as db
 from dotenv import load_dotenv
 from AI_Agents.Conversable_Agent import main as agent
 from emailservice import send_email
-# from secretemailservice import send_secret_email
 import uuid
 from flask_cors import CORS
 load_dotenv()
@@ -92,13 +90,6 @@ def recommend():
 def health(): 
     print("got the request")
     return jsonify({"status": "healthy"}),200
-
-# @app.route('/api/sendSecret', methods=['POST']) 
-# def sendSecret(): 
-#     print("Sending email...")
-#     request_data = request.get_json()
-#     print(send_secret_email(request_data['email'], request_data['generated_key'], request_data['name']))
-#     return jsonify({"status": "success and email sent"})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",debug=False, port=8000, threaded=True, use_reloader=False)

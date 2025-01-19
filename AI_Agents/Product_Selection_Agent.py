@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
@@ -72,6 +74,7 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
     options.add_argument(f'--geo-location={country_code}')  # Set geolocation 
     options.add_argument('--headless')
+    options.add_argument("--disable-dev-shm-usage")
 
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
@@ -80,8 +83,35 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     with open(input_filename, "r", encoding="utf-8") as f:
         links = [line.strip() for line in f.readlines() if line.strip()]
 
+    selenium_url = "http://selenium:4444/wd/hub"
+
     for link in links:
-        driver = webdriver.Chrome(options=options)
+        try:
+            print("Starting Selenium WebDriver")
+            driver = webdriver.Remote(
+                command_executor=selenium_url,
+                options=options,
+            )
+        
+            print("Navigating to target URL...")
+            driver.get(link)  # Replace with your desired URL
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "a"))
+            )
+            
+            # Scroll and extract content
+            slow_scroll_page(driver)
+            print("Page content loaded and scrolled")
+            
+            elements = driver.find_elements(By.TAG_NAME, "a")
+            all_links = [el.get_attribute("href") for el in elements if el.get_attribute("href")]
+            unique_links = list(set(all_links))
+            print(f"Extracted {len(unique_links)} links")
+
+        finally:
+            driver.quit()
+            print("Selenium WebDriver session closed")
+        # driver = webdriver.Chrome(options=options)
         
         # # Set geolocation coordinates
         # latitude = 45.2496824
@@ -95,28 +125,28 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
         #     "accuracy": accuracy
         # })
         
-        print(f"Processing link: {link}")
-        driver.get(link)
+        # print(f"Processing link: {link}")
+        # driver.get(link)
 
 
         # Wait for the page to initially load
-        time.sleep(5)
+        # time.sleep(5)
 
         # Scroll the page to load all dynamic content
-        slow_scroll_page(driver)
+        # slow_scroll_page(driver)
 
         # Find all <a> tags with href attributes
-        elements = driver.find_elements(By.TAG_NAME, "a")
-        all_links = []
-        for element in elements:
-            href = element.get_attribute("href")
-            if href:  # Check if the href attribute is not empty
-                all_links.append(href)
+        # elements = driver.find_elements(By.TAG_NAME, "a")
+        # all_links = []
+        # for element in elements:
+        #     href = element.get_attribute("href")
+        #     if href:  # Check if the href attribute is not empty
+        #         all_links.append(href)
 
-        # Deduplicate links
-        unique_links = list(set(all_links))
+        # # Deduplicate links
+        # unique_links = list(set(all_links))
 
-        driver.quit()
+        # driver.quit()
 
         print(f"Extracted {len(unique_links)} links from {link}")
 
