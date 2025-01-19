@@ -122,4 +122,4 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
 
 # Example usage
 # generate_search_results("White Sauce",None,["white","Sauce","Quality"],"US","1234567890")
-generate_search_results("White Sauce", ["https://www.amazon.com"],["white","Sauce","Quality"],"US","1234567890")
+# generate_search_results("White Sauce", ["https://www.amazon.com"],["white","Sauce","Quality"],"US","1234567890")
