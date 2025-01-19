@@ -138,4 +138,4 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-extract_all_links("White Sauce", "US", "1234567890")
+# extract_all_links("White Sauce", "US", "1234567890")
