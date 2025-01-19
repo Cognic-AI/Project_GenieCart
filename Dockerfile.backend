@@ -4,6 +4,12 @@ FROM python:3.11-slim
 # Set the working directory
 WORKDIR /app/backend
 
+RUN pip install --upgrade pip
+
+# Copy requirements.txt and install Python dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 # Copy the rest of the application code
 COPY ./Agent_Outputs /app/backend/Agent_Outputs
 COPY ./AI_Agents /app/backend/AI_Agents
@@ -15,7 +21,8 @@ COPY Machine_Customer_Endpoint.py .
 COPY requirements.txt .
 COPY genie-cart-firebase-service-account.json .
 
-RUN pip install -r requirements.txt
+# Change ownership and set permissions for /app/backend
+RUN chown -R root:root /app/backend && chmod -R 777 /app/backend
 
 # Expose the port the app runs on
 EXPOSE 8000
