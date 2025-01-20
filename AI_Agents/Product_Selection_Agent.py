@@ -92,6 +92,18 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
                 command_executor=selenium_url,
                 options=options,
             )
+
+            # # Set geolocation coordinates
+            # latitude = 45.2496824
+            # longitude = -76.1299012
+            # accuracy = 100
+            
+            # driver.maximize_window()
+            # driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+            #     "latitude": latitude,
+            #     "longitude": longitude,
+            #     "accuracy": accuracy
+            # })
         
             print("Navigating to target URL...")
             driver.get(link)  # Replace with your desired URL
@@ -111,42 +123,6 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
         finally:
             driver.quit()
             print("Selenium WebDriver session closed")
-        # driver = webdriver.Chrome(options=options)
-        
-        # # Set geolocation coordinates
-        # latitude = 45.2496824
-        # longitude = -76.1299012
-        # accuracy = 100
-        
-        # driver.maximize_window()
-        # driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
-        #     "latitude": latitude,
-        #     "longitude": longitude,
-        #     "accuracy": accuracy
-        # })
-        
-        # print(f"Processing link: {link}")
-        # driver.get(link)
-
-
-        # Wait for the page to initially load
-        # time.sleep(5)
-
-        # Scroll the page to load all dynamic content
-        # slow_scroll_page(driver)
-
-        # Find all <a> tags with href attributes
-        # elements = driver.find_elements(By.TAG_NAME, "a")
-        # all_links = []
-        # for element in elements:
-        #     href = element.get_attribute("href")
-        #     if href:  # Check if the href attribute is not empty
-        #         all_links.append(href)
-
-        # # Deduplicate links
-        # unique_links = list(set(all_links))
-
-        # driver.quit()
 
         print(f"Extracted {len(unique_links)} links from {link}")
 
