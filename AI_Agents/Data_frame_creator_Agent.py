@@ -22,7 +22,7 @@ def initialize_LLAMA():
 def get_LLAMA_response(LLAMA_client: OpenAI, prompt: str) -> str:
     try:
         completion = LLAMA_client.chat.completions.create(
-            model="meta/llama-3.1-70b-instruct",
+            model="meta/llama-3.3-70b-instruct",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that filters the products based on the item name provided."},
                 {"role": "user", "content": prompt}

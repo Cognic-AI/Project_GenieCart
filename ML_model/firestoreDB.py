@@ -60,9 +60,9 @@ class FirestoreDB:
             "score": item_score
         })
 
-    def add_csv(self, csv_data, item_name,request_id):
+    def add_csv(self, csv_data, item_name,country_code,request_id):
         print(f"\nAdding csv file")
-        self.db.collection("csv").document(request_id).set({'item_name':item_name})
+        self.db.collection("csv").document(request_id).set({'item_name':item_name,'country_code':country_code})
         for i in range(len(csv_data)):
             self.db.collection("csv").document(request_id).collection("data").document(str(i)).set(csv_data[i])
     

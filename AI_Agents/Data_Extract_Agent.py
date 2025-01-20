@@ -136,7 +136,7 @@ def process_links(country_code: str,request_id: str) -> None:
 
             product_counter += 1
 
-            if product_counter == 31:
+            if product_counter == 10:
                 break
 
         except Exception as e:

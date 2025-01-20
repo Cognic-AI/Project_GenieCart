@@ -11,7 +11,7 @@ load_dotenv()
 def create_machine_customer(request):
     database = db.FirestoreDB()
 
-    print(database.get_users())
+    # print(database.get_users())
     # print(request["secret_key"])
 
     customer = database.get_customer_by_key(request["secret_key"])

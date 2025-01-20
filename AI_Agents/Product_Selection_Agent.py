@@ -117,7 +117,7 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
             
             elements = driver.find_elements(By.TAG_NAME, "a")
             all_links = [el.get_attribute("href") for el in elements if el.get_attribute("href")]
-            unique_links = list(set(all_links))
+            unique_links = (list(set(all_links)))
             print(f"Extracted {len(unique_links)} links")
 
         finally:
