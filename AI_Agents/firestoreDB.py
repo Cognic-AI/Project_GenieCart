@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+import pandas as pd
 
 class FirestoreDB:
     def __init__(self):
@@ -59,11 +60,26 @@ class FirestoreDB:
             "score": item_score
         })
 
-    def add_csv(self, csv_data, item_name,request_id):
+    def add_csv(self, csv_data, item_name,country_code,request_id):
         print(f"\nAdding csv file")
-        self.db.collection("csv").document(request_id).set({'item_name':item_name})
+        self.db.collection("csv").document(request_id).set({'item_name':item_name,"country_code":country_code})
         for i in range(len(csv_data)):
             self.db.collection("csv").document(request_id).collection("data").document(str(i)).set(csv_data[i])
+
+    def check_csv(self, item_name, country_code):
+        print(f"\nChecking csv file")
+        query = self.db.collection("csv").where("item_name", "==", item_name).where("country_code", "==", country_code).stream()
+        
+        for doc in query:
+            doc.to_dict()
+            docs_ref = self.db.collection("csv").document(doc.id).collection("data").stream()
+            csv_data = [doc.to_dict() for doc in docs_ref]
+            # Convert to DataFrame
+            csv_file = pd.DataFrame(csv_data)
+            return csv_file
+        
+        return None
+
 
     def add_search_item(self, customer_id, item_array):
         print(f"\nAdding search items for Customer ID: {customer_id}")
