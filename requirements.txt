@@ -14,3 +14,4 @@ Flask==3.0.3
 Flask-Cors==5.0.0
 pandas==2.2.3
 numpy==1.26.4
+firebase-admin==6.6.0

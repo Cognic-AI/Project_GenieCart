@@ -47,19 +47,26 @@ def recommend():
         except ValueError as e:
             return jsonify({"status": "error", "message": str(e)}), 400
 
-        print(f"Agent workflow started for request {request_id}...")
+        # Check if CSV already exists for this item and country
+        csv_filename = f"{request_data['item_name']}_{machine_customer.country}_{request_id}.csv"
+        existing_files = [f for f in os.listdir("Final_products") if f.startswith(f"{request_data['item_name']}_{machine_customer.country}_")]
         
-        # Run the agent - output will only go to file
-        agent(request_data["item_name"], 
-              request_data["custom_domains"], 
-              request_data["tags"],
-              machine_customer.country,
-              request_id)
+        if existing_files:
+            print("Found existing CSV file for this item and country...")
+            csv_filename = existing_files[0]
+        else:
+            print(f"Agent workflow started for request {request_id}...")
+            # Run the agent - output will only go to file
+            agent(request_data["item_name"], 
+                  request_data["custom_domains"], 
+                  request_data["tags"],
+                  machine_customer.country,
+                  request_id)
+            print("Agent workflow completed...")
                 
-        print("Agent workflow completed...")
         # Get items from CSV and create model
         print("\nLoading items from CSV...")
-        items = ic.csv_to_list(os.path.join("Final_products",f"products_{request_id}.csv"))
+        items = ic.csv_to_list(os.path.join("Final_products", csv_filename))
         print(f"Loaded {len(items)} items")
         
         # Create model with items and machine customer

@@ -47,6 +47,7 @@ data_frame_creator_agent_system_message="""
 Your task is to execute the `json_to_csv` function when invoked.
 This function takes one input:
 - A string representing the product or item name.
+- A string representing the country code.
 - A string representing the request ID for this specific data frame creation task.
 
 Execute the function and ensure it runs successfully.
@@ -141,7 +142,7 @@ def main(user_query, custom_domains,tags,country_code,request_id):
         },
         {
             "recipient": data_frame_creator_agent,
-            "message": f"Please execute the `json_to_csv` function. product or item name is {user_query}. Request ID: {request_id}",
+            "message": f"Please execute the `json_to_csv` function. product or item name is {user_query}. country code is {country_code}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },

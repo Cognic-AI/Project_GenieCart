@@ -47,13 +47,13 @@ def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) ->
     response = get_LLAMA_response(LLAMA_client, prompt)
     return "true" in response.lower()
 
-def json_to_csv(item_name: str,request_id: str) -> None:
+def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
     print("------------------------------------------------------------------------------------------------")
     print("Data frame creator agent started")
 
     json_folder = os.path.join("Final_products",f"Final_products_{request_id}")
-    output_csv = os.path.join("Final_products",f"products_{request_id}.csv")
+    output_csv = os.path.join("Final_products",f"{item_name}_{country_code}_{request_id}.csv")
 
     # Initialize Gemini
     LLAMA_client = initialize_LLAMA()
