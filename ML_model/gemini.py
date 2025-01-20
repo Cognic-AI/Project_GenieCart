@@ -94,6 +94,7 @@ def generate_llm_tags_bulk(df):
         # Ensure the response is valid JSON
         try:
             response_json = json.loads(response.text)
+            # print(response_json)
             if "items" not in response_json or not isinstance(response_json["items"], list):
                 raise ValueError("Invalid JSON structure in response")
 
@@ -102,6 +103,8 @@ def generate_llm_tags_bulk(df):
                 item["name"]: [tag.lower().strip() for tag in item["tags"]]
                 for item in response_json["items"]
             }
+
+            print(item_tags_dict)
 
             print(f"Processed tags for {len(item_tags_dict)} items")
             return item_tags_dict

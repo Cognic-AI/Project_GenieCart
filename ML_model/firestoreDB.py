@@ -1,4 +1,5 @@
 import firebase_admin
+import pandas as pd
 from firebase_admin import credentials, firestore
 from datetime import datetime
 
@@ -64,6 +65,21 @@ class FirestoreDB:
         self.db.collection("csv").document(request_id).set({'item_name':item_name})
         for i in range(len(csv_data)):
             self.db.collection("csv").document(request_id).collection("data").document(str(i)).set(csv_data[i])
+    
+    def check_csv(self, item_name, country_code):
+        print(f"\nChecking csv file")
+        query = self.db.collection("csv").where("item_name", "==", item_name).where("country_code", "==", country_code).stream()
+        
+        for doc in query:
+            docs_ref = self.db.collection("csv").document(doc.id).collection("data").stream()
+            csv_data = [doc.to_dict() for doc in docs_ref]
+            # print(csv_data)
+            # Convert to DataFrame
+            
+            csv_file = pd.DataFrame(csv_data)
+            return True,csv_file
+        
+        return False,None
 
     def add_search_item(self, customer_id, item_array):
         print(f"\nAdding search items for Customer ID: {customer_id}")

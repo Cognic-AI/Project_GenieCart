@@ -3,7 +3,7 @@ import json
 import csv
 from dotenv import load_dotenv
 from openai import OpenAI
-import firestoreDB as db
+import ML_model.firestoreDB as db
 
 
 load_dotenv()
@@ -124,7 +124,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     
     # add to firebase
     database = db.FirestoreDB()
-    database.add_csv(data_to_fire,item_name,request_id)
+    database.add_csv(data_to_fire,item_name,country_code,request_id)
 
     print(f"CSV file has been created at {output_csv}")
 
