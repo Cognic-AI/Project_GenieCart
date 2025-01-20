@@ -47,9 +47,8 @@ def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) ->
     Respond with "true" if it matches, and "false" if it does not.
     """
 
-    # response = get_LLAMA_response(LLAMA_client, prompt)
-    # return "true" in response.lower()
-    return True
+    response = get_LLAMA_response(LLAMA_client, prompt)
+    return "true" in response.lower()
 
 def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
@@ -60,7 +59,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     output_csv = os.path.join("Final_products",f"{item_name}_{country_code}_{request_id}.csv")
 
     # Initialize Gemini
-    # LLAMA_client = initialize_LLAMA()
+    LLAMA_client = initialize_LLAMA()
 
     # Ensure the folder exists
     if not os.path.exists(json_folder):
@@ -88,8 +87,8 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
                 # Extract only the product_name from the JSON
                 product_name = data.get("product_name", "")
-                # if not filter_json_data(item_name, product_name, LLAMA_client):
-                    # continue
+                if not filter_json_data(item_name, product_name, LLAMA_client):
+                    continue
 
                 price = data.get("price", "")
                 if price == "" or price is None:

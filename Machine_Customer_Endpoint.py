@@ -67,21 +67,21 @@ def recommend():
         else:
             print(f"Agent workflow started for request {request_id}...")
             # Run the agent - output will only go to file
-            # agent(request_data["item_name"], 
-            #       request_data["custom_domains"], 
-            #       request_data["tags"],
-            #       machine_customer.country,
-            #       request_id)
+            agent(request_data["item_name"], 
+                  request_data["custom_domains"], 
+                  request_data["tags"],
+                  machine_customer.country,
+                  request_id)
 
-            item = request_data["item_name"]
-            domain = request_data["custom_domains"]
-            tags = request_data["tags"]
-            country =machine_customer.country
+            # item = request_data["item_name"]
+            # domain = request_data["custom_domains"]
+            # tags = request_data["tags"]
+            # country =machine_customer.country
 
-            SearchAgent.generate_search_results(item,domain,tags,country,request_id)
-            ProductSelectionAgent.extract_all_links(item, country, request_id)
-            DataExtractAgent.process_links(country,request_id)
-            DataFrameCreatorAgent.json_to_csv(item,country,request_id)
+            # SearchAgent.generate_search_results(item,domain,tags,country,request_id)
+            # ProductSelectionAgent.extract_all_links(item, country, request_id)
+            # DataExtractAgent.process_links(country,request_id)
+            # DataFrameCreatorAgent.json_to_csv(item,country,request_id)
 
             print("Agent workflow completed...")
             state,csv_file = database1.check_csv(request_data['item_name'],machine_customer.country)
