@@ -3,6 +3,9 @@ import json
 import csv
 from dotenv import load_dotenv
 from openai import OpenAI
+import firestoreDB as db
+
+
 load_dotenv()
 
 def initialize_LLAMA():
@@ -68,6 +71,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
         raise ValueError("No JSON files found in the specified folder.")
 
     # Open the CSV file for writing
+    data_to_fire = []
     with open(output_csv, mode="w", newline="", encoding="utf-8") as csv_file:
         writer = None
 
@@ -116,6 +120,11 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
                 # Write the JSON data as a row in the CSV file
                 writer.writerow(data)
+                data_to_fire.append(data)
+    
+    # add to firebase
+    database = db.FirestoreDB()
+    database.add_csv(data_to_fire,item_name,request_id)
 
     print(f"CSV file has been created at {output_csv}")
 
@@ -123,4 +132,4 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# json_to_csv("A4 bundle")
+# json_to_csv("Olive oil","US","d2cf80b7-4965-401a-9aba-e95ae6bd0052")
