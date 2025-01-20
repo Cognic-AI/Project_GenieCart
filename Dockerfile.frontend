@@ -30,20 +30,17 @@ FROM node:18-alpine
 WORKDIR /app/frontend
 
 # Copy package.json and package-lock.json
-COPY /frontend/package*.json ./
+COPY frontend/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the app
-COPY /frontend .
+# Copy the rest of the application
+COPY frontend .
 
-# Build the app
-# RUN npm run build
-
-
-# Expose the port
+# Expose the port your app will run on
 EXPOSE 5000
 
-# Start the app
-CMD ["npm", "run" , "dev"]
+# Start the app (use a static file server if necessary or your app's server logic)
+CMD ["npm", "run", "dev"]
+
