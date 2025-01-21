@@ -1,5 +1,5 @@
 class MachineCustomer:
-    def __init__(self, customer_id, item_name, price_level, tags=[], customer_name=None, email=None, country=None):
+    def __init__(self, customer_id, item_name, price_level, tags=[], customer_name=None, email=None, country=None,location=[]):
         self.customer_id = customer_id
         self.price_level = price_level
         self.item_name = item_name
@@ -8,6 +8,7 @@ class MachineCustomer:
         self.customer_name = customer_name
         self.email = email
         self.country = country
+        self.location = []
 
 
 class Item:
