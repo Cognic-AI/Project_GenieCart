@@ -19,8 +19,8 @@ GEMINI_API_KEY_1=your_gemini_api_key_1
 GEMINI_API_KEY_2=your_gemini_api_key_2
 GEMINI_API_KEY_3=your_gemini_api_key_3
 GEMINI_API_KEY_4=your_gemini_api_key_4
+GEMINI_API_KEY_5=your_gemini_api_key_5
 TAVILY_API_KEY=your_tavily_api_key
-LLAMA_API_KEY=your_Nvidia_api_key
 OPENAI_API_KEY=your_openai_api_key
 USER_AGENT=your_user_agent_string
 DB_credentials=your_db_credentials(run the db dump in the root to create a local database)
@@ -64,8 +64,8 @@ Project_GenieCart/
    echo "GEMINI_API_KEY_2=your_api_key_here" >> .env
    echo "GEMINI_API_KEY_3=your_api_key_here" >> .env
    echo "GEMINI_API_KEY_4=your_api_key_here" >> .env
+   echo "GEMINI_API_KEY_5=your_api_key_here" >> .env
    echo "TAVILY_API_KEY=your_api_key_here" >> .env
-   echo "LLAMA_API_KEY=your_api_key_here" >> .env
    echo "OPENAI_API_KEY=your_api_key_here" >> .env
    echo "USER_AGENT=your_web_browser_user_agent_here" >> .env
    echo "PRODUCT_CSV=product.csv" >> .env
@@ -129,7 +129,6 @@ To test the API endpoint using Postman:
 - **TypeScript** (Frontend)
 - **Google Gemini** (AI integration)
 - **Tavily API** (Web search)
-- **LLAMA 3.1 from Nvidia** (AI integration)
 - **OpenAI ChatGPT 4o mini** (AI integration)
 - **Machine Learning** (Recommendation system)
 - **MySQL** (Database)
