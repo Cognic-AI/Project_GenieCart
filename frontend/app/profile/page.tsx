@@ -10,7 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { AlertCircle, Download, DownloadCloud, MessageCircle, Settings, UserCircle } from 'lucide-react';
+import {  Download, MessageCircle, Settings} from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '../components/header';
 import { signOut } from 'next-auth/react';
@@ -21,7 +21,7 @@ import {fetchProfile, fetchHistory, fetchPurchases} from '../api/firestore.js';
 export default function ProfilePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [purchaseTab, setPurchaseTab] = useState(true);
+  const [purchaseTab, setPurchaseTab] = useState(false);
   const [purchases, setPurchases] = useState([]);
   const [realPurchases, setRealPurchases] = useState([]);
   const [isLoading,setIsLoading] = useState(true);
@@ -34,59 +34,6 @@ export default function ProfilePage() {
     generated_key:'',
     country:''
   });
-
-
-  // const handleLoadingPurchases = async () => {
-  //   try {
-  //     const response = await fetch('/api/profile/history', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ key: user?.id }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch purchases');
-  //     }
-
-  //     const data = await response.json();
-
-  //     // Ensure the response is an array
-  //     if (Array.isArray(data)) {
-  //       setPurchases(data as []);
-  //     } else {
-  //       console.error('Unexpected response structure:', data, data.type);
-  //       setPurchases([]);
-  //     }
-  //     console.log('API Response:', data); // Log the response to confirm its structure
-  //   } catch (error) {
-  //     console.error('Error fetching purchases:', error);
-  //   }
-  // };
-
-  // const handleLoadingProfile = async () => {
-  //   try {
-  //     const response = await fetch('/api/profile/profile', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ key: user?.id }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch purchases');
-  //     }
-
-  //     const data = await response.json();
-
-  //     if (Array.isArray(data)) {
-  //       setUser((data)[0]);
-  //     } else {
-  //       console.error('Unexpected response structure:', data, data.type);
-  //     }
-  //     console.log('API Response:', data); // Log the response to confirm its structure
-  //   } catch (error) {
-  //     console.error('Error fetching purchases:', error);
-  //   }
-  // };
 
   const handleLoadingProfile = async () => {
     setIsLoading(true);
@@ -117,6 +64,7 @@ export default function ProfilePage() {
     try {
       
       const res = await fetchHistory(sessionStorage.getItem('uid'));
+      console.log("History recieved");
 
       if (Array.isArray(res)) {
         setPurchases(res as []);
@@ -136,6 +84,7 @@ export default function ProfilePage() {
     try {
       
       const res = await fetchPurchases(sessionStorage.getItem('uid'));
+      console.log("Purchses recieved");
 
       if (Array.isArray(res)) {
         setRealPurchases(res as []);
@@ -182,14 +131,22 @@ export default function ProfilePage() {
     if (purchases.length === 0) {
       return <div className='justiy-center flex flex-col items-center w-full' style={{alignItems:'center'}}>No suggestions found</div>;
     }
-    return PurchasesPage(purchases);
+    return <PurchasesPage
+    folders={purchases}
+    purchases={realPurchases}
+    viewMode="history"
+  />;
   };
 
   const showRealPurchases = () => {
     if (realPurchases.length === 0) {
       return <div className='justiy-center flex flex-col items-center w-full' style={{alignItems:'center'}}>No Purchases found</div>;
     }
-    return PurchasesPage(realPurchases);
+    return <PurchasesPage
+    folders={purchases}
+    purchases={realPurchases} 
+    viewMode="purchase"
+  />;
   };
 
   const handleTabChange = (e) => {
