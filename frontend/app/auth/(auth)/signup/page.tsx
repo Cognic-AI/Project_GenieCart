@@ -8,6 +8,7 @@ import CountrySelector from '../../../components/selector';
 import { SelectMenuOption } from '@/lib/types';
 import { signUp } from "../../../api/auth.js";
 import { createAccount } from "../../../api/firestore.js";
+import dynamic from 'next/dynamic';
 
 function generateKey(length: number = 12): string {
   const numbers = '0123456789';
@@ -30,7 +31,9 @@ export default function SignUpPage(): React.JSX.Element {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [location, setLocation] = useState(null);
    const [error, setError] = useState<string>('');
+   const [showMap, setShowMap] = useState(false);
    const [generatedKey, setGeneratedKey] = useState(""); // To store the key for the popup
   const [showPopup, setShowPopup] = useState(false); // To control popup visibility
   const router = useRouter();
@@ -99,11 +102,22 @@ export default function SignUpPage(): React.JSX.Element {
     
   // };
 
+  const MapPicker = dynamic(() => import("../../../components/MapPicker"), {
+    ssr: false, // Disable server-side rendering for this component
+  });
+  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
     try {
+      if(location==null){
+        const err = "Location should be selected"
+        console.log(err);
+        setError(err);
+        return;
+      }
       const user = await signUp(email,password);
       const key  = generateKey();
       setGeneratedKey(key); // Store the key in state
@@ -115,7 +129,9 @@ export default function SignUpPage(): React.JSX.Element {
         country:country,
         generated_key:key,
         price_level:"LOW",
-        image:""
+        image:"",
+        latitude:location.lat,
+        longitude:location.lng
       });
       // await sendEmail(email,key,name);
       //Instead of sending mail, just showing one time secretkey 
@@ -132,6 +148,13 @@ export default function SignUpPage(): React.JSX.Element {
   const handleClosePopup = () => {
     setShowPopup(false); // Hide the popup
       router.push('/auth/signin');
+  };
+
+  const handleMap = (loc) => {
+    //open the map and let user to select the location
+    //get location data 
+    setLocation(loc);
+    setShowMap(false);
   };
 
   return (
@@ -220,6 +243,18 @@ export default function SignUpPage(): React.JSX.Element {
               selectedValue={COUNTRIES.find(option => option.value === country) as SelectMenuOption} 
             />
           </div>
+          <div className='w-full'>
+          {location ? `Lat:${location.lat}, Lng:${location.lng}` : ''}
+          
+        </div>
+          <button
+            type="button"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-150 ease-in-out"
+            style={{ backgroundColor: '#5479f7', color:'white', fontWeight:'bold', fontSize:20}}
+            onClick={() => setShowMap(true)}
+          >
+            Set the location
+          </button>
           
           <button
             type="submit"
@@ -255,6 +290,41 @@ export default function SignUpPage(): React.JSX.Element {
             >
               Close
             </button>
+          </div>
+        </div>
+      ):<></>}
+      {showMap? (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              transform: 'none',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '0', /* Remove border radius for full-screen effect */
+              zIndex: '1000', /* Ensures it's on top of other elements */
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden', /* Prevents overflow in the modal */
+
+            }}
+          >
+            <MapPicker onLocationSelect={handleMap} />
           </div>
         </div>
       ):<></>}
