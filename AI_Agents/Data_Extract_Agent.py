@@ -9,6 +9,7 @@ import shutil
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import time
 
 # Load environment variables
 load_dotenv()
@@ -114,7 +115,7 @@ def find_relevant_sections(soup: BeautifulSoup, request_id: str) -> Dict[str, st
     return relevant_sections
 
 # Function to extract all visible text from a webpage
-def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup]:
+def extract_page_content(url: str, country_code: str, latitude: float = None, longitude: float = None) -> Union[str, BeautifulSoup]:
     """Extracts and parses the content of a webpage."""
     try:
         headers: dict = {
@@ -122,6 +123,14 @@ def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup
             "Accept-Language": "en-US,en;q=0.9",
             "geo-location": country_code
         }
+        
+        # Add geolocation headers if coordinates provided
+        if latitude is not None and longitude is not None:
+            headers.update({
+                "geo-position": f"{latitude};{longitude}",
+                "geo-coordinates": f"{latitude}, {longitude}"
+            })
+            
         response: requests.Response = requests.get(url, headers=headers, timeout=30)
         response.raise_for_status()  # Raise HTTPError for bad responses
 
@@ -134,7 +143,7 @@ def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup
         return f"Error extracting content from {url}: {e}"
 
 # Process each link and save responses in separate files
-def process_links(country_code: str,request_id: str) -> None:
+def process_links(country_code: str, custom_domains: List[str], location: List[float], request_id: str) -> None:
     """Processes each link and saves structured responses in separate files."""
     print("------------------------------------------------------------------------------------------------")
     print("Data extraction agent started")
@@ -157,7 +166,7 @@ def process_links(country_code: str,request_id: str) -> None:
         print(f"Processing: {link}")
         try:
             # Extract page content
-            page_content: Union[str, BeautifulSoup] = extract_page_content(link,country_code)
+            page_content: Union[str, BeautifulSoup] = extract_page_content(link,country_code,location[0],location[1])
 
             # Get the next API key and initialize Gemini model
             api_key: str = key_manager.get_next_key()
@@ -211,7 +220,7 @@ def process_links(country_code: str,request_id: str) -> None:
 
             product_counter += 1
 
-            if product_counter == 31:
+            if product_counter == 100:
                 break
 
         except Exception as e:
@@ -226,4 +235,8 @@ def sanitize_filename(url: str) -> str:
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 # Example usage
-# process_links("US","1234567890")
+start_time = time.time()
+# process_links("CA",None,[56.4383657,-114.8492314],"1234567898")
+# process_links("CA",["https://www.amazon.com"],[56.4383657,-114.8492314],"1234567899")
+end_time = time.time()
+print(f"Time taken: {end_time - start_time:.2f} seconds")

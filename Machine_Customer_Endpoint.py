@@ -65,6 +65,7 @@ def recommend():
                   request_data["custom_domains"], 
                   request_data["tags"],
                   machine_customer.country,
+                  machine_customer.location,
                   request_id)
 
             print("Agent workflow completed...")
