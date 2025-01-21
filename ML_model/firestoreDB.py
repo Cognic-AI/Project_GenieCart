@@ -60,6 +60,13 @@ class FirestoreDB:
             "score": item_score
         })
 
+    def add_purchase(self, item_id, customer_id):
+        print(f"\nAdding purchase: {item_id}")
+        self.db.collection("customer").document(customer_id).collection("purchase").add({
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "item": item_id,
+        })
+
     def add_csv(self, csv_data, item_name,country_code,request_id):
         print(f"\nAdding csv file")
         self.db.collection("csv").document(request_id).set({'item_name':item_name,'country_code':country_code,'expiration_date':
@@ -117,6 +124,8 @@ class FirestoreDB:
             item_suggested_score.append(item.score)
 
         self.add_search_result(item_suggested, item_suggested_score, customer_id)
+        self.add_purchase(item_id,customer_id)
+
 
     def get_users(self):
         """
