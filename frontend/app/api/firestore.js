@@ -64,10 +64,12 @@ export const createAccount = async (collectionName, data) => {
   
       console.log(docs_);
 
-      const items = [];
+      const folders = [];
   
       // Iterate over each document in the 'history' collection
       for (const historyDoc of docs_) {
+        const folder = {folder:historyDoc.id,items:[]};
+        const items = [];
         const historyItems = historyDoc.get("items"); // Assume 'items' is an array of item IDs
         if (Array.isArray(historyItems)) {
           // Sequentially fetch each item
@@ -77,17 +79,19 @@ export const createAccount = async (collectionName, data) => {
             const itemRef = doc(db, "item", itemId); // Reference to the 'items' document
             const itemDoc = await getDoc(itemRef);
             if (itemDoc.exists()) {
-              items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp') }); // Add item data with ID
+              items.push({ item_id: itemDoc.id, ...itemDoc.data(),time_stamp:historyDoc.get('timestamp')}); // Add item data with ID
             }
             if(count==3) {
               break;
             }
           }
+          folder.items = items;
         }
+        folders.push(folder);
       }
   
-      console.log("Fetched Items:", items);
-      return items;
+      console.log("Fetched folders:", folders);
+      return folders;
     } catch (error) {
       console.error("Error fetching history items:", error);
       throw error;
