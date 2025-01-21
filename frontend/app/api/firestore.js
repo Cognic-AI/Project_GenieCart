@@ -200,3 +200,18 @@ export const createAccount = async (collectionName, data) => {
       throw error;
     }
   };
+
+  export const updateLocation = async (uid,lat, lon) => {
+    try {
+      const docRef = doc(db, "customer", uid); // Reference to the specific document
+      await updateDoc(docRef, {
+        latitude: lat,
+        longitude: lon
+      }); // Create or overwrite the document
+      console.log("Location updated successfully!");
+      return docRef.id;
+    } catch (error) {
+      console.error("Error updating location:", error);
+      throw error;
+    }
+  };
