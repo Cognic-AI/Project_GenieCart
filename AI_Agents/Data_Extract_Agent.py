@@ -9,6 +9,7 @@ import shutil
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import time
 
 # Load environment variables
 load_dotenv()
@@ -142,7 +143,7 @@ def extract_page_content(url: str, country_code: str, latitude: float = None, lo
         return f"Error extracting content from {url}: {e}"
 
 # Process each link and save responses in separate files
-def process_links(country_code: str, location: List[float], request_id: str) -> None:
+def process_links(country_code: str, custom_domains: List[str], location: List[float], request_id: str) -> None:
     """Processes each link and saves structured responses in separate files."""
     print("------------------------------------------------------------------------------------------------")
     print("Data extraction agent started")
@@ -234,4 +235,8 @@ def sanitize_filename(url: str) -> str:
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 # Example usage
-# process_links("US","1234567890")
+start_time = time.time()
+# process_links("CA",None,[56.4383657,-114.8492314],"1234567898")
+# process_links("CA",["https://www.amazon.com"],[56.4383657,-114.8492314],"1234567899")
+end_time = time.time()
+print(f"Time taken: {end_time - start_time:.2f} seconds")
