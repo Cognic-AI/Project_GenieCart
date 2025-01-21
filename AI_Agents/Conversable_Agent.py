@@ -54,6 +54,16 @@ Execute the function and ensure it runs successfully.
 """
 
 def main(user_query, custom_domains,tags,country_code,request_id):
+    print("user_query")
+    print(user_query)
+    print("custom_domains")
+    print(custom_domains)
+    print("tags")
+    print(tags)
+    print("country_code")
+    print(country_code)
+    print("request_id")
+    print(request_id)
     llm_config = {
         "config_list": [
             {"model": "gpt-4o-mini", "api_key": os.getenv("OPENAI_API_KEY")}
@@ -150,10 +160,4 @@ def main(user_query, custom_domains,tags,country_code,request_id):
 
     return result
 
-# result = main("White color A4 paper bundle",["https://www.amazon.com","https://daraz.lk"])
-
-# output_filename: str = os.path.join("Agent_Outputs", "Agent_workflow_output.txt")
-# with open(output_filename, "w", encoding="utf-8") as f:
-#     f.write(result)
-
-# print(f"Agent workflow output saved to: {output_filename}") 
+# result = main("White Sauce",None,["white","Sauce","Quality"],"CA","1234567890")

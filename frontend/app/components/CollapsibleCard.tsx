@@ -33,8 +33,8 @@ const CollapsibleCard = () => {
           tags: formData.tags.split(" "),
           price_level: formData.price_level=="High"?1:(formData.price_level=="Middle"?2:3),
           custom_domains: formData.onlySyscolab
-            ? ["https://www.keellssuper.com/"]
-            : ["https://www.amazon.com"],
+            ? ["https://www.amazon.com"]
+            : null,
         };
     
         // Make the POST request
@@ -148,7 +148,7 @@ const CollapsibleCard = () => {
           <div className="flex items-center space-x-2">
             <input type="checkbox" id="syscolab" className="form-checkbox" onChange={handleChanges} checked={formData.onlySyscolab} name='onlySyscolab'/>
             <label htmlFor="syscolab" className="text-sm text-gray-600">
-              Only syscolab products
+              Only Amazon products
             </label>
           </div>
           <button

@@ -1,10 +1,14 @@
+import json
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
-from typing import List, Union
+from typing import List, Union, Dict
 import shutil
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 # Load environment variables
 load_dotenv()
@@ -17,6 +21,7 @@ class GeminiKeyManager:
             os.getenv("GEMINI_API_KEY_2"),
             os.getenv("GEMINI_API_KEY_3"),
             os.getenv("GEMINI_API_KEY_4"),
+            os.getenv("GEMINI_API_KEY_5"),
         ]
         if not all(self.api_keys):
             raise ValueError("One or more GEMINI_API_KEYS are missing from environment variables.")
@@ -48,6 +53,66 @@ def initialize_gemini(gemini_api_key: str) -> genai.GenerativeModel:
         generation_config=generation_config,
     )
 
+def find_relevant_sections(soup: BeautifulSoup, request_id: str) -> Dict[str, str]:
+    """Find relevant sections using vector similarity search."""
+    
+    # Save entire soup to text file and read content
+    with open(f'webpage_content_{request_id}.txt', 'w', encoding='utf-8') as f:
+        f.write(str(soup))
+    
+    with open(f'webpage_content_{request_id}.txt', 'r', encoding='utf-8') as f:
+        content = f.read()
+        
+    # Delete the temporary file
+    os.remove(f'webpage_content_{request_id}.txt')
+    # Initialize TF-IDF vectorizer
+    vectorizer = TfidfVectorizer(
+        stop_words='english'
+    )
+    
+    # Create document vector from the entire content
+    doc_vector = vectorizer.fit_transform([content])
+    
+    relevant_sections = {}
+    # Group similar search terms together
+    term_groups = {
+        'name': ['product name', 'product title', 'item name', 'item title'],
+        'description': ['description', 'product details', 'item details', 'about this item'],
+        'price': ['price', 'cost', 'sale price', 'regular price', 'current price'],
+        'rating': ['rating', 'reviews', 'customer reviews', 'star rating', 'product rating'],
+        'shipping': ['shipping', 'delivery', 'shipping options', 'delivery options', 'shipping details'],
+        'availability': ['availability', 'stock', 'in stock', 'out of stock', 'inventory status'],
+        'warranty': ['warranty', 'guarantee', 'product warranty', 'warranty information'],
+        'image': ['image', 'product image', 'item image', 'gallery'],
+        'currency': ['currency', 'price currency', 'money']
+    }
+
+    # Process each group of related terms
+    for group_key, terms in term_groups.items():
+        max_similarity = 0
+        best_text = []
+        
+        for term in terms:
+            query_vector = vectorizer.transform([term])
+            similarity = cosine_similarity(query_vector, doc_vector)[0][0]
+            
+            if similarity > max_similarity:
+                max_similarity = similarity
+                sections = content.split('\n')
+                matching_indices = [i for i, section in enumerate(sections) if term.lower() in section.lower()]
+                
+                best_text = []
+                for idx in matching_indices:
+                    start_idx = max(0, idx - 3)
+                    end_idx = min(len(sections), idx + 4)
+                    context = sections[start_idx:end_idx]
+                    best_text.extend([s.strip() for s in context])
+        
+        if max_similarity > 0.01 and best_text:
+            relevant_sections[group_key] = "\n".join(best_text)
+    
+    return relevant_sections
+
 # Function to extract all visible text from a webpage
 def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup]:
     """Extracts and parses the content of a webpage."""
@@ -62,8 +127,9 @@ def extract_page_content(url: str,country_code: str) -> Union[str, BeautifulSoup
 
         # Parse the HTML using BeautifulSoup
         soup: BeautifulSoup = BeautifulSoup(response.content, "html.parser")
-
+            
         return soup
+
     except Exception as e:
         return f"Error extracting content from {url}: {e}"
 
@@ -86,44 +152,53 @@ def process_links(country_code: str,request_id: str) -> None:
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)  # Remove the folder and its contents
     os.makedirs(folder_path, exist_ok=True)  # Recreate the folder
+
     for link in links:
         print(f"Processing: {link}")
         try:
             # Extract page content
             page_content: Union[str, BeautifulSoup] = extract_page_content(link,country_code)
 
-            if isinstance(page_content, str):
-                print(page_content)
-                continue  # Skip if there's an error extracting content
-
             # Get the next API key and initialize Gemini model
             api_key: str = key_manager.get_next_key()
             gemini_model: genai.GenerativeModel = initialize_gemini(api_key)
 
+            # Find relevant sections using vector similarity search
+            relevant_sections = find_relevant_sections(page_content, request_id)
+            
+            # Combine relevant sections into a single string
+            relevant_content = "\n".join([f"{term}: {content}" for term, content in relevant_sections.items()])
+
             # Send the content to Gemini for structuring
             prompt: str = f"""
-            Structure the following product details in JSON format from the webpage html content(give in the same name as the fields).
-            Only extract data if the product is available to ship to {country_code}. If not available to {country_code}, return an empty JSON object.
+            You are a product data extraction specialist. Analyze the provided HTML content and structure the product details into a clean JSON format.
+
+            Rules:
+            - Only extract data if the product ships to {country_code}. If not available, return an empty JSON object.
+            - Price is the most important field and should be extracted.
+            - For prices, always include the final price after any discounts. Never leave price as null.
+            - Product ratings should be on a 0-5 scale with one decimal place.
+            - For boolean fields (availability, shipping, warranty), use strict true/false values.
+            - Extract up to 10 most recent customer reviews.
+            - All text fields should be properly cleaned of HTML tags and special characters.
+
             Add the following fields to the JSON:
             product_url
             product_name
             description
             price (There can be previous price and price after discounts add the after discount price)
             currency
-            product_rating (Mostly this is available which is usually 0 ot 5 find the rating and add it)
-            Color (all colors available)
+            product_rating (Mostly this is available which is usually 0 to 5 find the rating and add it)
             availability(make false if mentioned as out of stock otherwise always true)
             shipping (if mentioned as not shipping to {country_code}, mention false otherwise always true)
             delivery_date (add the delivery date or how long it takes to deliver)
             delivery_cost(or shipping cost)
-            warranty(ture or false on availablity)
-            warranty_policy
-            condition(new or used)
+            warranty(true or false on availability)
             image(add the image url)
-            latest_reviews(The reviws are available in the bottom parts analyze and add them)
+            latest_reviews(The reviews are available in the bottom parts analyze and add them)
 
             URL: {link}
-            HTML Content: {page_content}
+            Relevant Content: {relevant_content}
             """
             
             response = gemini_model.generate_content(contents=prompt)
@@ -151,4 +226,4 @@ def sanitize_filename(url: str) -> str:
     return "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in url)
 
 # Example usage
-# process_links("CA")
+process_links("US","1234567890")
