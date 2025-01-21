@@ -98,7 +98,7 @@ export default function ProfilePage() {
           customer_id: sessionStorage.getItem("uid"),
           customer_name: profile.name, // Access the 'name' property from the fetched profile
           email: profile.email || "", // Handle undefined fields gracefully
-          image: profile.image || "",
+          image: profile.image_link || "",
           price_level: profile.price_level || "",
           generated_key: profile.generated_key || "",
           country: profile.country || "",
@@ -226,7 +226,7 @@ export default function ProfilePage() {
             <DrawerTitle color='#5479f7'>User Profile</DrawerTitle>
           </DrawerHeader>
           <div className="px-4 py-2 flex flex-col items-center">
-          <img style={{borderRadius:30}} src={user_.image||"https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"} alt={user_.customer_name} className="w-full h-40 object-cover mb-4" />   
+          <img style={{borderRadius:30}} src={user_.image||"https://lindamood.net/wp-content/uploads/2019/09/Blank-profile-image.jpg"} alt={user_.customer_name} className="w-full h-40 object-cover mb-4" />   
           <div className="space-y-4 w-full">
               <div>
                 <h3 className="font-medium" style={{color:"#5479f7"}}>Name</h3>

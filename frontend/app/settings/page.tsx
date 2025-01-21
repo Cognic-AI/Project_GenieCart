@@ -37,7 +37,7 @@ export default function SettingsPage() {
   const [location, setLocation] = useState(null);
    const [showMap, setShowMap] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // To control popup visibility
-  const [newAvatarLink, setNewAvatarLink] = useState("https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
+  const [newAvatarLink, setNewAvatarLink] = useState("https://lindamood.net/wp-content/uploads/2019/09/Blank-profile-image.jpg"); // For the input link
   const [user_,setUser] = useState({
     customer_id:"",
     customer_name: '',
@@ -222,7 +222,7 @@ export default function SettingsPage() {
           customer_id: sessionStorage.getItem("uid"),
           customer_name: profile.name, // Access the 'name' property from the fetched profile
           email: profile.email || "", // Handle undefined fields gracefully
-          image: profile.image || "",
+          image: profile.image_link || "",
           price_level: profile.price_level || "",
           generated_key: profile.generated_key || "",
           country: profile.country || "",
@@ -337,7 +337,7 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Profile Picture</h3>
           <div className="flex items-center space-x-4">
             <Avatar className="h-24 w-24">
-              <img src={user_.image || 'https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'} alt="Profile" className="w-full h-40 object-cover mb-4" />  
+              <img src={user_.image || 'https://lindamood.net/wp-content/uploads/2019/09/Blank-profile-image.jpg'} alt="Profile" className="w-full h-20 object-cover mb-4" />  
             </Avatar>
             <div>
               {isEditingProfile ? (
@@ -452,4 +452,3 @@ export default function SettingsPage() {
     </div>
   )
 }
-

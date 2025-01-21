@@ -80,7 +80,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
                     tavily_context_results.append(result['url'])
     else:
         # If no custom domains, do a general search
-        tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=30)
+        tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=50, exclude_domains = ["https://www.facebook.com"])
         for result in tavily_context['results']:
             if 'url' in result:
                 tavily_context_results.append(result['url'])
@@ -88,24 +88,34 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("tavily_context_results: ", tavily_context_results)
 
     result_prompt_1 = f""" 
-    role: system, content: Analyze the following web page links from {country_code}. Only provide the links that shows many product results not single product pages. Only add links which have {prompt} product mentioned in the link, Other links are not needed. Give the results Line by line.
+    role: system, content: You are a search results analyzer for {country_code}. Your task is to filter product listing pages that contain multiple items matching '{prompt}'. Rules:
+    1. Only include links to category pages, search results pages, or collection pages
+    2. The page URL must contain keywords related to {prompt}
+    3. Exclude any single product pages or irrelevant category pages
+    4. If no links meet these criteria, return null
+    5. Return valid links one per line with no additional text or commentary
     role: user, content: {tavily_context_results}"""
     response_1 = gemini_model.generate_content(contents=result_prompt_1)
 
-    result_prompt_ = f""" 
-    role: system, content: Analyze the following web page links from {country_code}. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. If you think this link will give more unrelated results, don't add it. Give the results Line by line. Don't add facebook links. Only return 2 links(priorities the {custom_domains} when selecting best links).
-    role: user, content: {response_1}"""
-    response_ = gemini_model.generate_content(contents=result_prompt_)
+    # result_prompt_ = f""" 
+    # role: system, content: Analyze the following web page links from {country_code}. You must only add the add links which have {prompt} product mentioned in the link, Other links are not needed. If you think this link will give more unrelated results, don't add it. Give the results Line by line.
+    # role: user, content: {response_1}"""
+    # response_ = gemini_model.generate_content(contents=result_prompt_)
 
     filename: str = os.path.join("Agent_Outputs", f"search_agent_output_{request_id}.txt")
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(response_.text)
+        f.write(response_1.text)
 
     print("\n")
     print("search_agent_output.txt created")
 
     result_prompt_2 = f""" 
-    role: system, content: Analyze the following search results from {country_code} and provide the web page links. Only provide the links that shows single product in that web page that is {prompt}. Only return the links line by line.
+    role: system, content: You are a product link analyzer. Your task is to analyze search results from {country_code} and identify ONLY direct product pages for {prompt}. Rules:
+    1. Only include links that lead directly to a single product page
+    2. The product on that page must exactly match {prompt} - no variations or similar items
+    3. Exclude category pages, search results pages, or marketplace listings with multiple items
+    4. If no links meet these criteria, return null
+    5. Return valid links one per line with no additional text
     role: user, content: {tavily_context_results}"""
     response_2 = gemini_model.generate_content(contents=result_prompt_2)
 
@@ -121,5 +131,5 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("White Sauce",None,["white","Sauce","Quality"],"US","1234567890")
-# generate_search_results("White Sauce", ["https://www.amazon.com"],["white","Sauce","Quality"],"US","1234567890")
+# generate_search_results("Tomato Ketchup",None,["Tomato","Ketchup"],"US","1234567890")
+# generate_search_results("Tomato Ketchup", ["https://www.amazon.com"],["Tomato","Ketchup","Quality"],"CA","1234567890")

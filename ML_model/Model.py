@@ -274,7 +274,6 @@ class Model:
         print("Sorting items by score...")
         # Sort items by score in descending order
         self.item_array.sort(key=lambda x: x.score, reverse=True)
-        print("Top 3 items:")
-        for i in range(len(self.item_array)):
-            print(f"{i+1}. {self.item_array[i].name} - Score: {self.item_array[i].score} - Price: {self.item_array[i].price}")
+        print("Top item:")
+        print(f"1. {self.item_array[0].name} - Score: {self.item_array[0].score} - Price: {self.item_array[0].price}")
         return self.item_array

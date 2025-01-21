@@ -37,7 +37,8 @@ def recommend():
         print("RECOMMENDATION REQUEST")
         print("<====================>")
 
-        request_id = str(uuid.uuid4())
+        # request_id = str(uuid.uuid4())
+        request_id = "1234567890"
         
         # Get request data and create machine customer
         print("Getting request data...")

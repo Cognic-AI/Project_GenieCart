@@ -13,8 +13,8 @@ const CollapsibleCard = () => {
   const toggleCard = () => {
     setIsExpanded(!isExpanded);
   };
-  const handleChanges = (e) =>{
-    const { name, value, type, checked } = e.target;
+  const handleChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -33,8 +33,8 @@ const CollapsibleCard = () => {
           tags: formData.tags.split(" "),
           price_level: formData.price_level=="High"?1:(formData.price_level=="Middle"?2:3),
           custom_domains: formData.onlySyscolab
-            ? ["https://www.keellssuper.com/"]
-            : ["https://www.amazon.com"],
+            ? ["https://www.amazon.com"]
+            : null,
         };
     
         // Make the POST request
@@ -61,8 +61,12 @@ const CollapsibleCard = () => {
           const error = await response.json();
           alert(`Error: ${JSON.stringify(error)}`);
         }
-      } catch (err) {
-        alert(`Error: ${err.message}`);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          alert(`Error: ${err.message}`);
+        } else {
+          alert('An unknown error occurred');
+        }
       }
   };
 
@@ -148,7 +152,7 @@ const CollapsibleCard = () => {
           <div className="flex items-center space-x-2">
             <input type="checkbox" id="syscolab" className="form-checkbox" onChange={handleChanges} checked={formData.onlySyscolab} name='onlySyscolab'/>
             <label htmlFor="syscolab" className="text-sm text-gray-600">
-              Only syscolab products
+              Only Amazon products
             </label>
           </div>
           <button

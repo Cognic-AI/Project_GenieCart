@@ -89,9 +89,8 @@ class FirestoreDB:
 
         for item in item_array:
             state, item_id = self.get_item_id(item.link, item.name)
-            print(f"Item ID: {item_id}")
             if not state:
-                print("Item not found, adding to database")
+                print("Item not in the database, adding to database")
                 doc_ref = self.db.collection("item").add({
                     "name": item.name,
                     "link": item.link,
@@ -99,9 +98,21 @@ class FirestoreDB:
                     "description": item.description,
                     "rate": item.rate,
                     "tags": item.tags,
-                    "image_link": item.image_link
+                    "image_link": item.image_link,
                 })
                 item_id = doc_ref[1].id
+            else:
+                print("Item already exists in the database, updating the existing document")
+                # If item exists, update the existing document
+                self.db.collection("item").document(item_id).set({
+                    "name": item.name,
+                    "link": item.link, 
+                    "price": item.price,
+                    "description": item.description,
+                    "rate": item.rate,
+                    "tags": item.tags,
+                    "image_link": item.image_link,
+                })
             item_suggested.append(item_id)
             item_suggested_score.append(item.score)
 

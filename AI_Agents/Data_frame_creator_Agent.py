@@ -2,42 +2,61 @@ import os
 import json
 import csv
 from dotenv import load_dotenv
-from openai import OpenAI
+import google.generativeai as genai
+from typing import List
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import ML_model.firestoreDB as db
-
-
 load_dotenv()
 
-def initialize_LLAMA():
-    LLAMA_api_key = os.getenv("LLAMA_API_KEY")
-    if not LLAMA_api_key:
-        raise ValueError("LLAMA is not set in the environment variables.")
-    LLAMA_client = OpenAI(
-        base_url="https://integrate.api.nvidia.com/v1",
-        api_key=LLAMA_api_key
+# Initialize Gemini with API key cycling
+class GeminiKeyManager:
+    def __init__(self) -> None:
+        self.api_keys: List[str] = [
+            os.getenv("GEMINI_API_KEY_1"),
+            os.getenv("GEMINI_API_KEY_2"), 
+            os.getenv("GEMINI_API_KEY_3"),
+            os.getenv("GEMINI_API_KEY_4"),
+            os.getenv("GEMINI_API_KEY_5"),
+        ]
+        if not all(self.api_keys):
+            raise ValueError("One or more GEMINI_API_KEYS are missing from environment variables.")
+        self.current_index: int = 0
+
+    def get_next_key(self) -> str:
+        """Returns the next API key and cycles to the next one."""
+        key: str = self.api_keys[self.current_index]
+        self.current_index = (self.current_index + 1) % len(self.api_keys)
+        return key
+
+key_manager = GeminiKeyManager()
+
+def initialize_gemini():
+    gemini_api_key = key_manager.get_next_key()
+    if not gemini_api_key:
+        raise ValueError("GEMINI_API_KEY is not set in the environment variables.")
+    genai.configure(api_key=gemini_api_key)
+    generation_config = {
+        "temperature": 0.1,
+        "top_p": 0.6,
+        "top_k": 10,
+        "max_output_tokens": 20,
+        "response_mime_type": "application/json",
+    }
+    return genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
     )
 
-    return LLAMA_client
-
-def get_LLAMA_response(LLAMA_client: OpenAI, prompt: str) -> str:
+def get_gemini_response(model, prompt: str) -> str:
     try:
-        completion = LLAMA_client.chat.completions.create(
-            model="meta/llama-3.3-70b-instruct",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that filters the products based on the item name provided."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.6,
-            top_p=0.7,
-            max_tokens=100
-        )
-        return completion.choices[0].message.content
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
-        print(f"Error getting LLAMA response: {e}")
+        print(f"Error getting Gemini response: {e}")
         return None
 
-def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) -> bool:
-
+def filter_json_data(item_name: str, product_name: str, model) -> bool:
     prompt = f"""
     Decide if the following product name somehow matches the item name provided:
 
@@ -47,7 +66,7 @@ def filter_json_data(item_name: str, product_name: str, LLAMA_client: OpenAI) ->
     Respond with "true" if it matches, and "false" if it does not.
     """
 
-    response = get_LLAMA_response(LLAMA_client, prompt)
+    response = get_gemini_response(model, prompt)
     return "true" in response.lower()
 
 def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
@@ -57,9 +76,6 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
     json_folder = os.path.join("Final_products",f"Final_products_{request_id}")
     output_csv = os.path.join("Final_products",f"{item_name}_{country_code}_{request_id}.csv")
-
-    # Initialize Gemini
-    LLAMA_client = initialize_LLAMA()
 
     # Ensure the folder exists
     if not os.path.exists(json_folder):
@@ -85,9 +101,12 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
                 # Convert all keys to lowercase
                 data = {key.lower(): value for key, value in data.items()}
 
+                # Initialize Gemini
+                model = initialize_gemini()
+
                 # Extract only the product_name from the JSON
                 product_name = data.get("product_name", "")
-                if not filter_json_data(item_name, product_name, LLAMA_client):
+                if not filter_json_data(item_name, product_name, model):
                     continue
 
                 price = data.get("price", "")
@@ -132,4 +151,4 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# json_to_csv("Olive oil","US","d2cf80b7-4965-401a-9aba-e95ae6bd0052")
+# json_to_csv("Tomato Ketchup","US","1234567890")
