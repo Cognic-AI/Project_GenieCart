@@ -1,6 +1,7 @@
 import os
 import json
 import csv
+import time
 from dotenv import load_dotenv
 import google.generativeai as genai
 from typing import List
@@ -151,4 +152,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# json_to_csv("Tomato Ketchup","US","1234567890")
+# start_time = time.time()
+# json_to_csv("Water bottle","CA","1234567898")
+# end_time = time.time()
+# print(f"Time taken: {end_time - start_time:.2f} seconds")
