@@ -30,6 +30,7 @@ Your task is to execute the `extract_all_links` function when invoked.
 This function takes one input:
 - A string representing the product or item name.
 - A string representing the country code where the products searched.
+- A list representing the location of the user.
 - A string representing the request ID for this specific product selection task.
 
 Execute the function with the given input and ensure it runs successfully.
@@ -53,7 +54,7 @@ This function takes one input:
 Execute the function and ensure it runs successfully.
 """
 
-def main(user_query, custom_domains,tags,country_code,request_id):
+def main(user_query, custom_domains,tags,country_code,location,request_id):
     print("user_query")
     print(user_query)
     print("custom_domains")
@@ -62,6 +63,8 @@ def main(user_query, custom_domains,tags,country_code,request_id):
     print(tags)
     print("country_code")
     print(country_code)
+    print("location")
+    print(location)
     print("request_id")
     print(request_id)
     llm_config = {
@@ -140,7 +143,7 @@ def main(user_query, custom_domains,tags,country_code,request_id):
         },
         {
             "recipient": product_selection_agent,
-            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}. Request ID: {request_id}",
+            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}. location is {location}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },

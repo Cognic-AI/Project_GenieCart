@@ -53,7 +53,7 @@ def slow_scroll_page(driver: webdriver.Chrome) -> None:
         # Update the total height (to handle dynamically loaded content)
         total_height = driver.execute_script("return document.body.scrollHeight")
 
-def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
+def extract_all_links(item_name: str,country_code: str, location: List[float], request_id: str) -> None:
     """
     Extracts all product links by searching for the item name on given websites, handling various website structures.
 
@@ -71,7 +71,7 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     options.add_argument('--no-sandbox')
     options.add_argument(f"user-agent={os.getenv('USER_AGENT')}")
     options.add_argument(f'--geo-location={country_code}')  # Set geolocation 
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
 
     print("------------------------------------------------------------------------------------------------")
     print("Product selection agent started")
@@ -84,8 +84,8 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
         driver = webdriver.Chrome(options=options)
         
         # Set geolocation coordinates
-        latitude = 38.8256902
-        longitude = -133.3164751
+        latitude = location[0]
+        longitude = location[1]
         accuracy = 100
         
         driver.maximize_window()
@@ -138,4 +138,4 @@ def extract_all_links(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("Tomato Ketchup", "US", "1234567890")
+# extract_all_links("Tomato Ketchup", "US", [38.8256902, -133.3164751], "1234567890") 
