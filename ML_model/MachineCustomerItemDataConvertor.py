@@ -21,7 +21,14 @@ def create_machine_customer(request):
     
     print(customer)
 
-    mc= dt.MachineCustomer(customer['id'], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer['name'], customer['email'], customer['country'])
+    try:
+        location = [customer['latitude'],customer['longitude']]
+    except:
+        location = []
+    if location[0]==None:
+        location = []
+
+    mc= dt.MachineCustomer(customer['id'], request["item_name"], request["price_level"], generate_llm_tags_for_current_tags(request['item_name'],request["tags"]), customer['name'], customer['email'], customer['country'],location)
     print("Machine customer has been created")
     mc.history = fetchHistory(mc.customer_id)
     print("History has been fetched")
