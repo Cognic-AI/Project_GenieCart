@@ -131,5 +131,5 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-generate_search_results("Tomato Ketchup",None,["Tomato","Ketchup"],"US","1234567890")
+# generate_search_results("Tomato Ketchup",None,["Tomato","Ketchup"],"US","1234567890")
 # generate_search_results("Tomato Ketchup", ["https://www.amazon.com"],["Tomato","Ketchup","Quality"],"CA","1234567890")
