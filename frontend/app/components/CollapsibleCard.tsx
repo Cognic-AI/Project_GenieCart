@@ -13,8 +13,8 @@ const CollapsibleCard = () => {
   const toggleCard = () => {
     setIsExpanded(!isExpanded);
   };
-  const handleChanges = (e) =>{
-    const { name, value, type, checked } = e.target;
+  const handleChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -61,8 +61,12 @@ const CollapsibleCard = () => {
           const error = await response.json();
           alert(`Error: ${JSON.stringify(error)}`);
         }
-      } catch (err) {
-        alert(`Error: ${err.message}`);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          alert(`Error: ${err.message}`);
+        } else {
+          alert('An unknown error occurred');
+        }
       }
   };
 
