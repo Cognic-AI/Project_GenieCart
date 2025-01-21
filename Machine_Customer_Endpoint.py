@@ -89,7 +89,7 @@ def recommend():
             print("\nSending response to database...")
             # Initialize database connection
             database = db.FirestoreDB()
-            database.add_search_item(machine_customer.customer_id, result)
+            database.add_search_item(machine_customer.customer_id, result,request_data["item_name"])
             print("Sending email...")
             print(send_email(machine_customer.customer_name, machine_customer.email, result, request_data["item_name"]))
             return jsonify({"status": "success and email sent"})

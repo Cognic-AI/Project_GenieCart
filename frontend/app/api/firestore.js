@@ -68,7 +68,8 @@ export const createAccount = async (collectionName, data) => {
   
       // Iterate over each document in the 'history' collection
       for (const historyDoc of docs_) {
-        const folder = {folder:historyDoc.id,items:[]};
+        const folder_name = historyDoc.get("item_name")!=""?historyDoc.get("item_name"):historyDoc.id;
+        const folder = {folder:folder_name,items:[]};
         const items = [];
         const historyItems = historyDoc.get("items"); // Assume 'items' is an array of item IDs
         if (Array.isArray(historyItems)) {
