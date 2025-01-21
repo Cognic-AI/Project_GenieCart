@@ -52,12 +52,13 @@ class FirestoreDB:
 
         return items_docs
     
-    def add_search_result(self, item_id, item_score, customer_id):
+    def add_search_result(self, item_id, item_score, customer_id,item_name):
         print(f"\nAdding search result for Item ID(s): {item_id}, score(s): {item_score}")
         self.db.collection("customer").document(customer_id).collection("history").add({
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "items": item_id,
-            "score": item_score
+            "score": item_score,
+            "item_name":item_name
         })
 
     def add_purchase(self, item_id, customer_id):
@@ -89,7 +90,7 @@ class FirestoreDB:
         
         return False,None
 
-    def add_search_item(self, customer_id, item_array):
+    def add_search_item(self, customer_id, item_array,item_name):
         print(f"\nAdding search items for Customer ID: {customer_id}")
         item_suggested = []
         item_suggested_score = []
@@ -123,7 +124,7 @@ class FirestoreDB:
             item_suggested.append(item_id)
             item_suggested_score.append(item.score)
 
-        self.add_search_result(item_suggested, item_suggested_score, customer_id)
+        self.add_search_result(item_suggested, item_suggested_score, customer_id,item_name)
         self.add_purchase(item_id,customer_id)
 
 
