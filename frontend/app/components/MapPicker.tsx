@@ -14,8 +14,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-const MapPicker = ({ onLocationSelect }: { onLocationSelect: (location: { lat: number; lng: number }) => void }) => {
-  const [markerPosition, setMarkerPosition] = useState<[number, number]>([7.019290329461014, 80.09548187255861]);
+interface MapPickerProps {
+  onLocationSelect: (location: { lat: number; lng: number }) => void;
+  initial?: [number, number]; // Default to initial position
+}
+
+const MapPicker: React.FC<MapPickerProps> = ({ onLocationSelect, initial = [7.019290329461014, 80.09548187255861] }) => {
+  const [markerPosition, setMarkerPosition] = useState<[number, number]>(initial);
 
   const MapClickHandler = () => {
     useMapEvents({
@@ -23,6 +28,7 @@ const MapPicker = ({ onLocationSelect }: { onLocationSelect: (location: { lat: n
         const { lat, lng } = e.latlng;
         setMarkerPosition([lat, lng]);
         onLocationSelect({ lat, lng });
+        
       },
     });
     return null;

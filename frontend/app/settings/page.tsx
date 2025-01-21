@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar } from "@/components/ui/avatar"
-import {updatePriceLevel,updateName,updatePic, fetchProfile, updateKey} from '../api/firestore.js';
-import { KeyIcon } from 'lucide-react'
+import {updatePriceLevel,updateName,updatePic, fetchProfile, updateKey, updateLocation} from '../api/firestore.js';
+import { KeyIcon, MapPinIcon } from 'lucide-react'
+import dynamic from 'next/dynamic';
+
 
 function generateKey(length: number = 12): string {
   const numbers = '0123456789';
@@ -32,6 +34,8 @@ export default function SettingsPage() {
   const [tempUserName, setTempUserName] = useState("")
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [secret, setSecretKey] = useState('');
+  const [location, setLocation] = useState(null);
+   const [showMap, setShowMap] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // To control popup visibility
   const [newAvatarLink, setNewAvatarLink] = useState("https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"); // For the input link
   const [user_,setUser] = useState({
@@ -42,7 +46,37 @@ export default function SettingsPage() {
     generated_key:'',
     country:'',
     price_level:'Low',
+    latitude:'',
+    longitude:'',
   });
+
+  const MapPicker = dynamic(() => import("../components/MapPicker"), {
+    ssr: false, // Disable server-side rendering for this component
+  });
+
+  const handleMap = (loc) => {
+    //open the map and let user to select the location
+    //get location data 
+    setLocation(loc);
+    setUser((prev)=>{
+      return {...prev,latitude:loc.lat,longitude:loc.lng};
+    });
+    handleLocationSaving(loc.lat,loc.lng);
+    setShowMap(false);
+  };
+
+  const handleLocationSaving = async (lat,lng) => {
+    try {
+      await updateLocation(sessionStorage.getItem('uid'),lat,lng);
+      // Handle successful response (e.g., show success message or update state)
+        console.log('Location saved successfully.');
+
+    } catch (error) {
+    console.error('Error saving location:', error.message);
+    // Optionally, you could show the error to the user in the UI as well
+    }
+  };
+
 
   const handleClosePopup = () => {
     setShowPopup(false); // Hide the popup
@@ -60,7 +94,9 @@ export default function SettingsPage() {
   };
 
   const handleSubmitClick = () => {
-    user_.image = newAvatarLink; // Update avatarSrc with the new link
+    setUser((prev)=>{
+      return {...prev,image:newAvatarLink};
+    });
     setIsEditingProfile(false); // Exit edit mode
     handlePicSaving();
   };
@@ -130,7 +166,9 @@ export default function SettingsPage() {
   // };
 
   const handleNameSaving = async () => {
-    user_.customer_name = tempUserName;
+    setUser((prev)=>{
+      return {...prev,customer_name:tempUserName};
+    });
     try {
       await updateName(sessionStorage.getItem('uid'),user_.customer_name);
       // Handle successful response (e.g., show success message or update state)
@@ -188,6 +226,8 @@ export default function SettingsPage() {
           price_level: profile.price_level || "",
           generated_key: profile.generated_key || "",
           country: profile.country || "",
+          latitude:profile.latitude || "",
+          longitude:profile.longitude || "",
         });}else{
           console.error("Profile not found!");
         }
@@ -227,114 +267,130 @@ export default function SettingsPage() {
     <CardHeader>
       <CardTitle className="text-2xl" style={{color:"#5479f7", textAlign:'center'}}>User Settings</CardTitle>
     </CardHeader>
-    <CardContent className="space-y-6">
-      {/* User Price Preference */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold" style={{color:"#5479f7"}}>Price Preference</h3>
-        <RadioGroup value={user_.price_level} className="space-y-3">
-          <div className="flex items-center space-x-3">
-            <RadioGroupItem value="Low" id="Low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {setUser((prevUser) => ({
-                ...prevUser, // Spread the previous state
-                price_level: "Low", // Update the price_level
+    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Left Column (Price Preference, User Name, Profile Picture) */}
+      <div className="space-y-6">
+        {/* User Price Preference */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold" style={{color:"#5479f7"}}>Price Preference</h3>
+          <RadioGroup value={user_.price_level} className="space-y-3">
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="Low" id="Low" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {setUser((prevUser) => ({
+                ...prevUser, 
+                price_level: "Low",
               }));}}/>
-            <Label htmlFor="Low" className="cursor-pointer">
-              Low range prices
-            </Label>
-          </div>
-          <div className="flex items-center space-x-3">
-            <RadioGroupItem value="Middle" id="Middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() => {setUser((prevUser) => ({
-                ...prevUser, // Spread the previous state
-                price_level: "Middle", // Update the price_level
+              <Label htmlFor="Low" className="cursor-pointer">
+                Low range prices
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="Middle" id="Middle" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {setUser((prevUser) => ({
+                ...prevUser,
+                price_level: "Middle",
               }));}}/>
-            <Label htmlFor="Middle" className="cursor-pointer">
-              Middle range prices
-            </Label>
-          </div>
-          <div className="flex items-center space-x-3">
-            <RadioGroupItem value="High" id="High" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500'onClick={() => {setUser((prevUser) => ({
-                ...prevUser, // Spread the previous state
-                price_level: "High", // Update the price_level
+              <Label htmlFor="Middle" className="cursor-pointer">
+                Middle range prices
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="High" id="High" className='text-blue-500 border-blue-500 checked:bg-blue-500 checked:border-blue-500' onClick={() => {setUser((prevUser) => ({
+                ...prevUser, 
+                price_level: "High",
               }));}}/>
-            <Label htmlFor="High" className="cursor-pointer">
-              High range prices
-            </Label>
-          </div>
-        </RadioGroup>
-        <Button onClick={handlePriceSaving} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
-                Save
-              </Button>
-          </div>
+              <Label htmlFor="High" className="cursor-pointer">
+                High range prices
+              </Label>
+            </div>
+          </RadioGroup>
+          <Button onClick={handlePriceSaving} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
+            Save
+          </Button>
+        </div>
 
-          {/* User Name Change */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold"  style={{color:"#5479f7"}}>User Name</h3>
-            <div className="flex items-center space-x-2">
-              {isEditing ? (
-                <div className='flex'>
+        {/* User Name Change */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold" style={{color:"#5479f7"}}>User Name</h3>
+          <div className="flex items-center space-x-2">
+            {isEditing ? (
+              <div className='flex'>
                 <Input 
                   value={tempUserName} 
                   onChange={(e) => setTempUserName(e.target.value)}
                 />
                 <Button onClick={handleNameSaving} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
-                Save
-              </Button>
-                </div>
-              ) : (
-                <div>
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <div>
                 <span className="text-lg">{user_.customer_name}</span>
                 <Button onClick={handleEditToggle} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
-                Change
-              </Button>
+                  Change
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* User Profile Change */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Profile Picture</h3>
+          <div className="flex items-center space-x-4">
+            <Avatar className="h-24 w-24">
+              <img src={user_.image || 'https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'} alt="Profile" className="w-full h-40 object-cover mb-4" />  
+            </Avatar>
+            <div>
+              {isEditingProfile ? (
+                <div className="flex items-center space-x-2">
+                  <Input 
+                    type="text" 
+                    placeholder="Enter image URL" 
+                    value={newAvatarLink} 
+                    onChange={(e) => setNewAvatarLink(e.target.value)} 
+                    className="border p-2"
+                  />
+                  <Button onClick={handleSubmitClick} style={{ color: "white", background: "#5479f7" }}>
+                    Save
+                  </Button>
                 </div>
+              ) : (
+                <>
+                  <Input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                    id="avatar-upload"
+                  />
+                  <Button onClick={handleEditClick} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
+                    Change
+                  </Button>
+                </>
               )}
             </div>
           </div>
-
-          {/* User Profile Change */}
-          <div className="space-y-2">
-      <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Profile Picture</h3>
-      <div className="flex items-center space-x-4">
-      <Avatar className="h-24 w-24">
-      <img src={user_.image || 'https://m.media-amazon.com/images/M/MV5BOGQ5YWFjYjItODE5OC00ZDQxLTk5ZmYtNzY0YzM4NjIyMWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'} alt="Profile" className="w-full h-40 object-cover mb-4" />  
-        </Avatar>
-        <div>
-          {isEditingProfile ? (
-            <div className="flex items-center space-x-2">
-              <Input 
-                type="text" 
-                placeholder="Enter image URL" 
-                value={newAvatarLink} 
-                onChange={(e) => setNewAvatarLink(e.target.value)} 
-                className="border p-2"
-              />
-              <Button onClick={handleSubmitClick} style={{ color: "white", background: "#5479f7" }}>
-                Save
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleAvatarChange}
-                className="hidden"
-                id="avatar-upload"
-              />
-              <Button onClick={handleEditClick} style={{ color: "white", background: "#5479f7", marginLeft: "10px" }}>
-                Change
-              </Button>
-            </>
-          )}
         </div>
       </div>
-      <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Secret Key</h3>
-      <Button variant="outline" className="flex items-center gap-2" style={{color:"#5479f7"}} onClick={handleGenerateKey}>
-                <KeyIcon className="h-5 w-5" />
-                Generate New Secret Key
-            </Button>
-    </div>
-        </CardContent>
-      </Card>
+
+      {/* Right Column (Secret Key) */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Secret Key</h3>
+        <Button variant="outline" className="flex items-center gap-2" style={{color:"#5479f7"}} onClick={handleGenerateKey}>
+          <KeyIcon className="h-5 w-5" />
+          Generate New Secret Key
+        </Button>
+        <h3 className="text-lg font-semibold" style={{ color: "#5479f7" }}>Location</h3>
+        {location ? `Lat:${location.lat}, Lng:${location.lng}` : ''}
+        <Button variant="outline" className="flex items-center gap-2" style={{color:"#5479f7"}} onClick={()=>{
+          setShowMap(true);
+        }}>
+          <MapPinIcon className="h-5 w-5" />
+          Change Location
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+
     </div>
     {/* Popup */}
     {showPopup?(
@@ -351,6 +407,45 @@ export default function SettingsPage() {
             >
               Close
             </button>
+          </div>
+        </div>
+      ):<></>}
+
+      {showMap? (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              transform: 'none',
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '0', /* Remove border radius for full-screen effect */
+              zIndex: '1000', /* Ensures it's on top of other elements */
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden', /* Prevents overflow in the modal */
+
+            }}
+          >
+            <MapPicker onLocationSelect={handleMap} 
+            initial={
+              [user_.latitude!=""?Number(user_.latitude):7.019290329461014, user_.longitude!=""?Number(user_.longitude):80.09548187255861]
+              }/>
           </div>
         </div>
       ):<></>}
