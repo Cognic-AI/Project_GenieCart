@@ -219,7 +219,7 @@ def process_links(country_code: str, location: List[float], request_id: str) -> 
 
             product_counter += 1
 
-            if product_counter == 31:
+            if product_counter == 100:
                 break
 
         except Exception as e:

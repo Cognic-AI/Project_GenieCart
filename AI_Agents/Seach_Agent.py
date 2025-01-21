@@ -61,7 +61,7 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     
     final_prompt = f""" 
     role: system, content: You are a helpful assistant that converts the user prompt into a search query to find products from {country_code} using web search. You only provide the search query. In the search query mention as buy from the given country(convert the country code to country name). No other responds.
-    role: user, content: {prompt}, tags: {tags}"""
+    role: user, content: {prompt}"""
     response = gemini_model.generate_content(contents=final_prompt)
     search_query = response.text
 
@@ -73,14 +73,14 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     if custom_domains:
         for domain in custom_domains:
             domain_query = f"{search_query} site:{domain} location:{country_code}"
-            tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=20)
+            tavily_context = tavily_client.search(query=domain_query, search_depth="advanced", max_results=100)
             
             for result in tavily_context['results']:
                 if 'url' in result:
                     tavily_context_results.append(result['url'])
     else:
         # If no custom domains, do a general search
-        tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=50, exclude_domains = ["https://www.facebook.com"])
+        tavily_context = tavily_client.search(query=f"{search_query} location:{country_code}", search_depth="advanced", max_results=100, exclude_domains = ["https://www.facebook.com"])
         for result in tavily_context['results']:
             if 'url' in result:
                 tavily_context_results.append(result['url'])
@@ -131,5 +131,5 @@ def generate_search_results(prompt: str, custom_domains: List[str],tags: List[st
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# generate_search_results("Tomato Ketchup",None,["Tomato","Ketchup"],"US","1234567890")
-# generate_search_results("Tomato Ketchup", ["https://www.amazon.com"],["Tomato","Ketchup","Quality"],"CA","1234567890")
+# generate_search_results("Water bottle",None,["Water bottle","BPA Free","Leak proof","Non-toxic"],"CA","1234567898")
+# generate_search_results("Water bottle", ["https://www.amazon.com"],["Water bottle","BPA Free","Leak proof","Non-toxic"],"CA","1234567899")

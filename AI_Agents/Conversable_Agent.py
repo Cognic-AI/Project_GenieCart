@@ -29,6 +29,7 @@ product_selection_agent_system_message = """
 Your task is to execute the `extract_all_links` function when invoked. 
 This function takes one input:
 - A string representing the product or item name.
+- A list of domains to prioritize.
 - A string representing the country code where the products searched.
 - A list representing the location of the user.
 - A string representing the request ID for this specific product selection task.
@@ -40,6 +41,7 @@ data_extract_agent_system_message="""
 Your task is to execute the `process_links` function when invoked.
 This function takes one input:
 - A string representing the country code where the products searched.
+- A list representing the domains to prioritize.
 - A list representing the location of the user.
 - A string representing the request ID for this specific data extraction task.
 Execute the function and ensure it runs successfully.
@@ -144,13 +146,13 @@ def main(user_query, custom_domains,tags,country_code,location,request_id):
         },
         {
             "recipient": product_selection_agent,
-            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. country code is {country_code}. location is {location}. Request ID: {request_id}",
+            "message": f"Please execute the `extract_all_links` function. product or item name is {user_query}. Domains to prioritize: {custom_domains}. country code is {country_code}. location is {location}. Request ID: {request_id}",
             "max_turns": 2,
             "summary_method": "last_msg",
         },
         {
             "recipient": data_extract_agent,
-            "message": f"Please execute the `process_links` function. country code is {country_code}. location is {location}. Request ID: {request_id}", 
+            "message": f"Please execute the `process_links` function. country code is {country_code}. Domains to prioritize: {custom_domains}. location is {location}. Request ID: {request_id}", 
             "max_turns": 2,
             "summary_method": "last_msg",
         },

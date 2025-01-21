@@ -53,7 +53,7 @@ def slow_scroll_page(driver: webdriver.Chrome) -> None:
         # Update the total height (to handle dynamically loaded content)
         total_height = driver.execute_script("return document.body.scrollHeight")
 
-def extract_all_links(item_name: str,country_code: str, location: List[float], request_id: str) -> None:
+def extract_all_links(item_name: str, custom_domains: List[str], country_code: str, location: List[float], request_id: str) -> None:
     """
     Extracts all product links by searching for the item name on given websites, handling various website structures.
 
@@ -78,7 +78,7 @@ def extract_all_links(item_name: str,country_code: str, location: List[float], r
 
     input_filename: str = os.path.join("Agent_Outputs", f"search_agent_output_{request_id}.txt")
     with open(input_filename, "r", encoding="utf-8") as f:
-        links = [line.strip() for line in f.readlines() if line.strip()]
+        links = [line.strip() for line in f.readlines() if line.strip()][:3]
 
     for link in links:
         driver = webdriver.Chrome(options=options)
@@ -98,20 +98,28 @@ def extract_all_links(item_name: str,country_code: str, location: List[float], r
         print(f"Processing link: {link}")
         driver.get(link)
 
-
         # Wait for the page to initially load
         time.sleep(5)
 
         # Scroll the page to load all dynamic content
         slow_scroll_page(driver)
 
-        # Find all <a> tags with href attributes
-        elements = driver.find_elements(By.TAG_NAME, "a")
         all_links = []
-        for element in elements:
-            href = element.get_attribute("href")
-            if href:  # Check if the href attribute is not empty
-                all_links.append(href)
+        
+        # Special handling for Amazon
+        if custom_domains == ["https://www.amazon.com"]:
+            elements = driver.find_elements(By.CSS_SELECTOR, "a.a-link-normal.s-line-clamp-4.s-link-style.a-text-normal")
+            for element in elements:
+                href = element.get_attribute("href")
+                if href:
+                    all_links.append(href)
+        else:
+            # Default handling for other websites
+            elements = driver.find_elements(By.TAG_NAME, "a")
+            for element in elements:
+                href = element.get_attribute("href")
+                if href:  # Check if the href attribute is not empty
+                    all_links.append(href)
 
         # Deduplicate links
         unique_links = list(set(all_links))
@@ -126,11 +134,18 @@ def extract_all_links(item_name: str,country_code: str, location: List[float], r
             role: system, content: You are a helpful assistant to filter the given product links and return only the links which are related to the item name and from {country_code}. Return the full link with the website. Return line by line. Make sure you return only the links that are related to a one specific item (Analyze the link and get an understanding of it).   
             role: user, content: website {link} \n\n item name {item_name} \n\n links \n\n {unique_links}"""
 
-        response = gemini_model.generate_content(contents=final_prompt)
+        if custom_domains == ["https://www.amazon.com"]:
+            final_links = unique_links
+        else:
+            response = gemini_model.generate_content(contents=final_prompt)
+            final_links = response.text
 
         output_filename: str = os.path.join("Agent_Outputs", f"Filtered_links_{request_id}.txt")
         with open(output_filename, "a", encoding="utf-8") as f:
-            f.write(response.text)
+            # Convert list to string if needed
+            if isinstance(final_links, list):
+                final_links = "\n".join(final_links)
+            f.write(final_links)
 
         print(f"Filtered links saved to: {output_filename}")
 
@@ -138,4 +153,8 @@ def extract_all_links(item_name: str,country_code: str, location: List[float], r
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-# extract_all_links("Tomato Ketchup", "US", [38.8256902, -133.3164751], "1234567890") 
+# start_time = time.time()
+# extract_all_links("Water bottle", None, "CA", [56.4383657,-114.8492314], "1234567898")
+# extract_all_links("Water bottle", ["https://www.amazon.com"], "CA", [56.4383657,-114.8492314], "1234567899") 
+# end_time = time.time()
+# print(f"Time taken: {end_time - start_time:.2f} seconds")
