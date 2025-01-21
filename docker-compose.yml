@@ -5,6 +5,11 @@ services:
       dockerfile: Dockerfile.backend
     depends_on:
       - selenium
+    environment:
+      - SELENIUM_URL=http://selenium:4444/wd/hub
+      - PYTHONUNBUFFERED=1
+    tty: true
+    stdin_open: true
     ports:
       - "8000:8000"
     networks:
@@ -14,6 +19,22 @@ services:
       interval: 10s
       timeout: 15s
       retries: 3
+
+  # agent:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.agent
+  #   depends_on:
+  #     - selenium
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - app-network
+  #   healthcheck:
+  #     test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health')"]
+  #     interval: 10s
+  #     timeout: 15s
+  #     retries: 3
       
   frontend:
     build:

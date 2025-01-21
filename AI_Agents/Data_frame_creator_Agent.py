@@ -4,6 +4,7 @@ import csv
 from dotenv import load_dotenv
 import google.generativeai as genai
 from typing import List
+import ML_model.firestoreDB as db
 load_dotenv()
 
 # Initialize Gemini with API key cycling
@@ -84,6 +85,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
         raise ValueError("No JSON files found in the specified folder.")
 
     # Open the CSV file for writing
+    data_to_fire = []
     with open(output_csv, mode="w", newline="", encoding="utf-8") as csv_file:
         writer = None
 
@@ -135,6 +137,11 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
 
                 # Write the JSON data as a row in the CSV file
                 writer.writerow(data)
+                data_to_fire.append(data)
+    
+    # add to firebase
+    database = db.FirestoreDB()
+    database.add_csv(data_to_fire,item_name,country_code,request_id)
 
     print(f"CSV file has been created at {output_csv}")
 
@@ -142,4 +149,4 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-json_to_csv("Tomato Ketchup","US","1234567890")
+# json_to_csv("Tomato Ketchup","US","1234567890")
