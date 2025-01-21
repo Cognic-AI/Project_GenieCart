@@ -52,16 +52,9 @@ def recommend():
         except ValueError as e:
             return jsonify({"status": "error", "message": str(e)}), 400
 
-        # Check if CSV already exists for this item and country
-        # csv_filename = f"{request_data['item_name']}_{machine_customer.country}_{request_id}.csv"
-        # existing_files = [f for f in os.listdir("Final_products") if f.startswith(f"{request_data['item_name']}_{machine_customer.country}_")]
-
         database1 = db.FirestoreDB()
         state,csv_file = database1.check_csv(request_data['item_name'],machine_customer.country)
         
-        # if existing_files:
-        #     print("Found existing CSV file for this item and country...")
-        #     csv_filename = existing_files[0]
         print("Check csv data")
         if state:
             print("Found existing CSV file for this item and country...")
@@ -73,16 +66,6 @@ def recommend():
                   request_data["tags"],
                   machine_customer.country,
                   request_id)
-
-            # item = request_data["item_name"]
-            # domain = request_data["custom_domains"]
-            # tags = request_data["tags"]
-            # country =machine_customer.country
-
-            # SearchAgent.generate_search_results(item,domain,tags,country,request_id)
-            # ProductSelectionAgent.extract_all_links(item, country, request_id)
-            # DataExtractAgent.process_links(country,request_id)
-            # DataFrameCreatorAgent.json_to_csv(item,country,request_id)
 
             print("Agent workflow completed...")
             state,csv_file = database1.check_csv(request_data['item_name'],machine_customer.country)

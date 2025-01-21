@@ -267,13 +267,26 @@ class Model:
         return similarity
 
     def getFinalResult(self):
-        """Sort items by score and return sorted array"""
+        """Sort items by score and return sorted array with duplicates removed"""
         print("\n<====================>")
         print("FINAL RESULTS")
         print("<====================>")
-        print("Sorting items by score...")
-        # Sort items by score in descending order
-        self.item_array.sort(key=lambda x: x.score, reverse=True)
+        print("Removing duplicates and sorting items by score...")
+        
+        # Remove duplicates based on item name and link
+        seen = set()
+        unique_items = []
+        for item in self.item_array:
+            item_key = (item.name, item.link)
+            if item_key not in seen:
+                seen.add(item_key)
+                unique_items.append(item)
+        
+        # Sort unique items by score in descending order
+        unique_items.sort(key=lambda x: x.score, reverse=True)
+        
         print("Top item:")
-        print(f"1. {self.item_array[0].name} - Score: {self.item_array[0].score} - Price: {self.item_array[0].price}")
-        return self.item_array
+        if unique_items:
+            print(f"1. {unique_items[0].name} - Score: {unique_items[0].score} - Price: {unique_items[0].price}")
+        
+        return unique_items
