@@ -33,6 +33,7 @@ export default function SettingsPage() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [secret, setSecretKey] = useState('');
   const [showPopup, setShowPopup] = useState(false); // To control popup visibility
+  const [showPriceSuccessPopup, setShowPriceSuccessPopup] = useState(false); // For price success popup
   const [newAvatarLink, setNewAvatarLink] = useState("https://lindamood.net/wp-content/uploads/2019/09/Blank-profile-image.jpg"); // For the input link
   const [user_,setUser] = useState({
     customer_id:"",
@@ -48,10 +49,14 @@ export default function SettingsPage() {
     setShowPopup(false); // Hide the popup
   };
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      user_.image =  URL.createObjectURL(file)
+  const handleClosePriceSuccessPopup = () => {
+    setShowPriceSuccessPopup(false);
+  };
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files[0]) {
+      user_.image = URL.createObjectURL(files[0]);
     }
   };
 
@@ -98,10 +103,17 @@ export default function SettingsPage() {
 
       // Handle successful response (e.g., show success message or update state)
         console.log('Price level saved successfully.');
-
+        setShowPriceSuccessPopup(true); // Show success popup
+        setTimeout(() => {
+          setShowPriceSuccessPopup(false);
+        }, 3000); // Hide after 3 seconds
     } catch (error) {
-    console.error('Error saving price level:', error.message);
-    // Optionally, you could show the error to the user in the UI as well
+      if (error instanceof Error) {
+        console.error('Error saving price level:', error.message);
+      } else {
+        console.error('Error saving price level:', error);
+      }
+      // Optionally, you could show the error to the user in the UI as well
     }
   };
 
@@ -136,10 +148,13 @@ export default function SettingsPage() {
       // Handle successful response (e.g., show success message or update state)
         console.log('Name saved successfully.');
         handleEditToggle();
-
     } catch (error) {
-    console.error('Error saving name:', error.message);
-    // Optionally, you could show the error to the user in the UI as well
+      if (error instanceof Error) {
+        console.error('Error saving name:', error.message);
+      } else {
+        console.error('Error saving name:', error);
+      }
+      // Optionally, you could show the error to the user in the UI as well
     }
   };
 
@@ -170,10 +185,13 @@ export default function SettingsPage() {
       await updatePic(sessionStorage.getItem('uid'),user_.image);
       // Handle successful response (e.g., show success message or update state)
         console.log('Pic saved successfully.');
-
     } catch (error) {
-    console.error('Error saving pic:', error.message);
-    // Optionally, you could show the error to the user in the UI as well
+      if (error instanceof Error) {
+        console.error('Error saving pic:', error.message);
+      } else {
+        console.error('Error saving pic:', error);
+      }
+      // Optionally, you could show the error to the user in the UI as well
     }
   };
   const handleLoadingProfile = async () => {
@@ -181,7 +199,7 @@ export default function SettingsPage() {
       const profile = await fetchProfile("customer",sessionStorage.getItem("uid"));
       if (profile) {
         setUser({
-          customer_id: sessionStorage.getItem("uid"),
+          customer_id: sessionStorage.getItem("uid") || "",
           customer_name: profile.name, // Access the 'name' property from the fetched profile
           email: profile.email || "", // Handle undefined fields gracefully
           image: profile.image_link || "",
@@ -354,6 +372,25 @@ export default function SettingsPage() {
           </div>
         </div>
       ):<></>}
+      {/* Price Success Popup */}
+      {showPriceSuccessPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4 text-green-500">Success!</h2>
+            <p className="mb-4">
+              Price preference has been updated successfully.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={handleClosePriceSuccessPopup}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
