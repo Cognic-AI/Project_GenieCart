@@ -152,7 +152,7 @@ def json_to_csv(item_name: str,country_code: str,request_id: str) -> None:
     print("------------------------------------------------------------------------------------------------")
 
 # Example usage
-start_time = time.time()
-json_to_csv("Water bottle","CA","1234567898")
-end_time = time.time()
-print(f"Time taken: {end_time - start_time:.2f} seconds")
+# start_time = time.time()
+# json_to_csv("Water bottle","CA","1234567898")
+# end_time = time.time()
+# print(f"Time taken: {end_time - start_time:.2f} seconds")
