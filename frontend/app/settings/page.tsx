@@ -184,7 +184,7 @@ export default function SettingsPage() {
           customer_id: sessionStorage.getItem("uid"),
           customer_name: profile.name, // Access the 'name' property from the fetched profile
           email: profile.email || "", // Handle undefined fields gracefully
-          image: profile.image || "",
+          image: profile.image_link || "",
           price_level: profile.price_level || "",
           generated_key: profile.generated_key || "",
           country: profile.country || "",
