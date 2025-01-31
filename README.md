@@ -5,7 +5,7 @@
 ## Project Documentation  
 
 For detailed information about the project, please refer to the project proposal:  
-[📄 GenieCart Proposal](./docs/GenieCart_Documentation.pdf)
+[📄 GenieCart Documentation](./docs/GenieCart_Documentation.pdf)
 
 ## Key Features
 
